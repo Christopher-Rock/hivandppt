@@ -1,4 +1,4 @@
-function [ratios,rates,popint,pop]=smallsti(rates,varargin)
+function [ratios,pop,rates,popint]=smallsti(rates,varargin)
 %% Load input parameters
 N=[rates.Nm; rates.Nf; rates.Ns];
 steps=rates.steps;
@@ -26,7 +26,10 @@ zeta=rates.zeta;
     intlength=yintlength*steps;
     obslength=yobslength*steps;
     tmax=intstart+intlength+obslength;
-    numgroups=1*steps;
+    numgroups=ceil(steps);
+    if mod(steps,1)
+        warning('steps is not an integer. \nTime between visits increased.') %#ok<WNTAG>
+    end
 %% Baseline variable
     pop=zeros(3,tmax+1);pop(:,1)=0.02;
 %% Baseline loop
@@ -42,7 +45,7 @@ zeta=rates.zeta;
     for tint=2:intlength+1
         popintout(:,tint)=smalltsti(popintout(:,tint-1),dm,df,ds, ...
             mum,muf,mus,betamf,betams,betafm,betasm,gamma,pm,pf,zeta);
-        g=mod(tint-intstart-1,numgroups)+1;
+        g=mod(tint-1,numgroups)+1;
         popintout(3+g,tint)=0;% Or,itself times CoveragePerVisit, since not everyone will turn up each six months
         %Define g0,g1,... and set popintout(3+gk,tint)=popintout(3+gk,tint)/2 or similar   
         %Do something with changes in groups, migration, etc.
@@ -69,6 +72,8 @@ zeta=rates.zeta;
     xlabel('Years')
     set(gca,'YGrid','on')
     shg;
+%% Result modification
+    ratios=pop(:,end);
 end
     
     

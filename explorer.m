@@ -1,36 +1,44 @@
-function explorer
+function explorer(inputs,run) %#ok<INUSD>
+%% Select row of inputs to use
+    if nargin==1
+        run=1;
+    end        
 %% Set parameters
-rates0=[0.064 0.09 0.185 0.1 0.8 0.8 0.4 0.2];
-names={'b1' 'b2' 'b3' 'b4' 'c1' 'c2' 'c3' 'cvg'};
 mods=[0.5 2];
 modnames={'/2','*2'};
 %% Calculate default
-ratio0=smallsti(rates0);
+[~,pop]=smallsti(getrates(inputs,1));
+popend0=pop(:,end);
 %% Prepare figure
 outfig=gcf;
 clf;
 xlabel('FSW effectiveness')
 ylabel('Population-level effect')
 zlabel('Delay of effect')
+xlabel('m');ylabel('f');zlabel('s');
 hold on;
-set(gcf,'NextPlot','new')
 tempfig=figure;
 hold on;
+set(tempfig,'Visible','off')
 colors={'b','g','r','c','m','y'};
 %% Plot ratios for modified rates
-for ii=1:8
+for ii=1:size(inputs,2)
     for jj=1:2
-        rate=rates0;
-        if mods(jj)<1
-            rate(ii)=rate(ii).*mods(jj);
+        input=inputs;
+        if mods(jj)<1||input{run+1,ii}>1
+            input{run+1,ii}=input{run+1,ii}.*mods(jj);
         else
-            rate(ii)=1-(1-rate(ii))./mods(jj);
+            input{run+1,ii}=1-(1-input{run+1,ii})./mods(jj);
         end
         figure(tempfig);
-        ratio=smallsti(rate);
-        temp=[ratio0 ratio]';
+        [~,pop]=smallsti(getrates(input,1));
+        popend=pop(:,end);
+        temp=[popend0 popend]';
         figure(outfig);
         plot3(temp(:,1),temp(:,2),temp(:,3),[colors{mod(ii-1,length(colors))+1} '-'])
-        text(ratio(1),ratio(2),ratio(3),[names{ii} modnames{jj}])
+        text(temp(2,1),temp(2,2),temp(2,3),[input{1,ii} modnames{jj}])
     end
 end
+%% Protect explorer window; delete other window
+set(gcf,'NextPlot','new')
+close(tempfig)
