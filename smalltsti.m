@@ -1,9 +1,12 @@
-function pop=smalltsti(pa,v,rates)
+function pop=smalltsti(pa,dm,df,ds,mum,muf,mus,betamf,betams,betafm,betasm,gamma,pm,pf,zeta)
     m=pa(1);f=pa(2);s=pa(3:end);
-    S=pa(3)*(1-rates(8))+mean(pa(4:end))*rates(8);
+    if zeta
+        S=pa(3)*(1-zeta)+mean(pa(4:end))*zeta;
+    else
+        S=s;
+    end
     pop=zeros(size(pa));
-    pop(1)=m+(1-m).*(1-exp(rates(1).*(rates(5)*f+(1-rates(5))*S)));
-    pop(2)=f+(1-f).*(1-exp(rates(2).*(rates(6)*m+(1-rates(6))*v)));
-    pop(3:end)=s+(1-s).*(1-exp(rates(3).*(rates(7)*m+(1-rates(7))*v)));
-    pop=pop-pa.*rates(4);
+    pop(1)=(m*(1-gamma)+(1-m).*(1-(1-pm).^(betamf*f+betams*S))).*(1-mum)+mum*dm;
+    pop(2)=(f*(1-gamma)+(1-f)*(1-(1-pf)^(betafm*m)))*(1-muf)+muf*df;
+    pop(3:end)=(s*(1-gamma)+(1-s)*(1-(1-pf)^(betasm*m)))*(1-mus)+mus*ds;
 end

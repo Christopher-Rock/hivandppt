@@ -13,6 +13,7 @@ xlabel('FSW effectiveness')
 ylabel('Population-level effect')
 zlabel('Delay of effect')
 hold on;
+set(gcf,'NextPlot','new')
 tempfig=figure;
 hold on;
 colors={'b','g','r','c','m','y'};
