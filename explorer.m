@@ -31,7 +31,7 @@ for ii=1:size(inputs,2)
             input{run+1,ii}=1-(1-input{run+1,ii})./mods(jj);
         end
         figure(tempfig);
-        [~,pop]=smallsti(getrates(input,1));
+        [~,pop]=smallsti(getrates(input,run));
         popend=pop(:,end);
         temp=[popend0 popend]';
         figure(outfig);
