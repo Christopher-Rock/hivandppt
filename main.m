@@ -14,7 +14,7 @@ function ratios=main(inrates,runset)
     ratios=zeros(3,length(runset));
     for run=runset
         if ~isstruct(inrates)
-            rates=getrates(inrates,run);
+            rates=assct(inrates([1 run+1],:));
         else
             rates=inrates(run);
         end

@@ -1,12 +1,6 @@
 function [ratios,pop,rates,popint]=smallsti(rates,varargin)
 %% Load input parameters
 N=[rates.Nm; rates.Nf; rates.Ns];
-dm=rates.dm;
-df=rates.ds;
-ds=rates.ds;
-mum=rates.mum;
-muf=rates.muf;
-mus=rates.mus;
 betam=rates.betam;
 betaf=rates.betaf;
 betas=rates.betas;
@@ -17,8 +11,7 @@ eff=rates.eff;
 res=rates.res;
 att=rates.att;
 per=rates.per;
-eta=rates.eta;
-dnative=rates.dnative;
+theta=rates.theta;
 %% Set parameters
     % Populations m, f, s
     % At each time step,
@@ -34,58 +27,40 @@ dnative=rates.dnative;
     if mod(steps*per,1)
         warning('steps*per is not an integer. \nTime between visits increased.') %#ok<WNTAG>
     end
-%% Adjust time-varying parameters
+%% Adjust step-dependent parameters
     betam=betam/steps;
     betaf=betaf/steps;
     betas=betas/steps;
     gamma=gamma/steps;
-%% Prepare for migration
-    if dnative
-        mum=0;muf=0;mus=0;
-    end
+    theta=min(1,theta/365*steps);
 %% Prepare time-varying parameters
-    epsilon=min(1-(eff-res*(0:1/steps:yintlength))*att,1);
-    prot=eta/365*steps;
+    epsilon=max((eff-res*(0:1/steps:yintlength))*att,0);
 %% Baseline variable
     pop=zeros(3,tmax+1);pop(:,1)=0.02;
 %% Baseline loop
     for t=2:tmax+1
-        pop(:,t)=smalltsti(pop(:,t-1),dm,df,ds, ...
-            mum,muf,mus,betam,betaf,betas,c,gamma,0);
-    end
-%% Set internal migration HIV levels
-    if dnative
-        mum=rates.mum;muf=rates.muf;mus=rates.mus;
-        dm=pop(1,intstart);df=pop(2,intstart);ds=pop(3,intstart);
+        pop(:,t)=smalltsti(pop(:,t-1),betam,betaf,betas,c,gamma,0);
     end
 %% Intervention variables
     popintout=zeros(3+numgroups,intlength+obslength+1,2);
     popintout(1:2,1,1)=pop(1:2,intstart);
     popintout(3:end,1,1)=pop(3,intstart);
-    g=0;
 %% Intervention loop
     for tint=2:intlength+1
-        popintout(:,tint,:)=smalltsti(popintout(:,tint-1,:),dm,df,ds, ...
-            mum,muf,mus,betam,betaf,betas,c,gamma,zeta);
-        if g>0
-            popintout(3+g,tint,1)=mus*ds+(popintout(3+g,tint)-mus*ds)*...
-                (epsilon(tint-1)+(1-epsilon(tint-1))*(1-prot));
-            popintout(3+g,tint,2)=1-epsilon(tint-1);
-        end
+        popintout(:,tint,:)=smalltsti(popintout(:,tint-1,:),betam,betaf,betas,c,gamma,zeta,theta);
         g=mod(tint-2,numgroups)+1;
-        popintout(3+g,tint)=popintout(3+g,tint)*epsilon(tint-1);% Or,itself times CoveragePerVisit, since not everyone will turn up each six months
-        %Define g0,g1,... and set popintout(3+gk,tint)=popintout(3+gk,tint)/2 or similar   
+        popintout(3+g,tint,1)=popintout(3+g,tint,1)*(1-epsilon(tint-1));
+        popintout(3:g,tint,2)=popintout(3+g,tint,1)*epsilon(tint-1);
         %Do something with changes in groups, migration, etc.
     end
 %% Post-intervenion observation loop
     for tint=intlength+2:intlength+obslength+1
-        popintout(:,tint)=smalltsti(popintout(:,tint-1),dm,df,ds, ...
-            mum,muf,mus,betam,betaf,betas,c,gamma,zeta);
+        popintout(:,tint,:)=smalltsti(popintout(:,tint-1,:),betam,betaf,betas,c,gamma,zeta,theta);
     end
 %% Intervention output
     popint=zeros(3,intlength+obslength+1);
-    popint(1:2,:)=popintout(1:2,:);
-    popint(3,:)=mean(popintout(4:end,:))*zeta+popintout(3,:)*(1-zeta);
+    popint(1:2,:)=popintout(1:2,:,1);
+    popint(3,:)=mean(popintout(4:end,:,1))*zeta+popintout(3,:,1)*(1-zeta);
 %% Model output
     ratios=zeros(3,1);
     ratios(1)=popint(3,end)./pop(3,end);
@@ -94,7 +69,7 @@ dnative=rates.dnative;
         (pop(3,end)/pop(3,intstart+floor((tmax-intstart)/10)));
 %% Model plot
     plot ((0:tmax)/steps,pop',(intstart:tmax)/steps,popint')
-    ylim([0 0.4]);legend({'m','f','s','m_{int}','f_{int}','s_{int}'})
+    ylim([0 1]);legend({'m','f','s','m_{int}','f_{int}','s_{int}'})
     title(sprintf('Infection levels for trial %d',rates.run))
     xlabel('Years')
     set(gca,'YGrid','on')
