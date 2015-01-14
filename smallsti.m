@@ -34,7 +34,7 @@ theta=rates.theta;
     gamma=gamma/steps;
     theta=min(1,theta/365*steps);
 %% Prepare time-varying parameters
-    epsilon=max((eff-res*(0:1/steps:yintlength))*att,0);
+    delta=max((eff-res*(0:1/steps:yintlength))*att,0);
 %% Baseline variable
     pop=zeros(3,tmax+1);pop(:,1)=0.02;
 %% Baseline loop
@@ -49,8 +49,8 @@ theta=rates.theta;
     for tint=2:intlength+1
         popintout(:,tint,:)=smalltsti(popintout(:,tint-1,:),betam,betaf,betas,c,gamma,zeta,theta);
         g=mod(tint-2,numgroups)+1;
-        popintout(3+g,tint,1)=popintout(3+g,tint,1)*(1-epsilon(tint-1));
-        popintout(3:g,tint,2)=popintout(3+g,tint,1)*epsilon(tint-1);
+        popintout(3+g,tint,1)=popintout(3+g,tint,1)*(1-delta(tint-1));
+        popintout(3+g,tint,2)=delta(tint-1);
         %Do something with changes in groups, migration, etc.
     end
 %% Post-intervenion observation loop
