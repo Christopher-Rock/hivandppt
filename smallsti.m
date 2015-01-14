@@ -59,17 +59,18 @@ dnative=rates.dnative;
         dm=pop(1,intstart);df=pop(2,intstart);ds=pop(3,intstart);
     end
 %% Intervention variables
-    popintout=zeros(3+numgroups,intlength+obslength+1);
-    popintout(1:2,1)=pop(1:2,intstart);
-    popintout(3:end,1)=pop(3,intstart);
+    popintout=zeros(3+numgroups,intlength+obslength+1,2);
+    popintout(1:2,1,1)=pop(1:2,intstart);
+    popintout(3:end,1,1)=pop(3,intstart);
     g=0;
 %% Intervention loop
     for tint=2:intlength+1
-        popintout(:,tint)=smalltsti(popintout(:,tint-1),dm,df,ds, ...
+        popintout(:,tint,:)=smalltsti(popintout(:,tint-1,:),dm,df,ds, ...
             mum,muf,mus,betam,betaf,betas,c,gamma,zeta);
         if g>0
-            popintout(3+g,tint)=mus*ds+(popintout(3+g,tint)-mus*ds)*...
+            popintout(3+g,tint,1)=mus*ds+(popintout(3+g,tint)-mus*ds)*...
                 (epsilon(tint-1)+(1-epsilon(tint-1))*(1-prot));
+            popintout(3+g,tint,2)=1-epsilon(tint-1);
         end
         g=mod(tint-2,numgroups)+1;
         popintout(3+g,tint)=popintout(3+g,tint)*epsilon(tint-1);% Or,itself times CoveragePerVisit, since not everyone will turn up each six months
@@ -102,6 +103,3 @@ dnative=rates.dnative;
 %     ratios=pop(:,end);
 end
     
-    
-    % rates to_m to_f to_s recover coverage
-%     rates=[0.1 0.1 0.2 0.05 .60];
