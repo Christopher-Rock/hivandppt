@@ -12,6 +12,11 @@ res=rates.res;
 att=rates.att;
 per=rates.per;
 theta=rates.theta;
+if isfield(rates,'desc')
+    desc=rates.desc;
+else
+    run=rates.run;
+end
 %% Set parameters
     % Populations m, f, s
     % At each time step,
@@ -65,12 +70,16 @@ theta=rates.theta;
     ratios=zeros(3,1);
     ratios(1)=popint(3,end)./pop(3,end);
     ratios(2)=sum(popint(:,end)./pop(:,end).*N);
-    ratios(3)=popint(3,1+steps)/popint(3,1)./ ...
-        (pop(3,intstart+steps)/pop(3,intstart));
+    ratios(3)=popint(3,end)/popint(3,1+floor((tmax-intstart)/10))./ ...
+        (pop(3,end)/pop(3,intstart+floor((tmax-intstart)/10)));
 %% Model plot
     plot ((0:tmax)/steps,pop',(intstart:tmax)/steps,popint')
     ylim([0 0.4]);legend({'m','f','s','m_{int}','f_{int}','s_{int}'})
-    title(sprintf('Infection levels for trial %d',rates.run))
+    if isfield(rates,'desc')
+        title(['Infection levels for trial: ' desc])
+    else
+        title(sprintf('Infection levels for trial %d',rates.run))
+    end
     xlabel('Years')
     set(gca,'YGrid','on')
     shg;
