@@ -70,8 +70,8 @@ end
     ratios=zeros(3,1);
     ratios(1)=popint(3,end)./pop(3,end);
     ratios(2)=sum(popint(:,end)./pop(:,end).*N);
-    ratios(3)=popint(3,end)/popint(3,1+floor((tmax-intstart)/10))./ ...
-        (pop(3,end)/pop(3,intstart+floor((tmax-intstart)/10)));
+    ratios(3)=popint(3,1+steps)/popint(3,1)./ ...
+        (pop(3,intstart+steps)/pop(3,intstart));
 %% Model plot
     plot ((0:tmax)/steps,pop',(intstart:tmax)/steps,popint')
     ylim([0 0.4]);legend({'m','f','s','m_{int}','f_{int}','s_{int}'})
