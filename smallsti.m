@@ -1,10 +1,5 @@
 function [ratios,pop,rates,popint]=smallsti(rates,varargin)
 %% Load input parameters
-N=[rates.Nm; rates.Nb; rates.Nf; rates.Ns];
-w=rates.w;
-x=rates.x;
-y=rates.y;
-z=rates.z;
 c1=rates.c1;
 c2=rates.c2;
 gamma=rates.gamma;
@@ -14,12 +9,15 @@ res=rates.res;
 att=rates.att;
 per=rates.per;
 theta=rates.theta;
+%% Create vector input parameters
 if isfield(rates,'desc')
     desc=rates.desc;
 else
     run=rates.run;
 end
-equilib=[w;x;y;z];
+equilib=[rates.w;rates.x;rates.y;rates.z];
+N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
+    [1-rates.probs rates.probs]]';
 %% Set parameters
     % Populations m, f, s
     % At each time step,

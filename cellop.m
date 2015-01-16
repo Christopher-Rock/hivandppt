@@ -1,4 +1,4 @@
-function cll=cellop(cll,func,varargin)
+function [cll,rownum]=cellop(cll,func,varargin)
     switch func
         case 'rm'
             cll=rm(cll,varargin);
@@ -7,7 +7,7 @@ function cll=cellop(cll,func,varargin)
         case 'rep'
             cll=rep(cll,varargin);
         case 'new'
-            cll=new(cll,varargin);
+            [cll,rownum]=new(cll,varargin);
     end
 end
 
@@ -41,11 +41,14 @@ function cll=rep(cll,args)
     end
 end
 
-function cll=new(cll,args)
+function [cll,rownum]=new(cll,args)
     for ii=1:numel(args)
-        source=find(strcmp(cll(:,strcmp(cll(1,:),'desc')),args{ii}{1}));
-        cll=rep(cll,{source-1});
-        cll=set(cll,[{source} args{ii}{2:end}]);
-        cll{source+1,strcmp(cll(1,:),'desc')}=[];
+        rownum=find(strcmp(cll(:,strcmp(cll(1,:),'desc')),args{ii}{1}));
+        if isempty(rownum)
+            error([args{ii}{1} ' is not a description. ']) %#ok<ERTAG>
+        end
+        cll=rep(cll,{rownum-1});
+        cll=set(cll,[{rownum} args{ii}{2:end}]);
+        cll{rownum+1,strcmp(cll(1,:),'desc')}=[];
     end
 end
