@@ -1,10 +1,10 @@
 function [ratios,pop,rates,popint]=smallsti(rates,varargin)
 %% Load input parameters
 N=[rates.Nm; rates.Nb; rates.Nf; rates.Ns];
-betam=rates.betam;
-betaf=rates.betaf;
-betas=rates.betas;
-betab=rates.betab;
+w=rates.w;
+x=rates.x;
+y=rates.y;
+z=rates.z;
 c1=rates.c1;
 c2=rates.c2;
 gamma=rates.gamma;
@@ -19,6 +19,7 @@ if isfield(rates,'desc')
 else
     run=rates.run;
 end
+equilib=[w;x;y;z];
 %% Set parameters
     % Populations m, f, s
     % At each time step,
@@ -34,6 +35,8 @@ end
     if mod(steps*per,1)
         warning('steps*per is not an integer. \nTime between visits increased.') %#ok<WNTAG>
     end
+%% Calculate beta values
+    [betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma);
 %% Adjust step-dependent parameters
     betam=betam/steps;
     betaf=betaf/steps;
@@ -44,7 +47,7 @@ end
 %% Prepare time-varying parameters
     delta=max((eff-res*(0:1/steps:yintlength))*att,0);
 %% Baseline variable
-    pop=zeros(4,tmax+1);pop(1,1)=0.04;pop(2,1)=0.06;pop(3,1)=0.06;pop(4,1)=0.25;
+    pop=zeros(4,tmax+1);pop(:,1)=equilib;
 %% Baseline loop
     for t=2:tmax+1
         pop(:,t)=smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0);
@@ -71,17 +74,20 @@ end
     popint(4,:)=mean(popintout(5:end,:,1))*zeta+popintout(4,:,1)*(1-zeta);
 %% Model output
     ratios=zeros(3,1);
-    ratios(1)=popint(4,end)./pop(4,end);
-    ratios(2)=sum(popint(:,end)./pop(:,end).*N);
+    ratios(1)=popint(4,intlength)./pop(4,intstart+intlength);
+    ratios(2)=sum(popint(:,intlength)./pop(:,intstart+intlength).*N);
     ratios(3)=popint(4,1+steps)/popint(4,1)./ ...
         (pop(4,intstart+steps)/pop(4,intstart));
 %% Model plot
     plot ((0:tmax)/steps,pop',(intstart:tmax)/steps,popint')
+    holdnow=ishold(gcf);  hold on;
+    plot(yintstart+yintlength*[1;1],[0 1],'k-')
+    if ~holdnow, hold off; end
     ylim([0 0.4]);legend({'m','b','f','s','m_{int}','b_{int}','f_{int}','s_{int}'})
     if isfield(rates,'desc')
         title(['Infection levels for trial: ' desc])
     else
-        title(sprintf('Infection levels for trial %d',rates.run))
+        title(sprintf('Infection levels for trial %d',run))
     end
     xlabel('Years')
     set(gca,'YGrid','on')
