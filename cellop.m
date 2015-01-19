@@ -1,4 +1,4 @@
-function [cll,rownum]=cellop(cll,func,varargin)
+function [cll,rownums]=cellop(cll,func,varargin)
     switch func
         case 'rm'
             cll=rm(cll,varargin);
@@ -7,7 +7,7 @@ function [cll,rownum]=cellop(cll,func,varargin)
         case 'rep'
             cll=rep(cll,varargin);
         case 'new'
-            [cll,rownum]=new(cll,varargin);
+            [cll,rownums]=new(cll,varargin);
     end
 end
 
@@ -34,21 +34,25 @@ function cll=rep(cll,args)
     else
         reps=args{2};
     end
-    for ii = args{1}
+    cumuladd=size(cll,1)+1;
+    cll=[cll;cell(sum(reps),size(cll,2))];
+    for ii = args{1}(:)'
         for jj=1:reps
-            cll=[cll(1:ii+1,:); cll(ii+1:end,:)];
+            cll(cumuladd,:)=cll(ii+1,:); 
+            cumuladd=cumuladd+1;
         end
     end
 end
 
-function [cll,rownum]=new(cll,args)
+function [cll,rownums]=new(cll,args)
     for ii=1:numel(args)
-        rownum=find(strcmp(cll(:,strcmp(cll(1,:),'desc')),args{ii}{1}));
-        if isempty(rownum)
+        rowsin=find(strcmp(cll(:,strcmp(cll(1,:),'desc')),args{ii}{1}));
+        if isempty(rowsin)
             error([args{ii}{1} ' is not a description. ']) %#ok<ERTAG>
         end
-        cll=rep(cll,{rownum-1});
-        cll=set(cll,[{rownum} args{ii}{2:end}]);
-        cll{rownum+1,strcmp(cll(1,:),'desc')}=[];
+        cll=rep(cll,{rowsin-1});
+        rownums=size(cll,1)-(1:numel(rowsin));%make numel(args)=number of new rows
+        cll=set(cll,[{rownums} args{ii}{2:end}]);
+        cll(rownums+1,strcmp(cll(1,:),'desc'))={[]};
     end
 end
