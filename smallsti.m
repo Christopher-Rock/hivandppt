@@ -1,4 +1,4 @@
-function [ratios,popint,rates,pop]=smallsti(rates,varargin)
+function [ratios,popwith,rates,pop,proportional,oldproportional]=smallsti(rates,varargin)
 %% Load input parameters
 c1=rates.c1;
 c2=rates.c2;
@@ -20,7 +20,9 @@ if rates.region==1
 else
     chi=rates.chir;
 end
-equilib=[rates.w;rates.x;rates.y;rates.z];
+stilevel=[rates.w;rates.x;rates.y;rates.z];
+equilib=stilevel*rates.fracsyphilis;
+otherlevel=(stilevel-equilib)./(1-equilib);
 N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
     [1-rates.probs rates.probs]]';
 %% Set parameters
@@ -75,17 +77,19 @@ N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
 %     popint(1:3,:)=popintout(1:3,:,1);
 %     popint(4,:)=mean(popintout(5:end,:,1))*zeta+popintout(4,:,1)*(1-zeta);
 %% Model output
-    ratios=zeros(3,1);
-    ratios(1)=popint(4,intlength)./pop(4,intstart+intlength);
-    ratios(2)=sum(popint(:,intlength)./pop(:,intstart+intlength).*N);
-    ratios(3)=popint(4,1+steps)/popint(4,1)./ ...
-        (pop(4,intstart+steps)/pop(4,intstart));
+    popwith=bsxfun(@plus,popint,otherlevel)-bsxfun(@times,popint,otherlevel);
+    proportional=sum(bsxfun(@times,popwith,N./stilevel));
+    oldproportional=sum(N.*stilevel);
+    ratios=zeros(2,1);
+    ratios(1)=min(proportional);
+    ratios(2)=find(proportional<=min(proportional)+(1-min(proportional))/2,1)/steps;
     rates.steps=steps;
     rates.intlength=intlength;
 %% Model plot
-    plot ((0:tmax)/steps,pop',(intstart:tmax)/steps,popint')
+    plot ((0:intstart+intlength)/steps,pop(:,1:intstart+intlength+1)',(intstart:intstart+intlength)/steps,popint(:,1:intlength+1)')
     holdnow=ishold(gcf);  hold on;
-    plot(yintstart+yintlength*[1;1],[0 1],'k-')
+%     plot(yintstart+yintlength*[1;1],[0 1],'k-')
+    set(gca,'ColorOrderIndex',1)
     if ~holdnow, hold off; end
     ylim([0 0.4]);legend({'m','b','f','s','m_{int}','b_{int}','f_{int}','s_{int}'})
     if isfield(rates,'desc')

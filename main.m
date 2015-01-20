@@ -11,7 +11,8 @@ function ratios=main(inrates,runset)
     elseif max(runset)>numel(inrates)
         error('MATLAB:badsubscript','RUNSET must not exceed NUMEL(INRATES)')
     end
-    ratios=zeros(3,length(runset));
+    disp([repmat(' ',1,numel(runset)-1),'|'])
+    ratios=zeros(2,length(runset));
     for run=runset
         if ~isstruct(inrates)
             rates=assct(inrates([1 run+1],:));
@@ -19,6 +20,8 @@ function ratios=main(inrates,runset)
             rates=inrates(run);
         end
         ratios(:,run==runset)=smallsti(rates);
+        fprintf('1')
     end
+    fprintf('\n')
     hold off;
 end
