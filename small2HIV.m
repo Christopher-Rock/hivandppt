@@ -1,36 +1,41 @@
-function small2HIV(p,simdir)
-    if simdir(end)~='/'&& simdir(end)~='\'
-        simdir=[simdir '/'];
+function small2HIV(p,project,runset)
+    if nargin==2
+        runset=1:2:size(p,1)-2;
     end
-    % r2='C:/Users/Crock/Documents/r2/lowfs'
-    pops={'m','b','f','s'};
-    fileby=[simdir 'interventions/%d/input/BioYearInt'];
-    thisint=1;
-    load(sprintf(fileby,thisint),'PNGintBioVals','biointyrs')
-    for output=1:size(p,1)-1
-        [~,popint,rates,pop]=smallsti(assct(p,output));
-        nomatch=1;
-        for jj=1:4
-            if all((PNGintBioVals.(['sti_' pops{jj} '1'])(1)-pop(jj,end)).^2<0.0001)
-                PNGintBioVals.(['sti_' pops{jj} '1'])=yearly(popint(jj,:),rates.steps,rates.intlength);
-                nomatch=0;
-            elseif all((PNGintBioVals.(['sti_' pops{jj} '2'])(1)-pop(jj,end)).^2<0.0001)
-                PNGintBioVals.(['sti_' pops{jj} '2'])=yearly(popint(jj,:),rates.steps,rates.intlength);
-                nomatch=0;
-            end
-        end
-        if nomatch
-            error(['Simulated baseline levels of STI not close to HIV model' ...
-                '\n\n   pop(:,end) =\n\n    %f\n%f\n%f\n%f'],pop(:,end))
-        end
-        if numel(PNGintBioVals.sti_m1)~=biointyrs
-            error('yintlength ~= biointyrs') %#ok
-        end
+    if project(end)~='/'&& project(end)~='\'
+        project=[project '/'];
     end
-    fprintf([sprintf(fileby,thisint) '\n'])
-    save(sprintf(fileby,thisint),'PNGintBioVals','-append')
+    projectdir=project;
+    wdir=[project 'interventions/'];
+    disp(datestr(now))
+    fprintf('This is small2HIV. Running your model for %d interventions. \n', ...
+        numel(runset))
+    % project='C:/Users/Crock/Documents/r2/lowfs'
+    for run=runset
+        intname=p{run+1,1};
+        workdir=[project 'interventions/' intname '/'];
+        fileby=[workdir 'input/BioYearInt'];
+        xby=[fileby '.xls'];
+        %% Test whether intervention exists, if not create new intervention
+        if ~isdir([workdir 'input'])
+            fprintf(['Creating new intervention: ' intname '...']) 
+            mkdir(workdir);
+            copyfile([wdir 'BaselineInt'],workdir(1:end-1),'f')
+            copyfile([wdir 'BaselineInt.mat'],[workdir(1:end-1) '.mat'])
+            fprintf(' done. \n')
+        end
+        %% Output stis to Excel
+        stis=smallout(p,run);
+        xlswrite(xby,stis,'AK2:AR13');
+        %% Convert Excel
+        intyears = convertParamsInt([workdir '\input']);
+        DataGetterInt(project,intname,intyears,1);
+        %% Run simulation
+        numyears = DataFixerInt(workdir);
+        prepareIntParams([ns(workdir) '\input\'],12,numyears)
+        PngHIVInt(projectdir,workdir)
+        %% Report back to command line
+        fprintf('Interventions complete: %d of %d \n',run/2+0.5,max(runset)/2+0.5)
+    end
 end
 
-function annual=yearly(x,steps,intlength)
-    annual=x(1:steps:intlength)';
-end

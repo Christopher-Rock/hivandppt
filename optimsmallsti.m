@@ -13,3 +13,9 @@ function [betam,betab,betaf,betas]=optimsmallsti(pop,c1,c2,gm)
     beta=fminunc(f,[-0.6 -0.02 -1.2 -8],opts);
     temp=num2cell(beta);
     [betam,betab,betaf,betas]=deal(temp{:});
+
+    beta(1)=log((1-w-gm*w)/(1-w))/(c1*y+(1-c1)*z);
+    beta(2)=log((1-x-gm*x)/(1-x)/exp(beta(1)*(c1*y+(1-c1)*z)))/x;
+    beta(3)=log((1-y-gm*y)/(1-y))/(c2*w+(1-c2)*x);
+    beta(4)=log((1-z-gm*z)/(1-z))/(c2*w+(1-c2)*x);
+    0;

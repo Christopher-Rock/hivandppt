@@ -1,96 +1,125 @@
-function [p,pin,scen]=scenarios(type,varargin)
+function [ps,pin,scen,scenblocks]=scenarios(type,varargin)
+%% Define indices
+const=-2;
+regional=-1;
+sensit=1;
+al=2;
+ch=3;
+cv=4;
 pin=[...
-    {'desc';{'default';'low';'high'}} ...
-    {'gamma';{1.20}} ...
-    {'c1';{0.62;0.70;0.56}} ...
-    {'c2';{0.96;0.99;0.92}} ...
-    {'region';{2;1}} ...
-    {'w';{0.07;0.05}} ...
-    {'x';{0.08;0.06}} ...
-    {'y';{0.09;0.07}} ...
-    {'z';{0.32;0.30}} ...
-    {'probs';{0.01;0.05}} ...
-    {'probb';{0.04;0.06}} ...
-    {'alphalr';{0;0.5;1}} ...
-    {'alphab';{0;0.5;1}} ...
-    {'chiu';{1;0;0.5}} ...
-    {'chir';{1;0;0.5}} ...
-    {'zeta';{0.40;0.20;0.60}} ...
-    {'eff';{0.95;0.90;0.98}} ...
-    {'res';{0.03;0.01;0.05}} ... % Resistance per year
-    {'theta';{7.00;3.00;10}} ...
-    {'sexratio';{0.5}} ...
-    {'longdesc';{'Default intervention: 40% coverage of FSW, 0% coverage of MSMW and low-risk populations'}} ...
-    {'fracsyphilis';{0.67;0.50;0.83}} ];
-if nargin
-    switch type
-        case {'list' 'l'}
-            scen.flatblr={'default','alphalr',1,'alphab',1};
-            scenf.flatblr={'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)};
-            longdesc.flatblr=['Distribute the same number of treatments as in the default scenario ' ...
-                'across the whole population'];
-            scen.flatb={'default','alphab',1};
-            scenf.flatb={'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)/...
-                (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)};
-            longdesc.flatb=['Distribute the same number of treatments as in the default scenario ' ...
-                'across FSW and MSMW'];
+    {'desc';const;{'default';'low';'high'}} ...
+    {'gamma';sensit;{1.20;0.8;1.8}} ...
+    {'c1';sensit;{0.62;0.70;0.56}} ...
+    {'c2';sensit;{0.96;0.99;0.92}} ...
+    {'theta';sensit;{365.25/122;365.25/365;365.25/91}} ...
+    {'fracsyphilis';sensit;{0.67;0.50;0.83}} ...
+    {'eff';sensit;{0.95;0.90;0.98}} ...
+    {'res';sensit;{0.03;0.01;0.05}} ... % Resistance per year
+    {'region';regional;{2;1}} ...
+    {'w';regional;{0.07;0.05}} ...
+    {'x';regional;{0.08;0.06}} ...
+    {'y';regional;{0.09;0.07}} ...
+    {'z';regional;{0.32;0.30}} ...
+    {'probs';regional;{0.01;0.05}} ...
+    {'probb';regional;{0.04;0.06}} ...
+    {'alphalr';al;{0;0.5;1}} ...
+    {'alphab';al;{0;0.5;1}} ...
+    {'chiu';ch;{1;0;0.5}} ...
+    {'chir';ch;{1;0;0.5}} ...
+    {'zeta';cv;{0.75;0.5;0.9}} ...
+    {'tau';cv;{4;2;12}} ...
+    {'sexratio';const;{0.5}} ...
+    {'longdesc';const;{'Default intervention: 40% coverage of FSW, 0% coverage of MSMW and low-risk populations'}} ];
 
-        case {'univariate' 'u'}
-            for ii=[3:4 12:18 22]
-                if nargin==1 || any(strcmp(pin{1,ii},varargin))
-                    for jj=2:numel(pin{2,ii})
-                        if ~isequal(pin{2,ii}{1},pin{2,ii}{jj})
-                            scen.(sprintf('%s%d',pin{1,ii},jj))={'default',pin{1,ii},pin{2,ii}{jj}};
-                            if pin{2,ii}{jj}<pin{2,ii}{1}
-                                longdesc.(sprintf('%s%d',pin{1,ii},jj))=sprintf('Decrease %s to %4.2f',pin{1,ii},pin{2,ii}{jj});
-                            else
-                                longdesc.(sprintf('%s%d',pin{1,ii},jj))=sprintf('Increase %s to %4.2f',pin{1,ii},pin{2,ii}{jj});
+blocks=cell2mat(pin(2,:));
+npin=find(blocks==sensit);
+ipin=find(blocks==al|blocks==ch|blocks==cv);
+upin=[npin ipin];
+
+    scenblocks=[];
+    if isa(type,'char')
+        type={type};
+    end
+    for t = type
+        switch t{:}
+            case {'list' 'l'}
+                scen.flatblr={'default','alphalr',1,'alphab',1};
+                scenf.flatblr={'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)}; %#ok<*AGROW>
+                longdesc.flatblr=['Distribute the same number of treatments as in the default scenario ' ...
+                    'across the whole population'];
+                scenblocks=[scenblocks al];
+                scen.flatb={'default','alphab',1};
+                scenf.flatb={'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)/...
+                    (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)};
+                longdesc.flatb=['Distribute the same number of treatments as in the default scenario ' ...
+                    'across FSW and MSMW'];
+                scenblocks=[scenblocks al];
+                
+            case {'univariate' 'u'}
+                for ii=upin
+                    if nargin==1 || any(strcmp(pin{1,ii},varargin))
+                        for jj=2:numel(pin{3,ii})
+                            if ~isequal(pin{3,ii}{1},pin{3,ii}{jj})
+                                scen.(sprintf('%s%d',pin{1,ii},jj))={'default',pin{1,ii},pin{3,ii}{jj}};
+                                if pin{3,ii}{jj}<pin{3,ii}{1}
+                                    longdesc.(sprintf('%s%d',pin{1,ii},jj))=sprintf('Decrease %s to %4.2f',pin{1,ii},pin{3,ii}{jj});
+                                else
+                                    longdesc.(sprintf('%s%d',pin{1,ii},jj))=sprintf('Increase %s to %4.2f',pin{1,ii},pin{3,ii}{jj});
+                                end
+                                scenblocks=[scenblocks blocks(ii)];
                             end
-                            
+                        end
+                    end
+                end
+            case 's'
+                scen=struct;
+                longdesc=struct;
+                for ii=1:4:length(varargin)
+                    scen.(varargin{ii})=varargin{ii+1};
+                    longdesc.(varargin{ii})=varargin{ii+2};
+                    scenblocks=[scenblocks varargin{ii+3}];
+                end
+            otherwise
+                disp(type)
+        end
+    end
+
+
+%% Create cell-format default scenario
+snames=fieldnames(scen);
+pbase=cell(3,size(pin,2));
+for ii=find(blocks~=regional)
+    pbase{1,ii}=pin{1,ii};
+    pbase(2:3,ii)=pin{3,ii}(1);
+end
+for ii=find(blocks==regional)
+    pbase{1,ii}=pin{1,ii};
+    [pbase{2:3,ii}]=pin{3,ii}{:};
+end
+
+%% Append other cell-format scenarios
+blocksinuse=find(ismember(1:max(blocks),blocks));
+ps=cell(1,1,numel(blocksinuse));
+for block=blocksinuse
+    p=pbase;
+    for ii=1:length(snames)
+        if scenblocks(ii)==block
+            [p,rownums]=cellop(p,'new',scen.(snames{ii}));
+            p=cellop(p,'set',rownums,'desc',snames{ii});
+            p(rownums+1,strcmp(p(1,:),'longdesc'))={longdesc.(snames{ii})};
+            if exist('scenf','var')
+                if isfield(scenf,snames{ii})
+                    for jj=1:size(scenf.(snames{ii}),1)
+                        for hh=rownums
+                            p{hh+1,strcmp(p(1,:),scenf.(snames{ii}){jj,1})}=scenf.(snames{ii}){jj,2}(assct(p,hh));
                         end
                     end
                 end
             end
-        case 's'
-            scen=struct;
-            longdesc=struct;
-            for ii=1:3:length(varargin)
-                scen.(varargin{ii})=varargin{ii+1};
-                longdesc.(varargin{ii})=varargin{ii+2};
-            end
-        otherwise
-            disp(type)
-    end
-else
-    scen=struct();
-end
-
-%% Create cell-format default scenario
-snames=fieldnames(scen);
-p=cell(3,size(pin,2));
-for ii=[1:4 12:size(pin,2)]
-    p{1,ii}=pin{1,ii};
-    p(2:3,ii)=pin{2,ii}(1);
-end
-for ii=5:11
-    p{1,ii}=pin{1,ii};
-    [p{2:3,ii}]=pin{2,ii}{:};
-end
-
-%% Append other cell-format scenarios
-for ii=1:length(snames)
-    [p,rownums]=cellop(p,'new',scen.(snames{ii}));
-    p=cellop(p,'set',rownums,'desc',snames{ii});
-    p(rownums+1,strcmp(p(1,:),'longdesc'))={longdesc.(snames{ii})};
-    if exist('scenf','var')
-        if isfield(scenf,snames{ii})
-            for jj=1:size(scenf.(snames{ii}),1)
-                for hh=rownums
-                    p{hh+1,strcmp(p(1,:),scenf.(snames{ii}){jj,1})}=scenf.(snames{ii}){jj,2}(assct(p,hh));
-                end
-            end
         end
     end
+    ps{1,1,block}=p;
+end
 end
  % TODO: Find some values for gamma (dependence on duration of infection)
 
