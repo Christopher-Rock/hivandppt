@@ -4,6 +4,7 @@ c1=rates.c1;
 c2=rates.c2;
 gamma=rates.gamma;
 zeta=rates.zeta;
+tau=rates.tau;
 alphalr=rates.alphalr;
 alphab=rates.alphab;
 eff=rates.eff;
@@ -26,7 +27,7 @@ else
     pretty=0;
 end
 stilevel=[rates.w;rates.x;rates.y;rates.z];
-equilib=stilevel*rates.fracsyphilis;
+equilib=stilevel*rates.phi;
 otherlevel=(stilevel-equilib)./(1-equilib);
 N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
     [1-rates.probs rates.probs]]';
@@ -47,9 +48,9 @@ N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
 %% Calculate beta values
     [betam,betab,betaf,betas]=fastoptimsmallsti(equilib,c1,c2,gamma);
 %% Prepare time-varying parameters
-    deltalr=max(eff*(1-res*(0:1/steps:yintlength))*alphalr*zeta*chi,0);
-    deltab=max(eff*(1-res*(0:1/steps:yintlength))*alphab*zeta*chi,0);
-    deltas=max(eff*(1-res*(0:1/steps:yintlength))*zeta*chi,0);
+    deltalr=max(eff*(1-res*(0:1/steps:yintlength))*alphalr*zeta*tau*chi,0);
+    deltab=max(eff*(1-res*(0:1/steps:yintlength))*alphab*zeta*tau*chi,0);
+    deltas=max(eff*(1-res*(0:1/steps:yintlength))*zeta*tau*chi,0);
 %% Baseline variable
     pop=zeros(4,tmax+1);pop(:,1)=equilib;
 %% Baseline loop
@@ -86,8 +87,8 @@ N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
     proportional=sum(bsxfun(@times,popwith,N./stilevel));
     oldproportional=sum(N.*stilevel);
     ratios=zeros(2,1);
-    ratios(1)=1-min(proportional);
-    ratios(2)=find(round(proportional,12)<=round(min(proportional)+(1-min(proportional))/2,12),1)/steps;
+    ratios(1)=1-proportional(3*steps);
+    ratios(2)=1-proportional(10*steps);
     rates.steps=steps;
     rates.intlength=intlength;
 %% Model plot
@@ -112,15 +113,17 @@ N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
         disp('STI levels')
         disp([equilib stilevel otherlevel])
         disp('phi')
-        disp(fracsyphilis)
+        disp(rates.phi)
         disp('S equations')
         lambda=zeros(4,1);
+        pa=popint(:,2);
+        m=pa(1,1,1);b=pa(2,1,1);f=pa(3,1,1);s=pa(4,1,1);
         lambda(1)=1-exp(betas*c2*m+betas*(1-c2)*b);
-        disp([  1-popint(4,2)-deltas
+        disp([  1-popint(4,2)-deltas(2)
             popint(4,2)
-            deltas
+            deltas(2)
             lambda(1)
-            deltas/(1-deltas)
+            deltas(2)/(1-deltas(2))
             gamma*steps
             steps  ]);
         disp('Remember to set Delta_t as 1/steps!')

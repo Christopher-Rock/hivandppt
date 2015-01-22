@@ -29,11 +29,11 @@ function [ratios,withnames]=smallresults(p,dirty,nosave)
         end
     end
     %% Populate ratios
-    ratios(:,[1 3])=ratiosraw(1:2:end,:)*(1-popsplit)+ratiosraw(2:2:end,:)*popsplit;
+    ratios(:,[1 2])=ratiosraw(1:2:end,:)*(1-popsplit)+ratiosraw(2:2:end,:)*popsplit;
     for ii=2:2:size(p,1)-1
-        ratios(ii/2,2)=pulltable([id p{ii,1}],timesteps,steps_year,labels);
+        ratios(ii/2,3)=pulltable([id p{ii,1}],timesteps,steps_year,labels);
     end
-    ratios(:,2)=1-ratios(:,2)/pulltable([id 'BaselineInt'],timesteps,steps_year,labels);
+    ratios(:,3)=1-ratios(:,3)/pulltable([id 'BaselineInt'],timesteps,steps_year,labels);
     withnames=[p(2:2:end,1) num2cell(ratios)];
     disp(datestr(now))
 end

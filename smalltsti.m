@@ -1,5 +1,8 @@
 function pop=smalltsti(pa,betam,betab,betaf,betas,c1,c2,gamma,deltalrnew,deltabnew,deltasnew,deltalrold,deltabold,deltasold)
     m=pa(1,1,1);b=pa(2,1,1);f=pa(3,1,1);s=pa(4,1,1);
+    deltalrnew=deltalrnew/(1-deltalrold);
+    deltasnew=deltasnew/(1-deltasold);    
+    deltabnew=deltabnew/(1-deltabold);
     pop=zeros(size(pa));
     pop(1,1,1)=m*(1-gamma-deltalrnew)+((1-m-deltalrold)*(1-deltalrnew)+deltalrold).*(1-exp(betam*c1*f+betam*(1-c1)*s));
     pop(2,1,1)=b*(1-gamma-deltabnew)+((1-b-deltabold)*(1-deltabnew)+deltabold).*(1-exp(betam*c1*f+betam*(1-c1)*s+betab*b));
