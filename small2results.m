@@ -18,7 +18,7 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
     clean=0;
     cleanresults=0;
     userpsset=0;
-    if nargin>1
+    if nargin>2
         ii=1;
         while ii<length(varargin)
             switch varargin{ii}

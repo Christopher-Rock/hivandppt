@@ -9,8 +9,8 @@ function smallbar(results,names,tablename,figuredir)
     title(tablename)
     set(gca,'xticklabel',{'STI drop after 3 years','STI drop after 10 years', ...
         'HIV drop after 10 years'})
-    ti = get(gca,'TightInset');
-    saveas(gcf,[figuredir tablename],'png')
+    % ti = get(gca,'TightInset');
+    saveas(gcf,[figuredir strrep(tablename,char(10),' ')],'png')
     0;
     if ~dbifwarn
         dbclear if warning

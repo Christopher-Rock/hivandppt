@@ -1,12 +1,21 @@
-function pop=smalltsti(pa,betam,betab,betaf,betas,c1,c2,gamma,deltalrnew,deltabnew,deltasnew,deltalrold,deltabold,deltasold)
-    m=pa(1,1,1);b=pa(2,1,1);f=pa(3,1,1);s=pa(4,1,1);
-    deltalrnew=deltalrnew/(1-deltalrold);
-    deltasnew=deltasnew/(1-deltasold);    
-    deltabnew=deltabnew/(1-deltabold);
+function pop=smalltsti(pa,betam,betab,betaf,betas,c1,c2,gamma,delta,zetax,Theta)
+    if any(zetax)
+        prevxin=pa(:,1,1).*(1-zetax)+pa(:,:,2).*zetax;
+    dz=delta*zetax;
+    else
+        prevxin=pa(:,1,1);
+    end       
+    m=prevxin(1);b=prevxin(2);f=prevxin(3);s=prevxin(4);
     pop=zeros(size(pa));
-    pop(1,1,1)=m*(1-gamma-deltalrnew)+((1-m-deltalrold)*(1-deltalrnew)+deltalrold).*(1-exp(betam*c1*f+betam*(1-c1)*s));
-    pop(2,1,1)=b*(1-gamma-deltabnew)+((1-b-deltabold)*(1-deltabnew)+deltabold).*(1-exp(betam*c1*f+betam*(1-c1)*s+betab*b));
-    pop(3,1,1)=f*(1-gamma-deltalrnew)+((1-f-deltalrold)*(1-deltalrnew)+deltalrold)*(1-exp(betaf*c2*m+betaf*(1-c2)*b));
-    pop(4,1,1)=s*(1-gamma-deltasnew)+((1-s-deltasold)*(1-deltasnew)+deltasold)*(1-exp(betas*c2*m+betas*(1-c2)*b));
+    lambdax=1-exp([
+        betam*c1*f+betam*(1-c1)*s
+        betam*c1*f+betam*(1-c1)*s+betab*b
+        betaf*c2*m+betaf*(1-c2)*b
+        betas*c2*m+betas*(1-c2)*b]);
+    pop(:,1,1)   = (1-pa(:,1,1)).*lambdax+pa(:,1,1).*(1-gamma);
+    if any(zetax)    
+        pop(:,1,2)=(1-pa(:,1,2)).*lambdax+pa(:,1,2).*(1-gamma-dz);
+        pop(:,1,3)=(1-pa(:,1,3)).*dz+pa(:,1,3).*(1-Theta);
+    end
     0;
 end
