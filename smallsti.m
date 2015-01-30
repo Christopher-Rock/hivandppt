@@ -1,6 +1,7 @@
 function [ratios,popwith,rates,popintout,pop,proportional,oldproportional]=smallsti(rates,varargin)
 % SMALLSTI  Run simulation using structure imput
 % First three arguments are used - DO NOT EDIT
+
 %% Load input parameters
 c1=rates.c1;
 c2=rates.c2;

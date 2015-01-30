@@ -1,7 +1,16 @@
 function ratios=main(inrates,runset)
     clf;
     hold on;
+    addnames=0;
     if nargin==1
+        if isstruct(inrates)
+            runs=numel(inrates);
+        else
+            runs=size(inrates,1)-1;
+        end
+        runset=1:runs;
+    elseif runset==0
+        addnames=1;
         if isstruct(inrates)
             runs=numel(inrates);
         else
@@ -24,5 +33,8 @@ function ratios=main(inrates,runset)
     end
     fprintf('\n')
     hold off;
+    if addnames
+        ratios=array2table(reshape(ratios,size(ratios).*[2 .5]),'VariableNames',inrates(2:2:end,1)');
+    end
 end
 
