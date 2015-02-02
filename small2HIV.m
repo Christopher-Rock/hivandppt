@@ -14,7 +14,7 @@ function small2HIV(p,project,runset)
         numel(runset))
     % project='C:/Users/Crock/Documents/r2/lowfs'
     for run=runset
-        intname=p{run+1,1};
+        intname=[p{run+1,1} sprintf('_%d',p{run+1,strcmp(p(1,:),'intnum')})];
         workdir=[project 'interventions/' intname '/'];
         fileby=[workdir 'input/BioYearInt'];
         xby=[fileby '.xls'];
@@ -30,7 +30,7 @@ function small2HIV(p,project,runset)
             skip=0;
         else
             %% Otherwise, test whether STI levels have changed
-            if isequal(round(xlsread(xby,'AK2:AR13'),12),stis)
+            if isequal(round(xlsread(xby,'AK2:AR11'),14),round(stis,14)+1)
                 skip=1;
                 fprintf('No change in results for %s, skipping. \n',intname)
             else skip=0;
@@ -39,9 +39,9 @@ function small2HIV(p,project,runset)
         %% Run PngHIVInt on new data
         if ~skip
             %% Output stis to Excel
-            xlswrite(xby,stis,'AK2:AR13');
+            xlswrite(xby,stis,'AK2:AR11');
             %% Convert Excel
-            intyears = convertParamsInt([workdir '\input']);
+            intyears = convertParamsInt([workdir 'input']);
             DataGetterInt(project,intname,intyears,1);
             %% Run simulation
             numyears = DataFixerInt(workdir);

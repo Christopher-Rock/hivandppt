@@ -14,8 +14,8 @@ function pop=smalltsti(pa,betam,betab,betaf,betas,c1,c2,gamma,delta,zetax,Theta)
         betas*c2*m+betas*(1-c2)*b]);
     pop(:,1,1)   = (1-pa(:,1,1)).*lambdax+pa(:,1,1).*(1-gamma);
     if any(zetax)    
-        pop(:,1,2)=(1-pa(:,1,2)).*lambdax+pa(:,1,2).*(1-gamma-dz);
-        pop(:,1,3)=(1-pa(:,1,3)).*dz+pa(:,1,3).*(1-Theta);
+        pop(:,1,2)=(1-pa(:,1,2)-pa(:,1,3)).*lambdax+pa(:,1,2).*(1-gamma-dz);
+        pop(:,1,3)=(1-pa(:,1,3)).*dz.*(1-Theta).^0.5+pa(:,1,3).*(1-Theta);
     end
     0;
 end

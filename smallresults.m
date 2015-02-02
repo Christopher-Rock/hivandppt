@@ -2,7 +2,8 @@ function [ratios,withnames]=smallresults(p,dirty,nosave)
     disp(datestr(now))
     simdir='C:/Users/Crock/Documents/r2/lowfs';
     id=[simdir '/interventions/'];
-    load([id p{2,1} '/input/IndiParams'],'PNGparamsIndi')
+    load([id p{2,1} '_1' ...
+        '/input/IndiParams'],'PNGparamsIndi')
     popsplit=PNGparamsIndi.popsplit;
     load([id 'BaselineInt/input/PNGintPrepared'],'ModelintSpecs','labels')
     timesteps=ModelintSpecs.intsteps;
@@ -31,9 +32,11 @@ function [ratios,withnames]=smallresults(p,dirty,nosave)
     %% Populate ratios
     ratios(:,[1 2])=ratiosraw(1:2:end,:)*(1-popsplit)+ratiosraw(2:2:end,:)*popsplit;
     for ii=2:2:size(p,1)-1
-        ratios(ii/2,3)=pulltable([id p{ii,1}],timesteps,steps_year,labels);
+        ratios(ii/2,3)=pulltable([id p{ii,1} sprintf('_%d',p{ii,strcmp(p(1,:),'intnum')})],timesteps,steps_year,labels);
     end
     ratios(:,3)=1-ratios(:,3)/pulltable([id 'BaselineInt'],timesteps,steps_year,labels);
-    withnames=[p(2:2:end,1) num2cell(ratios)];
+    if nargout==2
+        withnames=[p(2:2:end,1) sprintf('_%d',repmat(1:5,size(p,1)/5,1)) num2cell(ratios)];
+    end
     disp(datestr(now))
 end

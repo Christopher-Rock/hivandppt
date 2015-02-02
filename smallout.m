@@ -1,5 +1,5 @@
 function stis=smallout(p,rowin1)
-    stis=zeros(12,8);
+    stis=zeros(10,8);
     [~,popwith,rates,~]=smallsti(assct(p,rowin1));
     for jj=5:8
         stis(:,jj)=yearly(popwith(jj-4,:),rates.steps,rates.intlength);

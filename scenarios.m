@@ -8,14 +8,18 @@ ch=3;
 cv=4;
 pin=[...
     {'desc';const;{'default';'low';'high'}} ...
-    {'gamma';sensit;{1.20;0.8;1.8}} ...
-    {'c1';sensit;{0.62;0.70;0.56}} ...
-    {'c2';sensit;{0.96;0.99;0.92}} ...
-    {'theta';sensit;{365.25/122;365.25/365;365.25/91}} ...
-    {'phi';sensit;{0.50,0.33,0.67}} ...
-    {'psi';sensit;{0.67,0.5,0.83}} ...
-    {'eff';sensit;{0.95;0.90;0.98}} ...
-    {'res';sensit;{0.03;0.01;0.05}} ... % Resistance per year
+    {'ac';const;{1}} ...
+    {'ar';const;{100}} ...
+    {'csm';const;{240}} ...
+    {'rsm';const;{1}} ...
+    {'cfm';const;{4}} ...
+    {'rfm';const;{0.7}} ...
+    {'gamma';sensit;{1.20;1.2*1.1;1.2*.9}} ...
+    {'theta';sensit;{365.25/122;1;7;}} ...
+    {'phi';sensit;{0.50,0.5*1.1,0.5*.9}} ...
+    {'psi';sensit;{0.67,.67*1.1,.67*.9}} ...
+    {'eff';sensit;{0.95;1-.05*1.1;1-.05*.9}} ...
+    {'res';sensit;{0.01;0.01*1.1;0.01*.9}} ... % Resistance per year
     {'region';regional;{2;1}} ...
     {'w';regional;{0.07;0.05}} ...
     {'x';regional;{0.08;0.06}} ...
@@ -29,7 +33,8 @@ pin=[...
     {'chiu';ch;{1;0;0.5}} ...
     {'chir';ch;{1;0;0.5}} ...
     {'zeta';cv;{0.75;0.5;0.9}} ...
-    {'tau';cv;{4;2;12}} ...
+    {'tau';cv;{6;4;12}} ...
+    {'intnum';cv;{1;2;3;4;5}} ...
     {'sexratio';const;{0.5}} ...
     {'longdesc';const;{'Default intervention'}} ];
 blocks=cell2mat(pin(2,:));
@@ -45,10 +50,8 @@ upin=[npin ipin];
         'ab','i',{'alphab';'flatb'}
         'ch','i',{'chir';'chiu'}
         'cv','i',{'zeta';'tau'}
-        'gmph','s',{'gamma';'phi'}
-        'sbpf','s',{'c1';'c2'}
-        'durr','s',{'theta'}
-        'efrs','s',{'eff';'res'}
+        'gmph','s',{'gamma';'phi';}
+        'durr','s',{'eff';'res';'theta';}
         'ulev','s',{'exception';'phipsi2';'highsti'}
         }';
     tables=gettables(tablein);
@@ -99,8 +102,18 @@ upin=[npin ipin];
                     scenblocks=[scenblocks L{2,ii}]; %#ok<*AGROW>
                 end
             case {'univariate' 'u'}
+                if any(strcmp(varargin,'subset'))
+                    cmp=varargin{[false strcmp(varargin(1:end-1),'subset')]};
+                    if iscell(cmp)
+                        cmp=cmp(:);
+                    end
+                    for ii=1:size(tables,2)
+                        tables{2,ii}=tables{2,ii}(ismember(tables{2,ii},[{'default'};cmp;strcat(cmp,'2');strcat(cmp,'3')]));
+                    end
+                    tables=tables(:,cellfun(@length,tables(2,:))>1);
+                end
                 for ii=upin
-                    if ~any(strcmp(varargin,'subset'))|any(strcmp(pin{1,ii},varargin))
+                    if ~any(strcmp(varargin,'subset'))|any(strcmp(pin{1,ii},cmp))
                         for jj=2:numel(pin{3,ii})
                             if ~isequal(pin{3,ii}{1},pin{3,ii}{jj})
                                 scen.(sprintf('%s%d',pin{1,ii},jj))={'default',pin{1,ii},pin{3,ii}{jj}};
@@ -119,8 +132,12 @@ upin=[npin ipin];
                 userscens=varargin(~strcmp(varargin,'blocks')&~strcmp(varargin,'subset'));
                 for ii=1:4:length(userscens)-1
                     scen.(userscens{ii})=userscens{ii+1};
+                    try %#ok<TRYNC>
                     longdesc.(userscens{ii})=userscens{ii+2};
                     scenblocks=[scenblocks userscens{ii+3}];
+                    catch
+                        scenblocks=[scenblocks 4];
+                    end
                 end
             otherwise
                 disp(type)
@@ -139,7 +156,12 @@ for ii=find(blocks==regional)
     pbase{1,ii}=pin{1,ii};
     [pbase{2:3,ii}]=pin{3,ii}{:};
 end
-p=pbase;
+pnew=pbase([1  2 3  2 3  2 3  2 3  2 3],:);
+pnew=cellop(pnew,'set',3:4,'zeta',pin{3,strcmp('zeta',pin(1,:))}{2},'intnum',2);
+pnew=cellop(pnew,'set',5:6,'zeta',pin{3,strcmp('zeta',pin(1,:))}{3},'intnum',3);
+pnew=cellop(pnew,'set',7:8,'tau',pin{3,strcmp('tau',pin(1,:))}{2},'intnum',4);
+pnew=cellop(pnew,'set',9:10,'tau',pin{3,strcmp('tau',pin(1,:))}{3},'intnum',5);
+p=pnew;
     
 %% Append other cell-format scenarios
 blocksinuse=find(ismember(1:max(blocks),blocks));
@@ -197,6 +219,14 @@ function tables=gettables(tablein)
                 tables{1,ii}=[titlestr namein{1}];
                 tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3']};
             elseif length(namein)==7
+            elseif length(namein)==4
+                tables{1,ii}=[titlestr namein{1} cjn namein{2}];
+                tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']; ...
+                    [namein{3} '2'];[namein{3} '3'];[namein{4} '2'];[namein{4} '3']};                
+            elseif length(namein)==3
+                tables{1,ii}=[titlestr namein{1} cjn namein{2}];
+                tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']; ...
+                    [namein{3} '2'];[namein{3} '3'];};
             end
         else
             if 0
@@ -244,9 +274,6 @@ end
  % TODO: Find some values for gamma (dependence on duration of infection)
 
 
-
-
- 
 % %% Old style
 % p=[ ...    
 %     {'desc'      'gamma'     'c1'        'c2'         'betam'      'betab'      'betaf'      'betas'

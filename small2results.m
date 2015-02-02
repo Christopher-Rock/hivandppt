@@ -18,32 +18,40 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
     clean=0;
     cleanresults=0;
     userpsset=0;
+    userscenarios=0;
     if nargin>2
         ii=1;
-        while ii<length(varargin)
+        while ii<=length(varargin)
             switch varargin{ii}
                 case 'clean'
                     clean=1;
                     ii=ii+1;
-                    if isa(varargin{ii}{1},'numeric')
-                        resultss=varargin{ii};
-                        cleanresults=1;
-                        ii=ii+1;
-                    else
-                        resultss=cell(size(psset));
+                    if ii<=length(varargin)
+                        if isa(varargin{ii}{1},'numeric')
+                            resultss=varargin{ii};
+                            cleanresults=1;
+                            ii=ii+1;
+                        else
+                            resultss=cell(size(psset));
+                        end
                     end
                 case 'psset'
                     psset=varargin{ii+1};
                     userpsset=1;
                     ii=ii+2;
+                case 'subset'
+                    [p,tables]=scenarios('u','subset',varargin{ii+1}(:));
+                    userscenarios=1;
+                    ii=ii+2;
             end
         end
     end
-    [p,tables]=scenarios({'u','l'});
+    if ~userscenarios
+        [p,tables]=scenarios({'u','l'}); end
     if ~userpsset
-        psset=1:length(tables); end
+        psset=1:size(tables,2); end
     tabless=tables{:,psset};
-    scentodo=numel(cat(1,tables{2,psset}));
+    scentodo=numel(cat(1,tables{2,psset}))*5;
     scensofar=0;
     fprintf('This is %s. Generating results for %d scenarios. \n', ...
         mfilename,scentodo)
@@ -67,10 +75,10 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
 end
 
 function pout=getrows(p,names)
-    pout=cell(2*length(names)+1,size(p,2));
+    pout=cell(10*length(names)+1,size(p,2));
     pout(1,:)=p(1,:);
     for ii=1:length(names)
-        pout(2*ii:2*ii+1,:)=p(strcmp(p(:,1),names{ii}),:);
+        pout(10*ii-8:10*ii+1,:)=p(strcmp(p(:,1),names{ii}),:);
     end
 end
     
