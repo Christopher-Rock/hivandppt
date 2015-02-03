@@ -27,6 +27,7 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     elseif nargin<4
         splot=0;
     end
+    %% Prepare for main loop
     disp([repmat(' ',1,numel(runset)-1),'|'])
     if ~isstruct(inrates)
         ratesall=assct(inrates);
@@ -34,7 +35,12 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
         ratesall=inrates;
     end
     ratios=zeros(2,length(runset));
+    try %#ok<TRYNC>
+    oldfig=get(gcf,'Number');
+    clf(oldfig-1+2*(oldfig<=1),'reset')
+    end
     if ~nplot
+        %% Main loop 1
         for run=runset
             rates=ratesall(run);
             ratios(:,run==runset)=smallsti(rates);
@@ -49,6 +55,7 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
         prpls(1,:)=prpl1;
         ppis(1,:)=popint(4,:);
         fprintf('1')
+        %% Main loop 2
         for run=runset(2:end)
             rates=ratesall(run);
             [ratios(:,run==runset),~,~,prpls(run==runset,:),popint]=smallsti(rates);
@@ -56,11 +63,13 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
             fprintf('1')
         end
     end
+    %% Close out
     fprintf('\n')
     hold off;
     if addnames
         ratios=array2table(reshape(ratios,size(ratios).*[2 .5]),'VariableNames',inrates(2:2:end,1)');
     end
+    %% NPLOT
     if nplot
         sprpl=prpls(1:2:end,:)*(1-popsplit)+prpls(2:2:end,:)*popsplit;
         sppis=ppis(1:2:end,:)*(1-popsplit)+ppis(2:2:end,:)*popsplit;
@@ -75,7 +84,7 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     end
     %% SPLOT
     if splot
-        plotcmp(ratios(2,:),5,popsplit)
+        plotcmp(ratios(2,:),5,popsplit);
     end
 end
 

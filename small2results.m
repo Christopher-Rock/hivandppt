@@ -43,6 +43,10 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
                     [p,tables]=scenarios('u','subset',varargin{ii+1}(:));
                     userscenarios=1;
                     ii=ii+2;
+                case 'scen'
+                    [p,tables]=scenarios(varargin{ii+1}{:});
+                    userscenarios=1;
+                    ii=ii+2;
             end
         end
     end

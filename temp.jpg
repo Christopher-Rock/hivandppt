@@ -1,0 +1,4166 @@
+3+4
+
+ans =
+
+     7
+
+optimsmallsti(pop,c1,c2,gm)
+[Warning: Gradient must be provided for trust-region algorithm; using quasi-newton algorithm instead.] 
+[> In <a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\fminunc.m',403,1)">fminunc at 403</a>
+  In <a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',13,1)">optimsmallsti at 13</a>] 
+
+ans =
+
+   -0.7649
+
+doc fminunc
+optimsmallsti(pop,c1,c2,gm)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimset', 'C:\Program Files\MATLAB\R2014b\toolbox\matlab\optimfun\optimset.m', 245)" style="font-weight:bold">optimset</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\matlab\optimfun\optimset.m',245,0)">line 245</a>)
+Invalid value for OPTIONS parameter Algorithm:
+ must be 'active-set', 'trust-region-reflective', 'interior-point', 'interior-point-convex',
+ 'levenberg-marquardt', 'trust-region-dogleg', 'sqp', or 'simplex'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimsmallsti', 'T:\Crock\SmallModel\optimsmallsti.m', 7)" style="font-weight:bold">optimsmallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',7,0)">line 7</a>)
+    opts=optimset('Display','off','Algorithm','duasi-newton');
+} 
+optimsmallsti(pop,c1,c2,gm)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimoptions', 'C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m', 114)" style="font-weight:bold">optimoptions</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m',114,0)">line 114</a>)
+Invalid solver specified. Provide a solver name or handle (such as 'fmincon' or @fminunc).
+Type DOC OPTIMOPTIONS for a list of solvers.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimsmallsti', 'T:\Crock\SmallModel\optimsmallsti.m', 7)" style="font-weight:bold">optimsmallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',7,0)">line 7</a>)
+    opts=optimoptions('quasi-newton','Display','off');
+} 
+help fminunc
+ <strong>fminunc</strong> finds a local minimum of a function of several variables.
+    X = <strong>fminunc</strong>(FUN,X0) starts at X0 and attempts to find a local minimizer
+    X of the function FUN. FUN accepts input X and returns a scalar
+    function value F evaluated at X. X0 can be a scalar, vector or matrix. 
+ 
+    X = <strong>fminunc</strong>(FUN,X0,OPTIONS) minimizes with the default optimization
+    parameters replaced by values in OPTIONS, an argument created with the
+    OPTIMOPTIONS function.  See OPTIMOPTIONS for details.  Used options are
+    Display, TolX, TolFun, DerivativeCheck, Diagnostics, FunValCheck,
+    GradObj, HessPattern, Hessian, HessMult, HessUpdate, InitialHessType,
+    InitialHessMatrix, MaxFunEvals, MaxIter, DiffMinChange and
+    DiffMaxChange, LargeScale, MaxPCGIter, PrecondBandWidth, TolPCG,
+    PlotFcns, OutputFcn, and TypicalX. Use the GradObj option to specify
+    that FUN also returns a second output argument G that is the partial
+    derivatives of the function df/dX, at the point X. Use the Hessian
+    option to specify that FUN also returns a third output argument H that
+    is the 2nd partial derivatives of the function (the Hessian) at the
+    point X. The Hessian is only used by the large-scale algorithm.
+ 
+    X = <strong>fminunc</strong>(PROBLEM) finds the minimum for PROBLEM. PROBLEM is a
+    structure with the function FUN in PROBLEM.objective, the start point
+    in PROBLEM.x0, the options structure in PROBLEM.options, and solver
+    name 'fminunc' in PROBLEM.solver. Use this syntax to solve at the 
+    command line a problem exported from OPTIMTOOL. The structure PROBLEM 
+    must have all the fields.
+ 
+    [X,FVAL] = <strong>fminunc</strong>(FUN,X0,...) returns the value of the objective 
+    function FUN at the solution X.
+ 
+    [X,FVAL,EXITFLAG] = <strong>fminunc</strong>(FUN,X0,...) returns an EXITFLAG that 
+    describes the exit condition of <strong>fminunc</strong>. Possible values of EXITFLAG 
+    and the corresponding exit conditions are listed below. See the
+    documentation for a complete description.
+ 
+      1  Magnitude of gradient small enough. 
+      2  Change in X too small.
+      3  Change in objective function too small.
+      5  Cannot decrease function along search direction.
+      0  Too many function evaluations or iterations.
+     -1  Stopped by output/plot function.
+     -3  Problem seems unbounded. 
+    
+    [X,FVAL,EXITFLAG,OUTPUT] = <strong>fminunc</strong>(FUN,X0,...) returns a structure 
+    OUTPUT with the number of iterations taken in OUTPUT.iterations, the 
+    number of function evaluations in OUTPUT.funcCount, the algorithm used 
+    in OUTPUT.algorithm, the number of CG iterations (if used) in
+    OUTPUT.cgiterations, the first-order optimality (if used) in
+    OUTPUT.firstorderopt, and the exit message in OUTPUT.message.
+ 
+    [X,FVAL,EXITFLAG,OUTPUT,GRAD] = <strong>fminunc</strong>(FUN,X0,...) returns the value 
+    of the gradient of FUN at the solution X.
+ 
+    [X,FVAL,EXITFLAG,OUTPUT,GRAD,HESSIAN] = <strong>fminunc</strong>(FUN,X0,...) returns the 
+    value of the Hessian of the objective function FUN at the solution X.
+ 
+    Examples
+      FUN can be specified using @:
+         X = fminunc(@myfun,2)
+ 
+    where myfun is a MATLAB function such as:
+ 
+        function F = myfun(x)
+        F = sin(x) + 3;
+ 
+      To minimize this function with the gradient provided, modify
+      the function myfun so the gradient is the second output argument:
+         function [f,g] = myfun(x)
+          f = sin(x) + 3;
+          g = cos(x);
+      and indicate the gradient value is available by creating options
+      with OPTIONS.GradObj set to 'on' (using OPTIMOPTIONS):
+         options = optimoptions('fminunc','GradObj','on');
+         x = fminunc(@myfun,4,options);
+ 
+      FUN can also be an anonymous function:
+         x = fminunc(@(x) 5*x(1)^2 + x(2)^2,[5;1])
+ 
+    If FUN is parameterized, you can use anonymous functions to capture the
+    problem-dependent parameters. Suppose you want to minimize the 
+    objective given in the function myfun, which is parameterized by its 
+    second argument c. Here myfun is a MATLAB file function such as
+ 
+      function [f,g] = myfun(x,c)
+ 
+      f = c*x(1)^2 + 2*x(1)*x(2) + x(2)^2; % function
+      g = [2*c*x(1) + 2*x(2)               % gradient
+           2*x(1) + 2*x(2)];
+ 
+    To optimize for a specific value of c, first assign the value to c. 
+    Then create a one-argument anonymous function that captures that value 
+    of c and calls myfun with two arguments. Finally, pass this anonymous 
+    function to <strong>fminunc</strong>:
+ 
+      c = 3;                              % define parameter first
+      options = optimoptions('fminunc','GradObj','on'); % indicate gradient is provided 
+      x = fminunc(@(x) myfun(x,c),[1;1],options)
+ 
+    See also <a href="matlab:help optimoptions">optimoptions</a>, <a href="matlab:help fminsearch">fminsearch</a>, <a href="matlab:help fminbnd">fminbnd</a>, <a href="matlab:help fmincon">fmincon</a>, @, <a href="matlab:help inline">inline</a>.
+
+    Reference page in Help browser
+       <a href="matlab:doc fminunc">doc fminunc</a>
+
+optimsmallsti(pop,c1,c2,gm)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimoptions', 'C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m', 114)" style="font-weight:bold">optimoptions</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m',114,0)">line 114</a>)
+Invalid solver specified. Provide a solver name or handle (such as 'fmincon' or @fminunc).
+Type DOC OPTIMOPTIONS for a list of solvers.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimsmallsti', 'T:\Crock\SmallModel\optimsmallsti.m', 7)" style="font-weight:bold">optimsmallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',7,0)">line 7</a>)
+    opts=optimoptions('quasi-newton','Display','off','GradObj','off');
+} 
+optimsmallsti(pop,c1,c2,gm)
+[Warning: Gradient must be provided for trust-region algorithm; using quasi-newton algorithm instead.] 
+[> In <a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\fminunc.m',403,1)">fminunc at 403</a>
+  In <a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',13,1)">optimsmallsti at 13</a>] 
+
+ans =
+
+   -0.7649
+
+optimsmallsti(pop,c1,c2,gm)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimoptions', 'C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m', 114)" style="font-weight:bold">optimoptions</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m',114,0)">line 114</a>)
+Invalid value for OPTIONS parameter Algorithm:
+ must be 'trust-region' or 'quasi-newton'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimsmallsti', 'T:\Crock\SmallModel\optimsmallsti.m', 7)" style="font-weight:bold">optimsmallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',7,0)">line 7</a>)
+    opts=optimoptions(@fminunc,'Algorithm','quasi-newtwon','Display','off','GradObj','off');
+} 
+optimsmallsti(pop,c1,c2,gm)
+
+ans =
+
+   -0.7649
+
+main(p,2:3)
+{Reference to non-existent field 'w'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('smallsti', 'T:\Crock\SmallModel\smallsti.m', 4)" style="font-weight:bold">smallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',4,0)">line 4</a>)
+w=rates.w;
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('main', 'T:\Crock\SmallModel\main.m', 21)" style="font-weight:bold">main</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\main.m',21,0)">line 21</a>)
+        ratios(:,run==runset)=smallsti(rates);
+} 
+p
+
+p = 
+
+  Columns 1 through 7
+
+    'desc'       'gamma'     'c1'        'c2'        'betam'      'betab'      'betaf'  
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [-0.7650]    [-0.1760]    [-1.6400]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [-0.7650]    [-0.1760]    [-1.6400]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [-0.7650]    [-0.1760]    [-1.6400]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [-0.7650]    [-0.1760]    [-1.6400]
+
+  Columns 8 through 15
+
+    'betas'       'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'    
+    [-10.3600]    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]
+    [-10.3600]    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]
+    [-10.3600]    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]
+    [-10.3600]    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]
+
+  Columns 16 through 18
+
+    'Nb'        'Ns'        'Nf'    
+    [0.0200]    [0.0500]    [0.4700]
+    [0.0400]    [0.0100]    [0.4700]
+    [0.0400]    [0.0100]    [0.4700]
+    [0.0600]    [0.5000]    [0.4700]
+
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];',p')
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('sprintf')" style="font-weight:bold">sprintf</a>
+Function is not defined for 'cell' inputs.
+} 
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];',p'{:})
+ sprintf('r.%s = [%4.2f, %4.2f, %4.2f];',p'{:})
+                                           |
+{Error: Unbalanced or unexpected parenthesis or bracket.
+} 
+p';
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];',ans{:})
+
+ans =
+
+r.desc = [103.00, 97.00, 109.00];r.ma = [99.00, 49.00, 99.00];r.2 = [98.00, 101.00, 116.00];r.am = [98.00, 101.00, 116.00];r.ab = [98.00, 101.00, 116.00];r.af = [98.00, 101.00, 116.00];r.as = [122.00, 101.00, 116.00];r.a = [101.00, 102.00, 102.00];r.res = [97.00, 116.00, 116.00];r.per = [116.00, 104.00, 101.00];r.ta = [78.00, 109.00, 78.00];r.b = [78.00, 115.00, 78.00];r.f = [108.00, 111.00, 119.00];r.er = [1.20, 0.96, 0.99];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.2.000000e-01 = [0.90, 0.01, 0.70];r. = [0.00, 0.50, 0.02];r.5.000000e-02 = [0.47, 100.00, 101.00];r.fault = [1.20, 0.92, 0.96];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.4.000000e-01 = [0.95, 0.03, 0.90];r. = [3.00, 0.50, 0.04];r.1.000000e-02 = [0.47, 100.00, 101.00];r.fault = [1.20, 0.92, 0.96];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.5.000000e-01 = [0.95, 0.03, 0.90];r. = [3.00, 0.50, 0.04];r.1.000000e-02 = [0.47, 117.00, 112.00];r.per = [1.20, 0.84, 0.92];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.8.000000e-01 = [0.98, 0.05, 1.00];r.5.000000e-01 = [7.00, 0.50, 0.06];r.5.000000e-01 = [0.47, 
+
+p=[ ...    
+    {'desc'      'gamma'     'c1'        'c2'         'w'         'x'          'y'          'z'
+     'lower'     1.2         0.96        0.99         0.05         0.06         0.07         0.3
+     'default'   1.2         0.92        0.96         0.07         0.08         0.09         0.32
+     'upper'     1.2         0.84        0.92         0.07         0.08         0.09         0.32  } ...
+    {'zeta'     'eff'       'res'       'att'        'per'        'theta'    
+     0.2        0.9         0.01        0.7          2            0
+     0.5        0.95        0.025       0.9          1            3
+     0.8        0.98        0.05        1            0.5          7         } ...
+    {'Nm'       'Nb'        'Ns'        'Nf'
+     0.5        0.02        0.05        0.47
+     0.5        0.04        0.01        0.47 
+     0.5        0.06        0.5         0.47}];
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];\n',ans{:})
+{Cell contents reference from a non-cell array object.
+} 
+p;
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];\n',ans{:})
+{Cell contents reference from a non-cell array object.
+} 
+ans
+
+ans =
+
+r.desc = [103.00, 97.00, 109.00];r.ma = [99.00, 49.00, 99.00];r.2 = [98.00, 101.00, 116.00];r.am = [98.00, 101.00, 116.00];r.ab = [98.00, 101.00, 116.00];r.af = [98.00, 101.00, 116.00];r.as = [122.00, 101.00, 116.00];r.a = [101.00, 102.00, 102.00];r.res = [97.00, 116.00, 116.00];r.per = [116.00, 104.00, 101.00];r.ta = [78.00, 109.00, 78.00];r.b = [78.00, 115.00, 78.00];r.f = [108.00, 111.00, 119.00];r.er = [1.20, 0.96, 0.99];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.2.000000e-01 = [0.90, 0.01, 0.70];r. = [0.00, 0.50, 0.02];r.5.000000e-02 = [0.47, 100.00, 101.00];r.fault = [1.20, 0.92, 0.96];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.4.000000e-01 = [0.95, 0.03, 0.90];r. = [3.00, 0.50, 0.04];r.1.000000e-02 = [0.47, 100.00, 101.00];r.fault = [1.20, 0.92, 0.96];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.5.000000e-01 = [0.95, 0.03, 0.90];r. = [3.00, 0.50, 0.04];r.1.000000e-02 = [0.47, 117.00, 112.00];r.per = [1.20, 0.84, 0.92];r.-7.650000e-01 = [-0.18, -1.64, -10.36];r.8.000000e-01 = [0.98, 0.05, 1.00];r.5.000000e-01 = [7.00, 0.50, 0.06];r.5.000000e-01 = [0.47, 
+
+ans=p;
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];\n',ans{:})
+
+ans =
+
+r.desc = [108.00, 111.00, 119.00];
+r.er = [100.00, 101.00, 102.00];
+r.ault = [117.00, 112.00, 112.00];
+r.er = [103.00, 97.00, 109.00];
+r.ma = [1.20, 1.20, 1.20];
+r.c1 = [0.96, 0.92, 0.84];
+r.c2 = [0.99, 0.96, 0.92];
+r.w = [0.05, 0.07, 0.07];
+r.x = [0.06, 0.08, 0.08];
+r.y = [0.07, 0.09, 0.09];
+r.z = [0.30, 0.32, 0.32];
+r.zeta = [0.20, 0.50, 0.80];
+r.eff = [0.90, 0.95, 0.98];
+r.res = [0.01, 0.03, 0.05];
+r.att = [0.70, 0.90, 1.00];
+r.per = [2.00, 1.00, 0.50];
+r.theta = [0.00, 3.00, 7.00];
+r.Nm = [0.50, 0.50, 0.50];
+r.Nb = [0.02, 0.04, 0.06];
+r.Ns = [0.05, 0.01, 0.50];
+r.Nf = [0.47, 0.47, 0.47];
+
+
+ans=p'
+
+ans = 
+
+    'desc'     'lower'     'default'    'upper' 
+    'gamma'    [1.2000]    [ 1.2000]    [1.2000]
+    'c1'       [0.9600]    [ 0.9200]    [0.8400]
+    'c2'       [0.9900]    [ 0.9600]    [0.9200]
+    'w'        [0.0500]    [ 0.0700]    [0.0700]
+    'x'        [0.0600]    [ 0.0800]    [0.0800]
+    'y'        [0.0700]    [ 0.0900]    [0.0900]
+    'z'        [0.3000]    [ 0.3200]    [0.3200]
+    'zeta'     [0.2000]    [ 0.5000]    [0.8000]
+    'eff'      [0.9000]    [ 0.9500]    [0.9800]
+    'res'      [0.0100]    [ 0.0250]    [0.0500]
+    'att'      [0.7000]    [ 0.9000]    [     1]
+    'per'      [     2]    [      1]    [0.5000]
+    'theta'    [     0]    [      3]    [     7]
+    'Nm'       [0.5000]    [ 0.5000]    [0.5000]
+    'Nb'       [0.0200]    [ 0.0400]    [0.0600]
+    'Ns'       [0.0500]    [ 0.0100]    [0.5000]
+    'Nf'       [0.4700]    [ 0.4700]    [0.4700]
+
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];\n',ans{:})
+
+ans =
+
+r.desc = [103.00, 97.00, 109.00];
+r.ma = [99.00, 49.00, 99.00];
+r.2 = [119.00, 120.00, 121.00];
+r.z = [122.00, 101.00, 116.00];
+r.a = [101.00, 102.00, 102.00];
+r.res = [97.00, 116.00, 116.00];
+r.per = [116.00, 104.00, 101.00];
+r.ta = [78.00, 109.00, 78.00];
+r.b = [78.00, 115.00, 78.00];
+r.f = [108.00, 111.00, 119.00];
+r.er = [1.20, 0.96, 0.99];
+r.5.000000e-02 = [0.06, 0.07, 0.30];
+r.2.000000e-01 = [0.90, 0.01, 0.70];
+r. = [0.00, 0.50, 0.02];
+r.5.000000e-02 = [0.47, 100.00, 101.00];
+r.fault = [1.20, 0.92, 0.96];
+r.7.000000e-02 = [0.08, 0.09, 0.32];
+r.5.000000e-01 = [0.95, 0.03, 0.90];
+r. = [3.00, 0.50, 0.04];
+r.1.000000e-02 = [0.47, 117.00, 112.00];
+r.per = [1.20, 0.84, 0.92];
+r.7.000000e-02 = [0.08, 0.09, 0.32];
+r.8.000000e-01 = [0.98, 0.05, 1.00];
+r.5.000000e-01 = [7.00, 0.50, 0.06];
+r.5.000000e-01 = [0.47, 
+
+ans{:}
+{Cell contents reference from a non-cell array object.
+} 
+ans=p'
+
+ans = 
+
+    'desc'     'lower'     'default'    'upper' 
+    'gamma'    [1.2000]    [ 1.2000]    [1.2000]
+    'c1'       [0.9600]    [ 0.9200]    [0.8400]
+    'c2'       [0.9900]    [ 0.9600]    [0.9200]
+    'w'        [0.0500]    [ 0.0700]    [0.0700]
+    'x'        [0.0600]    [ 0.0800]    [0.0800]
+    'y'        [0.0700]    [ 0.0900]    [0.0900]
+    'z'        [0.3000]    [ 0.3200]    [0.3200]
+    'zeta'     [0.2000]    [ 0.5000]    [0.8000]
+    'eff'      [0.9000]    [ 0.9500]    [0.9800]
+    'res'      [0.0100]    [ 0.0250]    [0.0500]
+    'att'      [0.7000]    [ 0.9000]    [     1]
+    'per'      [     2]    [      1]    [0.5000]
+    'theta'    [     0]    [      3]    [     7]
+    'Nm'       [0.5000]    [ 0.5000]    [0.5000]
+    'Nb'       [0.0200]    [ 0.0400]    [0.0600]
+    'Ns'       [0.0500]    [ 0.0100]    [0.5000]
+    'Nf'       [0.4700]    [ 0.4700]    [0.4700]
+
+ans{:}
+
+ans =
+
+desc
+
+
+ans =
+
+gamma
+
+
+ans =
+
+c1
+
+
+ans =
+
+c2
+
+
+ans =
+
+w
+
+
+ans =
+
+x
+
+
+ans =
+
+y
+
+
+ans =
+
+z
+
+
+ans =
+
+zeta
+
+
+ans =
+
+eff
+
+
+ans =
+
+res
+
+
+ans =
+
+att
+
+
+ans =
+
+per
+
+
+ans =
+
+theta
+
+
+ans =
+
+Nm
+
+
+ans =
+
+Nb
+
+
+ans =
+
+Ns
+
+
+ans =
+
+Nf
+
+
+ans =
+
+lower
+
+
+ans =
+
+    1.2000
+
+
+ans =
+
+    0.9600
+
+
+ans =
+
+    0.9900
+
+
+ans =
+
+    0.0500
+
+
+ans =
+
+    0.0600
+
+
+ans =
+
+    0.0700
+
+
+ans =
+
+    0.3000
+
+
+ans =
+
+    0.2000
+
+
+ans =
+
+    0.9000
+
+
+ans =
+
+    0.0100
+
+
+ans =
+
+    0.7000
+
+
+ans =
+
+     2
+
+
+ans =
+
+     0
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.0200
+
+
+ans =
+
+    0.0500
+
+
+ans =
+
+    0.4700
+
+
+ans =
+
+default
+
+
+ans =
+
+    1.2000
+
+
+ans =
+
+    0.9200
+
+
+ans =
+
+    0.9600
+
+
+ans =
+
+    0.0700
+
+
+ans =
+
+    0.0800
+
+
+ans =
+
+    0.0900
+
+
+ans =
+
+    0.3200
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.9500
+
+
+ans =
+
+    0.0250
+
+
+ans =
+
+    0.9000
+
+
+ans =
+
+     1
+
+
+ans =
+
+     3
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.0400
+
+
+ans =
+
+    0.0100
+
+
+ans =
+
+    0.4700
+
+
+ans =
+
+upper
+
+
+ans =
+
+    1.2000
+
+
+ans =
+
+    0.8400
+
+
+ans =
+
+    0.9200
+
+
+ans =
+
+    0.0700
+
+
+ans =
+
+    0.0800
+
+
+ans =
+
+    0.0900
+
+
+ans =
+
+    0.3200
+
+
+ans =
+
+    0.8000
+
+
+ans =
+
+    0.9800
+
+
+ans =
+
+    0.0500
+
+
+ans =
+
+     1
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+     7
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.0600
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.4700
+
+p{:}
+
+ans =
+
+desc
+
+
+ans =
+
+lower
+
+
+ans =
+
+default
+
+
+ans =
+
+upper
+
+
+ans =
+
+gamma
+
+
+ans =
+
+    1.2000
+
+
+ans =
+
+    1.2000
+
+
+ans =
+
+    1.2000
+
+
+ans =
+
+c1
+
+
+ans =
+
+    0.9600
+
+
+ans =
+
+    0.9200
+
+
+ans =
+
+    0.8400
+
+
+ans =
+
+c2
+
+
+ans =
+
+    0.9900
+
+
+ans =
+
+    0.9600
+
+
+ans =
+
+    0.9200
+
+
+ans =
+
+w
+
+
+ans =
+
+    0.0500
+
+
+ans =
+
+    0.0700
+
+
+ans =
+
+    0.0700
+
+
+ans =
+
+x
+
+
+ans =
+
+    0.0600
+
+
+ans =
+
+    0.0800
+
+
+ans =
+
+    0.0800
+
+
+ans =
+
+y
+
+
+ans =
+
+    0.0700
+
+
+ans =
+
+    0.0900
+
+
+ans =
+
+    0.0900
+
+
+ans =
+
+z
+
+
+ans =
+
+    0.3000
+
+
+ans =
+
+    0.3200
+
+
+ans =
+
+    0.3200
+
+
+ans =
+
+zeta
+
+
+ans =
+
+    0.2000
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.8000
+
+
+ans =
+
+eff
+
+
+ans =
+
+    0.9000
+
+
+ans =
+
+    0.9500
+
+
+ans =
+
+    0.9800
+
+
+ans =
+
+res
+
+
+ans =
+
+    0.0100
+
+
+ans =
+
+    0.0250
+
+
+ans =
+
+    0.0500
+
+
+ans =
+
+att
+
+
+ans =
+
+    0.7000
+
+
+ans =
+
+    0.9000
+
+
+ans =
+
+     1
+
+
+ans =
+
+per
+
+
+ans =
+
+     2
+
+
+ans =
+
+     1
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+theta
+
+
+ans =
+
+     0
+
+
+ans =
+
+     3
+
+
+ans =
+
+     7
+
+
+ans =
+
+Nm
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+Nb
+
+
+ans =
+
+    0.0200
+
+
+ans =
+
+    0.0400
+
+
+ans =
+
+    0.0600
+
+
+ans =
+
+Ns
+
+
+ans =
+
+    0.0500
+
+
+ans =
+
+    0.0100
+
+
+ans =
+
+    0.5000
+
+
+ans =
+
+Nf
+
+
+ans =
+
+    0.4700
+
+
+ans =
+
+    0.4700
+
+
+ans =
+
+    0.4700
+
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];\n',p{:})
+
+ans =
+
+r.desc = [108.00, 111.00, 119.00];
+r.er = [100.00, 101.00, 102.00];
+r.ault = [117.00, 112.00, 112.00];
+r.er = [103.00, 97.00, 109.00];
+r.ma = [1.20, 1.20, 1.20];
+r.c1 = [0.96, 0.92, 0.84];
+r.c2 = [0.99, 0.96, 0.92];
+r.w = [0.05, 0.07, 0.07];
+r.x = [0.06, 0.08, 0.08];
+r.y = [0.07, 0.09, 0.09];
+r.z = [0.30, 0.32, 0.32];
+r.zeta = [0.20, 0.50, 0.80];
+r.eff = [0.90, 0.95, 0.98];
+r.res = [0.01, 0.03, 0.05];
+r.att = [0.70, 0.90, 1.00];
+r.per = [2.00, 1.00, 0.50];
+r.theta = [0.00, 3.00, 7.00];
+r.Nm = [0.50, 0.50, 0.50];
+r.Nb = [0.02, 0.04, 0.06];
+r.Ns = [0.05, 0.01, 0.50];
+r.Nf = [0.47, 0.47, 0.47];
+
+
+sprintf('r.%s = [%4.2f, %4.2f, %4.2f];\n',p{5:end})
+
+ans =
+
+r.gamma = [1.20, 1.20, 1.20];
+r.c1 = [0.96, 0.92, 0.84];
+r.c2 = [0.99, 0.96, 0.92];
+r.w = [0.05, 0.07, 0.07];
+r.x = [0.06, 0.08, 0.08];
+r.y = [0.07, 0.09, 0.09];
+r.z = [0.30, 0.32, 0.32];
+r.zeta = [0.20, 0.50, 0.80];
+r.eff = [0.90, 0.95, 0.98];
+r.res = [0.01, 0.03, 0.05];
+r.att = [0.70, 0.90, 1.00];
+r.per = [2.00, 1.00, 0.50];
+r.theta = [0.00, 3.00, 7.00];
+r.Nm = [0.50, 0.50, 0.50];
+r.Nb = [0.02, 0.04, 0.06];
+r.Ns = [0.05, 0.01, 0.50];
+r.Nf = [0.47, 0.47, 0.47];
+
+
+cell(4,5)
+
+ans = 
+
+    []    []    []    []    []
+    []    []    []    []    []
+    []    []    []    []    []
+    []    []    []    []    []
+
+x={{3},{3,5}}
+
+x = 
+
+    {1x1 cell}    {1x2 cell}
+
+x{2}{2}
+
+ans =
+
+     5
+
+p
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+spintf('{''%s;%4.2f;%4.2f;%4.2f} ...
+ spintf('{''%s;%4.2f;%4.2f;%4.2f} ...
+        |
+{Error: String is not terminated properly.
+} 
+spintf('{''%s;%4.2f;%4.2f;%4.2f} ...',p{5:end})
+{Undefined function 'spintf' for input arguments of type 'char'.
+} 
+sprintf('{''%s;%4.2f;%4.2f;%4.2f} ...',p{5:end})
+
+ans =
+
+{'gamma;1.20;1.20;1.20} ...{'c1;0.96;0.92;0.84} ...{'c2;0.99;0.96;0.92} ...{'w;0.05;0.07;0.07} ...{'x;0.06;0.08;0.08} ...{'y;0.07;0.09;0.09} ...{'z;0.30;0.32;0.32} ...{'zeta;0.20;0.50;0.80} ...{'eff;0.90;0.95;0.98} ...{'res;0.01;0.03;0.05} ...{'att;0.70;0.90;1.00} ...{'per;2.00;1.00;0.50} ...{'theta;0.00;3.00;7.00} ...{'Nm;0.50;0.50;0.50} ...{'Nb;0.02;0.04;0.06} ...{'Ns;0.05;0.01;0.50} ...{'Nf;0.47;0.47;0.47} ...
+
+sprintf('{''%s;%4.2f;%4.2f;%4.2f} ...\n',p{5:end})
+
+ans =
+
+{'gamma;1.20;1.20;1.20} ...
+{'c1;0.96;0.92;0.84} ...
+{'c2;0.99;0.96;0.92} ...
+{'w;0.05;0.07;0.07} ...
+{'x;0.06;0.08;0.08} ...
+{'y;0.07;0.09;0.09} ...
+{'z;0.30;0.32;0.32} ...
+{'zeta;0.20;0.50;0.80} ...
+{'eff;0.90;0.95;0.98} ...
+{'res;0.01;0.03;0.05} ...
+{'att;0.70;0.90;1.00} ...
+{'per;2.00;1.00;0.50} ...
+{'theta;0.00;3.00;7.00} ...
+{'Nm;0.50;0.50;0.50} ...
+{'Nb;0.02;0.04;0.06} ...
+{'Ns;0.05;0.01;0.50} ...
+{'Nf;0.47;0.47;0.47} ...
+
+
+sprintf('{''%s'';%4.2f;%4.2f;%4.2f} ...\n',p{5:end})
+
+ans =
+
+{'gamma';1.20;1.20;1.20} ...
+{'c1';0.96;0.92;0.84} ...
+{'c2';0.99;0.96;0.92} ...
+{'w';0.05;0.07;0.07} ...
+{'x';0.06;0.08;0.08} ...
+{'y';0.07;0.09;0.09} ...
+{'z';0.30;0.32;0.32} ...
+{'zeta';0.20;0.50;0.80} ...
+{'eff';0.90;0.95;0.98} ...
+{'res';0.01;0.03;0.05} ...
+{'att';0.70;0.90;1.00} ...
+{'per';2.00;1.00;0.50} ...
+{'theta';0.00;3.00;7.00} ...
+{'Nm';0.50;0.50;0.50} ...
+{'Nb';0.02;0.04;0.06} ...
+{'Ns';0.05;0.01;0.50} ...
+{'Nf';0.47;0.47;0.47} ...
+
+
+p
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{2,'zeta',0.4})
+{For colon operator with char operands, first and last operands must be char.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>rep', 'T:\Crock\SmallModel\cellop.m', 38)" style="font-weight:bold">cellop>rep</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',38,0)">line 38</a>)
+        for jj=1:reps
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 47)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,0)">line 47</a>)
+        cll=rep(cll,args{ii});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+cellop(p,'new',{2,'zeta',0.4})
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>rep', 'T:\Crock\SmallModel\cellop.m', 33)" style="font-weight:bold">cellop>rep</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',33,0)">line 33</a>)
+        reps=ones(size(args{1}));
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 47)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,0)">line 47</a>)
+        cll=rep(cll,args{ii}{1});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+dbstop if error
+cellop(p,'new',{2,'zeta',0.4})
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>rep', 'T:\Crock\SmallModel\cellop.m', 33)" style="font-weight:bold">cellop>rep</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',33,0)">line 33</a>)
+        reps=ones(size(args{1}));
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 47)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,0)">line 47</a>)
+        cll=rep(cll,args{ii}{1});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',33,1)">33  </a>        reps=ones(size(args{1}));
+cellop(p,'new',{2,'zeta',0.4})
+{Index exceeds matrix dimensions.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 48)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',48,0)">line 48</a>)
+        cll=set(cll,[{nrow+ii} args{ii+1}]);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',48,1)">48  </a>        cll=set(cll,[{nrow+ii} args{ii+1}]);
+[{nrow+ii} args{ii+1}]
+{Index exceeds matrix dimensions.
+} 
+args
+
+args = 
+
+    {1x3 cell}
+
+ii+1
+
+ans =
+
+     2
+
+args
+
+args = 
+
+    {1x3 cell}
+
+args{2}
+{Index exceeds matrix dimensions.
+} 
+args{1}
+
+ans = 
+
+    [2]    'zeta'    [0.4000]
+
+cellop(p,'new',{2,'zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+           []          []          []          []          []          []          []          []
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+    [0.4000]          []          []          []          []         []          []          []
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+          []          []
+
+cellop(p,'new',{2,'zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{2,'zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'def','zeta',0.4})
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>rep', 'T:\Crock\SmallModel\cellop.m', 35)" style="font-weight:bold">cellop>rep</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',35,0)">line 35</a>)
+        reps=args{2};
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 47)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,0)">line 47</a>)
+        cll=rep(cll,source);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',35,1)">35  </a>        reps=args{2};
+if system_dependent('IsDebugMode')==1, dbquit; end
+cellop(p,'new',{'def','zeta',0.4})
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>rep', 'T:\Crock\SmallModel\cellop.m', 35)" style="font-weight:bold">cellop>rep</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',35,0)">line 35</a>)
+        reps=args{2};
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 47)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,0)">line 47</a>)
+        cll=rep(cll,source);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',35,1)">35  </a>        reps=args{2};
+if system_dependent('IsDebugMode')==1, dbquit; end
+cellop(p,'new',{'def','zeta',0.4})
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,1)">47  </a>        cll=rep(cll,source);
+strcmp(cll(1,:),'desc')
+
+ans =
+
+  Columns 1 through 16
+
+     1     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 17 through 18
+
+     0     0
+
+cll(:,strcmp(cll(1,:),'desc'))
+
+ans = 
+
+    'desc'
+    'lower'
+    'default'
+    'upper'
+
+if system_dependent('IsDebugMode')==1, dbquit; end
+cellop(p,'new',{'default','zeta',0.4})
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,1)">47  </a>        cll=rep(cll,source);
+if system_dependent('IsDebugMode')==1, dbcont; end
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>rep', 'T:\Crock\SmallModel\cellop.m', 33)" style="font-weight:bold">cellop>rep</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',33,0)">line 33</a>)
+        reps=ones(size(args{1}));
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 47)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',47,0)">line 47</a>)
+        cll=rep(cll,source);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+dbcont
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.4000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+x={3 4}
+
+x = 
+
+    [3]    [4]
+
+x{:}=2
+{The right hand side of this assignment has too few values to satisfy the left hand side.
+} 
+cellop(p,'new',{'default','zeta',0.4})
+{Assignment has more non-singleton rhs dimensions than non-singleton subscripts
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>set', 'T:\Crock\SmallModel\cellop.m', 27)" style="font-weight:bold">cellop>set</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',27,0)">line 27</a>)
+        cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 49)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,0)">line 49</a>)
+        cll=set(cll,{source,'desc',[]});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',27,1)">27  </a>        cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+cellop(p,'new',{'default','zeta',0.4})
+{Assignment has more non-singleton rhs dimensions than non-singleton subscripts
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>set', 'T:\Crock\SmallModel\cellop.m', 27)" style="font-weight:bold">cellop>set</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',27,0)">line 27</a>)
+        cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 49)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,0)">line 49</a>)
+        cll=set(cll,{source,'desc',''});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',27,1)">27  </a>        cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+if system_dependent('IsDebugMode')==1, dbquit; end
+cellop(p,'new',{'default','zeta',0.4})
+{Assignment has more non-singleton rhs dimensions than non-singleton subscripts
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>set', 'T:\Crock\SmallModel\cellop.m', 27)" style="font-weight:bold">cellop>set</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',27,0)">line 27</a>)
+        cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 49)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,0)">line 49</a>)
+        cll=set(cll,{source,'desc',''});
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',27,1)">27  </a>        cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+cll(args{1}+1,strcmp(fnames,args{ii}))
+
+ans = 
+
+    'default'
+
+num2cell(args{ii+1},2)
+
+ans = 
+
+   Empty cell array: 0-by-1
+
+cellop(p,'new',{'default','zeta',0.4})
+{A null assignment can have only one non-colon index.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 49)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,0)">line 49</a>)
+        cll(source+1,strcmp(cll(1,:),'desc'))=[];
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            cll=new(cll,varargin);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,1)">49  </a>        cll(source+1,strcmp(cll(1,:),'desc'))=[];
+cellop(p,'new',{'default','zeta',0.4})
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+           []    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+[a,b]=cellop(p,'new',{'default','zeta',0.4})
+
+a = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+           []    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+
+b =
+
+     4
+
+[a,b]=cellop(p,'new',{'default','zeta',0.4})
+
+a = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+           []    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.4000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+
+b =
+
+     3
+
+scenarios('u')
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 2)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',2,0)">line 2</a>)
+Dimensions of matrices being concatenated are not consistent.
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',2,1)">2   </a>pin={...
+scenarios('u')
+{Undefined function or variable "scen".
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 35)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',35,0)">line 35</a>)
+snames=fieldnames(scen);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',35,1)">35  </a>snames=fieldnames(scen);
+scenarios('u')
+u
+{Undefined function or variable "scen".
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 37)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',37,0)">line 37</a>)
+snames=fieldnames(scen);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',37,1)">37  </a>snames=fieldnames(scen);
+if system_dependent('IsDebugMode')==1, dbquit; end
+scenarios('list')
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 40)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',40,0)">line 40</a>)
+    p{1,ii}=pin{ii}{1};
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',40,1)">40  </a>    p{1,ii}=pin{ii}{1};
+scenarios('list')
+{Error: <a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',23,18)">File: scenarios.m Line: 23 Column: 18
+</a>Unexpected MATLAB expression.
+} 
+scenarios('list')
+{Cell contents reference from a non-cell array object.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 40)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',40,0)">line 40</a>)
+    p{1,ii}=pin{ii,2}{1};
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',40,1)">40  </a>    p{1,ii}=pin{ii,2}{1};
+scenarios('u')
+{Index exceeds matrix dimensions.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 28)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',28,0)">line 28</a>)
+             scen.(sprintf('%s%d',pin{1,ii},jj))={'default',pin{1,ii},pin{2,ii}{jj}};
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',28,1)">28  </a>             scen.(sprintf('%s%d',pin{1,ii},jj))={'default',pin{1,ii},pin{2,ii}{jj}};
+pin{ii,2}
+
+ans =
+
+gamma
+
+numel(pin{ii,2})
+
+ans =
+
+     5
+
+numel(pin{ii,2})
+{Undefined function or variable 'ii'.
+} 
+scenarios('u')
+{The right hand side of this assignment has too few values to satisfy the left hand side.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 41)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,0)">line 41</a>)
+    p{2,:}=pin{2,ii}{2};
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,1)">41  </a>    p{2,:}=pin{2,ii}{2};
+scenarios('u')
+{Index exceeds matrix dimensions.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 41)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,0)">line 41</a>)
+    p{2,ii}=pin{2,ii}{2};
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,1)">41  </a>    p{2,ii}=pin{2,ii}{2};
+scenarios('u')
+{Index exceeds matrix dimensions.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 41)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,0)">line 41</a>)
+    p{2,ii}=pin{2,ii}{2};
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,1)">41  </a>    p{2,ii}=pin{2,ii}{2};
+scenarios('u')
+{The left hand side is initialized and has an empty range of indices.
+However, the right hand side returned one or more results.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 49)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,0)">line 49</a>)
+        cll{rownum+1,strcmp(cll(1,:),'desc')}=[];
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            [cll,rownum]=new(cll,varargin);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 44)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',44,0)">line 44</a>)
+    [p,rownum]=cellop(p,'new',scen.(snames{ii}));
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',49,1)">49  </a>        cll{rownum+1,strcmp(cll(1,:),'desc')}=[];
+cll{rownum+1,strcmp(cll(1,:),'desc')}
+cll{rownum+1,strcmp(cll(1,:),'desc')}
+disp(cll{rownum+1,strcmp(cll(1,:),'desc')})
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('disp')" style="font-weight:bold">disp</a>
+Not enough input arguments.
+} 
+cll{rownum+1,strcmp(cll(1,:),'desc')}
+strcmp(cll(1,:),'desc')
+
+ans =
+
+  Columns 1 through 16
+
+     1     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 17 through 18
+
+     0     0
+
+rownum
+
+rownum =
+
+   Empty matrix: 0-by-1
+
+strcmp(cll(1,:),'desc')
+{Undefined variable cll.
+} 
+scenarios('u')
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop>new', 'T:\Crock\SmallModel\cellop.m', 48)" style="font-weight:bold">cellop>new</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',48,0)">line 48</a>)
+default is not a description.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('cellop', 'T:\Crock\SmallModel\cellop.m', 10)" style="font-weight:bold">cellop</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',10,0)">line 10</a>)
+            [cll,rownum]=new(cll,varargin);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 44)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',44,0)">line 44</a>)
+    [p,rownum]=cellop(p,'new',scen.(snames{ii}));
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\cellop.m',48,1)">48  </a>            error([args{ii}{1} ' is not a description. ']) %#ok<ERTAG>
+cll(:,strcmp(cll(1,:),'desc'))
+
+ans = 
+
+    'desc'
+    'def'
+
+scenarios('u')
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nf3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nf2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nf1'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Ns3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Ns2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Ns1'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nb3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nb2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nb1'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nm3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nm2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nm1'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'theta3'     [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'theta2'     [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'theta1'     [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'per3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'per2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'per1'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'att3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'att2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'att1'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'res3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'res2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'res1'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'eff3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'eff2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'eff1'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta4'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta3'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta2'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta1'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'z3'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'z2'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3000]
+    'z1'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'y3'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'y2'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0700]    [0.3200]
+    'y1'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'x3'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'x2'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0600]    [0.0900]    [0.3200]
+    'x1'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'w3'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'w2'         [1.2000]    [0.9200]    [0.9600]    [0.0500]    [0.0800]    [0.0900]    [0.3200]
+    'w1'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c23'        [1.2000]    [0.9200]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c22'        [1.2000]    [0.9200]    [0.9900]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c21'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c13'        [1.2000]    [0.8400]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c12'        [1.2000]    [0.9600]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c11'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'gamma1'     [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0600]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0200]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4400]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4800]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    7]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    0]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [0.5000]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     2]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [     1]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.7000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0500]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0100]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9800]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9000]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.8000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.4000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.2000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4950]
+    [0.0100]    [0.4500]
+    [0.0100]    [0.4900]
+    [0.0050]    [0.4900]
+    [0.0500]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+
+scenarios('u')
+
+ans = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nf3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nf2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Ns3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Ns2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nb3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nb2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nm3'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'Nm2'        [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'theta3'     [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'theta2'     [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'per3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'per2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'att3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'att2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'res3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'res2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'eff3'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'eff2'       [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta4'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta3'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'zeta2'      [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'z2'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3000]
+    'y2'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0700]    [0.3200]
+    'x2'         [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0600]    [0.0900]    [0.3200]
+    'w2'         [1.2000]    [0.9200]    [0.9600]    [0.0500]    [0.0800]    [0.0900]    [0.3200]
+    'c23'        [1.2000]    [0.9200]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c22'        [1.2000]    [0.9200]    [0.9900]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c13'        [1.2000]    [0.8400]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'c12'        [1.2000]    [0.9600]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0600]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0200]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4400]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4800]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    7]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    0]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [0.5000]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     2]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [     1]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.7000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0500]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0100]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9800]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9000]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.8000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.4000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.2000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [     1]    [    3]    [0.4600]    [0.0400]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4950]
+    [0.0100]    [0.4500]
+    [0.0050]    [0.4900]
+    [0.0500]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+    [0.0100]    [0.4900]
+
+main(scenarios(u))
+{Undefined function or variable 'u'.
+} 
+main(scenarios('u'))
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('times')" style="font-weight:bold"> .* </a>
+Matrix dimensions must agree.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('smallsti', 'T:\Crock\SmallModel\smallsti.m', 76)" style="font-weight:bold">smallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',76,0)">line 76</a>)
+    ratios(2)=sum(popint(:,intlength)./pop(:,intstart+intlength).*N);
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('main', 'T:\Crock\SmallModel\main.m', 21)" style="font-weight:bold">main</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\main.m',21,0)">line 21</a>)
+        ratios(:,run==runset)=smallsti(rates);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',76,1)">76  </a>    ratios(2)=sum(popint(:,intlength)./pop(:,intstart+intlength).*N);
+main(scenarios('u'))
+
+ans =
+
+  Columns 1 through 10
+
+    0.6812    0.6812    0.6812    0.6812    0.6812    0.7492    0.5870    0.5883    0.7909    0.6520
+    0.8606    0.8606    0.8605    0.8567    0.8610    0.8913    0.8167    0.8181    0.9108    0.8468
+    0.6574    0.6574    0.6574    0.6574    0.6574    0.7213    0.5740    0.5635    0.8283    0.6196
+
+  Columns 11 through 20
+
+    0.7434    0.7527    0.6161    0.6696    0.7010    0.4959    0.7442    0.8714    0.6747    0.6656
+    0.8893    0.8818    0.8405    0.8556    0.8689    0.7675    0.8900    0.9464    0.8633    0.8233
+    0.7332    0.6611    0.6537    0.6465    0.6756    0.4535    0.7256    0.8625    0.6541    0.6560
+
+  Columns 21 through 26
+
+    0.6808    0.6779    0.6814    0.6811    0.6607    0.6993
+    0.8594    0.8508    0.8610    0.8602    0.8048    0.9101
+    0.6574    0.6576    0.6574    0.6574    0.6565    0.6578
+
+main(scenarios('u'))
+
+ans =
+
+  Columns 1 through 10
+
+    0.6812    0.6812    0.6812    0.6812    0.6812    0.7492    0.5870    0.5883    0.7909    0.6520
+    0.8606    0.8606    0.8605    0.8567    0.8610    0.8913    0.8167    0.8181    0.9108    0.8468
+    0.6574    0.6574    0.6574    0.6574    0.6574    0.7213    0.5740    0.5635    0.8283    0.6196
+
+  Columns 11 through 20
+
+    0.7434    0.7527    0.6161    0.6696    0.7010    0.4959    0.7442    0.8714    0.6747    0.6656
+    0.8893    0.8818    0.8405    0.8556    0.8689    0.7675    0.8900    0.9464    0.8633    0.8233
+    0.7332    0.6611    0.6537    0.6465    0.6756    0.4535    0.7256    0.8625    0.6541    0.6560
+
+  Columns 21 through 26
+
+    0.6808    0.6779    0.6814    0.6811    0.6607    0.6993
+    0.8594    0.8508    0.8610    0.8602    0.8048    0.9101
+    0.6574    0.6576    0.6574    0.6574    0.6565    0.6578
+
+
+
+main(scenarios('u'))
+
+ans =
+
+  Columns 1 through 10
+
+    0.6812    0.6812    0.6812    0.6812    0.6812    0.7492    0.5870    0.5883    0.7909    0.6520
+    0.8606    0.8606    0.8605    0.8567    0.8610    0.8913    0.8167    0.8181    0.9108    0.8468
+    0.6574    0.6574    0.6574    0.6574    0.6574    0.7213    0.5740    0.5635    0.8283    0.6196
+
+  Columns 11 through 20
+
+    0.7434    0.7527    0.6161    0.6696    0.7010    0.4959    0.7442    0.8714    0.6747    0.6656
+    0.8893    0.8818    0.8405    0.8556    0.8689    0.7675    0.8900    0.9464    0.8633    0.8233
+    0.7332    0.6611    0.6537    0.6465    0.6756    0.4535    0.7256    0.8625    0.6541    0.6560
+
+  Columns 21 through 26
+
+    0.6808    0.6779    0.6814    0.6811    0.6607    0.6993
+    0.8594    0.8508    0.8610    0.8602    0.8048    0.9101
+    0.6574    0.6576    0.6574    0.6574    0.6565    0.6578
+
+main(scenarios('u','zeta'))
+
+ans =
+
+    0.6812    0.4959    0.7442    0.8714
+    0.8606    0.7675    0.8900    0.9464
+    0.6574    0.4535    0.7256    0.8625
+
+doc plot
+doc axis
+doc axes
+get(gca,'ColorOrder')
+
+ans =
+
+         0    0.4470    0.7410
+    0.8500    0.3250    0.0980
+    0.9290    0.6940    0.1250
+    0.4940    0.1840    0.5560
+    0.4660    0.6740    0.1880
+    0.3010    0.7450    0.9330
+    0.6350    0.0780    0.1840
+
+plot([3 4;6 7],'b-')
+main(scenarios('u','zeta'))
+{Index exceeds matrix dimensions.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('smallsti', 'T:\Crock\SmallModel\smallsti.m', 83)" style="font-weight:bold">smallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',83,0)">line 83</a>)
+    plot(yintstart+yintlength*[1;1],[0 1],colstrs{get(gca,'ColorOrderIndex')})
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('main', 'T:\Crock\SmallModel\main.m', 21)" style="font-weight:bold">main</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\main.m',21,0)">line 21</a>)
+        ratios(:,run==runset)=smallsti(rates);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',83,1)">83  </a>    plot(yintstart+yintlength*[1;1],[0 1],colstrs{get(gca,'ColorOrderIndex')})
+main(scenarios('u','zeta'))
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('matlab.graphics.axis.Axes/set')" style="font-weight:bold">matlab.graphics.axis.Axes/set</a>
+While setting the 'ColorOrderIndex' property of <a href="matlab:doc matlab.graphics.axis.Axes">Axes</a>:
+Value should be greater than 0
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('smallsti', 'T:\Crock\SmallModel\smallsti.m', 84)" style="font-weight:bold">smallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',84,0)">line 84</a>)
+    set(gca,'ColorOrderIndex',mod(get(gca,'ColorOrderIndex')+1,length(get(gca,'ColorOrder'))))
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('main', 'T:\Crock\SmallModel\main.m', 21)" style="font-weight:bold">main</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\main.m',21,0)">line 21</a>)
+        ratios(:,run==runset)=smallsti(rates);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',84,1)">84  </a>    set(gca,'ColorOrderIndex',mod(get(gca,'ColorOrderIndex')+1,length(get(gca,'ColorOrder'))))
+main(scenarios('u','zeta'))
+
+ans =
+
+    0.6812    0.4959    0.7442    0.8714
+    0.8606    0.7675    0.8900    0.9464
+    0.6574    0.4535    0.7256    0.8625
+
+main(scenarios('u','zeta'))
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('plot')" style="font-weight:bold">plot</a>
+Data must be a single matrix Y or a list of pairs X,Y.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('smallsti', 'T:\Crock\SmallModel\smallsti.m', 81)" style="font-weight:bold">smallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',81,0)">line 81</a>)
+    plot ((0:tmax)/steps,'k-',pop',(intstart:tmax)/steps,popint',colstrs{get(gca,'ColorOrderIndex')})
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('main', 'T:\Crock\SmallModel\main.m', 21)" style="font-weight:bold">main</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\main.m',21,0)">line 21</a>)
+        ratios(:,run==runset)=smallsti(rates);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',81,1)">81  </a>    plot ((0:tmax)/steps,'k-',pop',(intstart:tmax)/steps,popint',colstrs{get(gca,'ColorOrderIndex')})
+main(scenarios('u','zeta'))
+
+ans =
+
+    0.6812    0.4959    0.7442    0.8714
+    0.8606    0.7675    0.8900    0.9464
+    0.6574    0.4535    0.7256    0.8625
+
+edit legend
+findobj(gcf,'Tag','legend')
+
+ans = 
+
+  <a href="matlab:helpPopup matlab.graphics.illustration.Legend" style="font-weight:bold">Legend</a> (m, b, f, s, m_{int}, b_{int}, f_{int}, s_{int}) with properties:
+
+         String: {'m'  'b'  'f'  's'  'm_{int}'  'b_{int}'  'f_{int}'  's_{int}'}
+       Location: 'northeast'
+    Orientation: 'vertical'
+       FontSize: 9
+       Position: [0.7458 0.5555 0.1357 0.3390]
+          Units: 'normalized'
+
+  Show <a href="matlab:if exist('ans', 'var'), matlab.graphics.internal.getForDisplay('ans', ans, 'matlab.graphics.illustration.Legend'), else, matlab.graphics.internal.getForDisplay('ans'), end">all properties</a>
+
+findobj(gcf,'Tag','legend').String
+{Undefined variable "findobj" or class "findobj".
+} 
+getfield(findobj(gcf,'Tag','legend'),'String')
+
+ans = 
+
+    'm'    'b'    'f'    's'    'm_{int}'    'b_{int}'    'f_{int}'    's_{int}'
+
+getfield(findobj(gcf,'Tag','legend'),'String')+1
+{Undefined function 'plus' for input arguments of type 'cell'.
+} 
+plot([3 4;6 7],'b-')
+findobj(gcf,'Tag','legend')
+
+ans = 
+
+  0x0 empty <a href="matlab:helpPopup matlab.graphics.GraphicsPlaceholder" style="font-weight:bold">GraphicsPlaceholder</a> array.
+
+getfield(findobj(gcf,'Tag','legend'),'String')+1
+{No appropriate method, property, or field String for class matlab.graphics.GraphicsPlaceholder.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('getfield', 'C:\Program Files\MATLAB\R2014b\toolbox\matlab\datatypes\getfield.m', 36)" style="font-weight:bold">getfield</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\matlab\datatypes\getfield.m',36,0)">line 36</a>)
+    f = s.(deblank(strField)); % deblank field name
+} 
+<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\matlab\datatypes\getfield.m',36,1)">36  </a>    f = s.(deblank(strField)); % deblank field name        
+findobj(gcf,'Tag','legend')
+
+ans = 
+
+  0x0 empty <a href="matlab:helpPopup matlab.graphics.GraphicsPlaceholder" style="font-weight:bold">GraphicsPlaceholder</a> array.
+
+~ans
+{Undefined function 'not' for input arguments of type 'matlab.graphics.GraphicsPlaceholder'.
+} 
+isempty(ans)
+
+ans =
+
+     1
+
+main(scenarios('u','zeta'))
+
+ans =
+
+    0.6812    0.4959    0.7442    0.8714
+    0.8606    0.7675    0.8900    0.9464
+    0.6574    0.4535    0.7256    0.8625
+
+help legend
+ <strong>legend</strong> Display legend.
+    <strong>legend</strong>(string1,string2,string3, ...) puts a legend on the current plot
+    using the specified strings as labels. <strong>legend</strong> works on line graphs,
+    bar graphs, pie graphs, ribbon plots, etc.  You can label any
+    solid-colored patch or surface object.  The fontsize and fontname for
+    the legend strings matches the axes fontsize and fontname.
+ 
+    <strong>legend</strong>(H,string1,string2,string3, ...) puts a legend on the plot
+    containing the handles in the vector H using the specified strings as
+    labels for the corresponding handles.
+ 
+    <strong>legend</strong>(M), where M is a string matrix or cell array of strings, and
+    <strong>legend</strong>(H,M) where H is a vector of handles to lines and patches also
+    works.
+ 
+    <strong>legend</strong>(AX,...) puts a legend on the axes with handle AX.
+ 
+    <strong>legend</strong> OFF removes the legend from the current axes and deletes
+    the legend handle.
+    <strong>legend</strong>(AX,'off') removes the legend from the axis AX.
+ 
+    <strong>legend</strong> TOGGLE toggles legend on or off.  If no legend exists for the
+    current axes one is created using default strings. The default
+    string for an object is the value of the DisplayName property
+    if it is non-empty and otherwise it is a string of the form
+    'data1','data2', etc.
+    <strong>legend</strong>(AX,'toggle') toggles legend for axes AX
+ 
+    <strong>legend</strong> HIDE makes legend invisible.
+    <strong>legend</strong>(AX,'hide') makes legend on axes AX invisible.
+    <strong>legend</strong> SHOW makes legend visible. If no legend exists for the
+    current axes one is created using default strings.
+    <strong>legend</strong>(AX,'show') makes legend on axes AX visible.
+ 
+    <strong>legend</strong> BOXOFF  makes legend background box invisible when legend is
+    visible.
+    <strong>legend</strong>(AX,'boxoff') for axes AX makes legend background box invisible when
+    legend is visible.
+    <strong>legend</strong> BOXON makes legend background box visible when legend is visible.
+    <strong>legend</strong>(AX,'boxon') for axes AX making legend background box visible when
+    legend is visible.
+ 
+    LEGH = <strong>legend</strong> returns the handle to legend on the current axes or
+    empty if none exists.
+ 
+ 
+    <strong>legend</strong>(...,'Location',LOC) adds a legend in the specified
+    location, LOC, with respect to the axes.  LOC may be either a
+    1x4 position vector or one of the following strings:
+        'North'              inside plot box near top
+        'South'              inside bottom
+        'East'               inside right
+        'West'               inside left
+        'NorthEast'          inside top right (default for 2-D plots)
+        'NorthWest'           inside top left
+        'SouthEast'          inside bottom right
+        'SouthWest'          inside bottom left
+        'NorthOutside'       outside plot box near top
+        'SouthOutside'       outside bottom
+        'EastOutside'        outside right
+        'WestOutside'        outside left
+        'NorthEastOutside'   outside top right (default for 3-D plots)
+        'NorthWestOutside'   outside top left
+        'SouthEastOutside'   outside bottom right
+        'SouthWestOutside'   outside bottom left
+        'Best'               least conflict with data in plot
+        'BestOutside'        least unused space outside plot
+    If the legend does not fit in the 1x4 position vector the position
+    vector is resized around the midpoint to fit the preferred legend size.
+    Moving the legend manually by dragging with the mouse or setting
+    the Position property will set the legend Location property to 'none'.
+ 
+    <strong>legend</strong>(...,'Orientation',ORIENTATION) creates a legend with the
+    legend items arranged in the specified ORIENTATION. Allowed
+    values for ORIENTATION are 'vertical' (the default) and 'horizontal'.
+ 
+    [LEGH,OBJH,OUTH,OUTM] = <strong>legend</strong>(...) returns a handle LEGH to the
+    legend axes; a vector OBJH containing handles for the text, lines,
+    and patches in the legend; a vector OUTH of handles to the
+    lines and patches in the plot; and a cell array OUTM containing
+    the text in the legend.
+ 
+    Examples:
+        x = 0:.2:12;
+        plot(x,besselj(1,x),x,besselj(2,x),x,besselj(3,x));
+        legend('First','Second','Third','Location','NorthEastOutside')
+ 
+        b = bar(rand(10,5),'stacked'); colormap(summer); hold on
+        x = plot(1:10,5*rand(10,1),'marker','square','markersize',12,...
+                 'markeredgecolor','y','markerfacecolor',[.6 0 .6],...
+                 'linestyle','-','color','r','linewidth',2); hold off
+        legend([b,x],'Carrots','Peas','Peppers','Green Beans',...
+                  'Cucumbers','Eggplant')
+
+    Reference page in Help browser
+       <a href="matlab:doc legend">doc legend</a>
+
+edit legend
+lgd
+{Undefined function or variable 'lgd'.
+} 
+if system_dependent('IsDebugMode')==1, dbquit; end
+lgd
+{Undefined function or variable 'lgd'.
+} 
+lgd=findobj(gcf,'Tag','legend')
+
+lgd = 
+
+  <a href="matlab:helpPopup matlab.graphics.illustration.Legend" style="font-weight:bold">Legend</a> (, zeta4, zeta3, zeta2) with properties:
+
+         String: {''  'zeta4'  'zeta3'  'zeta2'}
+       Location: 'northeast'
+    Orientation: 'vertical'
+       FontSize: 9
+       Position: [0.7172 0.7428 0.1643 0.1517]
+          Units: 'normalized'
+
+  Show <a href="matlab:if exist('lgd', 'var'), matlab.graphics.internal.getForDisplay('lgd', lgd, 'matlab.graphics.illustration.Legend'), else, matlab.graphics.internal.getForDisplay('lgd'), end">all properties</a>
+
+if exist('lgd', 'var'), matlab.graphics.internal.getForDisplay('lgd', lgd, 'matlab.graphics.illustration.Legend'), else, matlab.graphics.internal.getForDisplay('lgd'), end
+          BeingDeleted: 'off'
+                   Box: 'on'
+            BusyAction: 'queue'
+         ButtonDownFcn: @bdowncb
+              Children: []
+                 Color: [1 1 1]
+             CreateFcn: ''
+             DeleteFcn: ''
+             EdgeColor: [0.1500 0.1500 0.1500]
+             FontAngle: 'normal'
+              FontName: 'Helvetica'
+              FontSize: 9
+            FontWeight: 'normal'
+      HandleVisibility: 'on'
+               HitTest: 'on'
+           Interpreter: 'tex'
+         Interruptible: 'off'
+             LineWidth: 0.5000
+              Location: 'northeast'
+           Orientation: 'vertical'
+                Parent: [1x1 Figure]
+         PickableParts: 'visible'
+              Position: [0.7172 0.7428 0.1643 0.1517]
+              Selected: 'off'
+    SelectionHighlight: 'on'
+                String: {''  'zeta4'  'zeta3'  'zeta2'}
+                   Tag: 'legend'
+             TextColor: [0 0 0]
+                  Type: 'legend'
+         UIContextMenu: [1x1 ContextMenu]
+                 Units: 'normalized'
+              UserData: []
+               Visible: 'on'
+
+p
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'lower'      [1.2000]    [0.9600]    [0.9900]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'upper'      [1.2000]    [0.8400]    [0.9200]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'       'theta'    'Nm'        'Nb'    
+    [0.2000]    [0.9000]    [0.0100]    [0.7000]    [     2]    [    0]    [0.5000]    [0.0200]
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [     1]    [    3]    [0.5000]    [0.0400]
+    [0.8000]    [0.9800]    [0.0500]    [     1]    [0.5000]    [    7]    [0.5000]    [0.0600]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0500]    [0.4700]
+    [0.0100]    [0.4700]
+    [0.5000]    [0.4700]
+
+save matlab p -append
+p=p([1 3],:)
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'    'theta'    'Nm'        'Nb'    
+    [0.5000]    [0.9500]    [0.0250]    [0.9000]    [  1]    [    3]    [0.5000]    [0.0400]
+
+  Columns 17 through 18
+
+    'Ns'        'Nf'    
+    [0.0100]    [0.4700]
+
+smallsti(assct(p))
+{Reference to non-existent field 'sexratio'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('smallsti', 'T:\Crock\SmallModel\smallsti.m', 19)" style="font-weight:bold">smallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',19,0)">line 19</a>)
+N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\smallsti.m',19,1)">19  </a>N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
+if system_dependent('IsDebugMode')==1, dbquit; end
+p=scenarios
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 21)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',21,0)">line 21</a>)
+Not enough input arguments.
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',21,1)">21  </a> switch type
+p=scenarios
+{Undefined function or variable "scen".
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('scenarios', 'T:\Crock\SmallModel\scenarios.m', 41)" style="font-weight:bold">scenarios</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,0)">line 41</a>)
+snames=fieldnames(scen);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\scenarios.m',41,1)">41  </a>snames=fieldnames(scen);
+p=scenarios
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'    'theta'    'sexratio'    'probs' 
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [  1]    [    3]    [  0.5000]    [0.0100]
+
+  Column 17
+
+    'probb' 
+    [0.0400]
+
+smallsti(assct(p))
+
+ans =
+
+    0.6812
+    0.8606
+    0.6574
+
+[a1,~,ans]=smallsti(assct(p))
+
+a1 =
+
+    0.6812
+    0.8606
+    0.6574
+
+
+ans = 
+
+        desc: 'default'
+       gamma: 1.2000
+          c1: 0.9200
+          c2: 0.9600
+           w: 0.0700
+           x: 0.0800
+           y: 0.0900
+           z: 0.3200
+        zeta: 0.5000
+         eff: 0.9500
+         res: 0.0300
+         att: 0.9000
+         per: 1
+       theta: 3
+    sexratio: 0.5000
+       probs: 0.0100
+       probb: 0.0400
+
+equilib=[0.07 0.08 0.09 0.32]
+
+equilib =
+
+    0.0700    0.0800    0.0900    0.3200
+
+equilib=[0.07 0.08 0.09 0.32]'
+
+equilib =
+
+    0.0700
+    0.0800
+    0.0900
+    0.3200
+
+rates=assct(p)
+
+rates = 
+
+        desc: 'default'
+       gamma: 1.2000
+          c1: 0.9200
+          c2: 0.9600
+           w: 0.0700
+           x: 0.0800
+           y: 0.0900
+           z: 0.3200
+        zeta: 0.5000
+         eff: 0.9500
+         res: 0.0300
+         att: 0.9000
+         per: 1
+       theta: 3
+    sexratio: 0.5000
+       probs: 0.0100
+       probb: 0.0400
+
+c1=rates.c1;
+c2=rates.c2;
+gamma=rates.gamma;
+zeta=rates.zeta;
+eff=rates.eff;
+res=rates.res;
+att=rates.att;
+per=rates.per;
+theta=rates.theta;
+%% Create vector input parameters
+if isfield(rates,'desc')
+    desc=rates.desc;
+else
+    run=rates.run;
+end
+equilib=[rates.w;rates.x;rates.y;rates.z];
+N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
+    [1-rates.probs rates.probs]]';
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma);
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma);
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimoptions', 'C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m', 114)" style="font-weight:bold">optimoptions</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m',114,0)">line 114</a>)
+Invalid value for OPTIONS parameter Display:
+ must be 'off', 'none', 'notify', 'notify-detailed', 'final', 'final-detailed', 'iter', or
+ 'iter-detailed'.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('optimsmallsti', 'T:\Crock\SmallModel\optimsmallsti.m', 7)" style="font-weight:bold">optimsmallsti</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\optimsmallsti.m',7,0)">line 7</a>)
+    opts=optimoptions(@fminunc,'Algorithm','quasi-newton','Display','on','GradObj','off');
+} 
+<a href="matlab: opentoline('C:\Program Files\MATLAB\R2014b\toolbox\optim\optim\optimoptions.m',114,1)">114 </a>            throw(ME);
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma);
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (default)
+
+helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');
+smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0)
+{Undefined function or variable 't'.
+} 
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)
+
+ans =
+
+    0.0753
+    0.0852
+    0.0900
+    0.3200
+
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)-equilib
+
+ans =
+
+    0.0053
+    0.0052
+    0.0000
+   -0.0000
+
+helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');
+helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma);
+
+Optimization stopped because the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'norm_current_step','CSHelpWindow');">norm of the current step</a>, 3.011712e-07, is
+less than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolx','CSHelpWindow');">options.TolX</a> = 1.000000e-06.
+
+Optimization Metric                                    Options
+relative norm(step) =   3.01e-07                TolX =   1e-06 (default)
+
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)-equilib
+
+ans =
+
+    0.0053
+    0.0052
+   -0.0000
+   -0.0000
+
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)-equilib
+
+ans =
+
+    0.0053
+    0.0052
+   -0.0000
+   -0.0000
+
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma);
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (selected)
+
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma)
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (selected)
+
+
+betam =
+
+   -0.8733
+
+
+betab =
+
+   -0.1941
+
+
+betaf =
+
+   -1.7946
+
+
+betas =
+
+  -11.8143
+
+{betam,betab,betaf,betas}=={optimsmallsti(equilib,c1,c2,gamma)}
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (selected)
+
+{Undefined function 'eq' for input arguments of type 'cell'.
+} 
+[betam,betab,betaf,betas]=[optimsmallsti(equilib,c1,c2,gamma)]
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (selected)
+
+{Too many output arguments.
+} 
+[betam,betab,betaf,betas]==[optimsmallsti(equilib,c1,c2,gamma)]
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (selected)
+
+
+ans =
+
+     1     0     0     0
+
+[betam,betab,betaf,betas]-[optimsmallsti(equilib,c1,c2,gamma)]
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 3.416124e-07, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-06.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   3.42e-07                  TolFun =   1e-06 (selected)
+
+
+ans =
+
+         0    0.6792   -0.9212  -10.9410
+
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma)
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 1.993624e-10, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-09.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   1.99e-10                  TolFun =   1e-09 (selected)
+
+
+betam =
+
+   -0.8733
+
+
+betab =
+
+   -0.1942
+
+
+betaf =
+
+   -1.7945
+
+
+betas =
+
+  -11.8144
+
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)-equilib
+
+ans =
+
+    0.0053
+    0.0052
+   -0.0000
+   -0.0000
+
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)-equilib
+
+ans =
+
+   1.0e-08 *
+
+   -0.2050
+    0.1039
+   -0.0525
+   -0.2490
+
+smallsti(assct(p))
+
+Optimization completed: The <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'first_order_opt_unc','CSHelpWindow');">first-order optimality measure</a>, 1.993624e-10, is less 
+than <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'tolfun','CSHelpWindow');">options.TolFun</a> = 1.000000e-09.
+
+Optimization Metric                                            Options
+relative norm(gradient) =   1.99e-10                  TolFun =   1e-09 (selected)
+
+
+ans =
+
+    0.6555
+    0.8244
+    0.6525
+
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma)
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+betam =
+
+   -0.8733
+
+
+betab =
+
+   -0.1942
+
+
+betaf =
+
+   -1.7945
+
+
+betas =
+
+  -11.8144
+
+smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0)-equilib
+
+ans =
+
+   1.0e-08 *
+
+   -0.0921
+   -0.0399
+   -0.0685
+   -0.1809
+
+pop=zeros(3,200);
+for t=1:200
+pop(:,t)=smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0);
+end
+{Subscripted assignment dimension mismatch.
+} 
+pop(:,t)=smalltsti(equilib,betam,betab,betaf,betas,c1,c2,gamma,0);
+{Subscripted assignment dimension mismatch.
+} 
+pop=bsxfun(@minus,pop,equilib)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('bsxfun')" style="font-weight:bold">bsxfun</a>
+Non-singleton dimensions of the two input arrays must match each other.
+} 
+pop=bsxfun(@minus,pop,equilib')
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('bsxfun')" style="font-weight:bold">bsxfun</a>
+Non-singleton dimensions of the two input arrays must match each other.
+} 
+pop=zeros(4,200);
+for t=1:200
+pop(:,1)=equilib;
+for t=1:200
+for t=2:200
+pop(:,t)=smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0);
+end
+pop=bsxfun(@minus,pop,equilib)
+
+pop =
+
+  1.0e+238 *
+
+  Columns 1 through 10
+
+         0   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000
+         0   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000
+         0   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000
+         0   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000   -0.0000    0.0000
+
+  Columns 11 through 20
+
+   -0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+   -0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 21 through 30
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 31 through 40
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 41 through 50
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 51 through 60
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 61 through 70
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000   -0.0000    0.0000   -0.0000       NaN
+    0.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000   -0.0000    0.0000       NaN
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000   -0.0000      -Inf       Inf
+   -0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000    1.3781       Inf      -Inf
+
+  Columns 71 through 80
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 81 through 90
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 91 through 100
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 101 through 110
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 111 through 120
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 121 through 130
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 131 through 140
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 141 through 150
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 151 through 160
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 161 through 170
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 171 through 180
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 181 through 190
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 191 through 200
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+for t=2:200
+pop(:,t)=smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0);
+end
+pop
+
+pop =
+
+  Columns 1 through 16
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 17 through 32
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 33 through 48
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 49 through 64
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 65 through 80
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 81 through 96
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 97 through 112
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 113 through 128
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 129 through 144
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 145 through 160
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 161 through 176
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 177 through 192
+
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0     0
+
+  Columns 193 through 200
+
+     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0
+     0     0     0     0     0     0     0     0
+
+pop(:,1)=equilib;
+for t=2:200
+pop(:,t)=smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0);
+end
+pop
+
+pop =
+
+  1.0e+238 *
+
+  Columns 1 through 10
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 11 through 20
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 21 through 30
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 31 through 40
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 41 through 50
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 51 through 60
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 61 through 70
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000       NaN
+    0.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000   -0.0000    0.0000       NaN
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000   -0.0000      -Inf       Inf
+    0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000    1.3781       Inf      -Inf
+
+  Columns 71 through 80
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 81 through 90
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 91 through 100
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 101 through 110
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 111 through 120
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 121 through 130
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 131 through 140
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 141 through 150
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 151 through 160
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 161 through 170
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 171 through 180
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 181 through 190
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 191 through 200
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+pop(:,1:10)
+
+ans =
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+pop(:,1:50)
+
+ans =
+
+  Columns 1 through 10
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 11 through 20
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 21 through 30
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 31 through 40
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0699    0.0701    0.0699
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0799    0.0801    0.0799
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0899    0.0901    0.0899    0.0902
+    0.3200    0.3200    0.3200    0.3201    0.3199    0.3201    0.3198    0.3203    0.3196    0.3206
+
+  Columns 41 through 50
+
+    0.0702    0.0697    0.0704    0.0695    0.0708    0.0689    0.0717    0.0676    0.0735    0.0649
+    0.0802    0.0798    0.0803    0.0795    0.0807    0.0790    0.0814    0.0779    0.0830    0.0756
+    0.0898    0.0903    0.0895    0.0907    0.0890    0.0914    0.0879    0.0930    0.0856    0.0964
+    0.3191    0.3213    0.3181    0.3228    0.3160    0.3258    0.3116    0.3322    0.3023    0.3457
+
+pop(:,1:100)
+
+ans =
+
+  1.0e+238 *
+
+  Columns 1 through 10
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 11 through 20
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 21 through 30
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 31 through 40
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 41 through 50
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000
+
+  Columns 51 through 60
+
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000
+    0.0000    0.0000    0.0000    0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000
+
+  Columns 61 through 70
+
+    0.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000   -0.0000       NaN
+    0.0000   -0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000   -0.0000    0.0000       NaN
+   -0.0000    0.0000   -0.0000    0.0000   -0.0000    0.0000   -0.0000   -0.0000      -Inf       Inf
+    0.0000    0.0000   -0.0000    0.0000    0.0000   -0.0000    0.0000    1.3781       Inf      -Inf
+
+  Columns 71 through 80
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 81 through 90
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+  Columns 91 through 100
+
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN
+
+pop(:,50:60)
+
+ans =
+
+  Columns 1 through 10
+
+    0.0649    0.0774    0.0594    0.0855    0.0478    0.1028    0.0240    0.1396   -0.0234    0.2168
+    0.0756    0.0864    0.0708    0.0934    0.0608    0.1084    0.0403    0.1403   -0.0005    0.2074
+    0.0964    0.0807    0.1035    0.0706    0.1186    0.0496    0.1505    0.0067    0.2188   -0.0759
+    0.3457    0.2829    0.3742    0.2424    0.4343    0.1593    0.5599   -0.0008    0.8086   -0.2199
+
+  Column 11
+
+   -0.1055
+   -0.0706
+    0.3614
+    1.1693
+
+betam=betam/steps;
+{Undefined function or variable 'steps'.
+} 
+steps=12;
+betam=betam/steps;
+    betaf=betaf/steps;
+    betas=betas/steps;
+    betab=betab/steps;
+    gamma=gamma/steps;
+for t=2:200
+pop(:,t)=smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0);
+end
+pop
+
+pop =
+
+  Columns 1 through 10
+
+    0.0700    0.0703    0.0707    0.0711    0.0716    0.0721    0.0726    0.0731    0.0736    0.0742
+    0.0800    0.0804    0.0809    0.0814    0.0820    0.0825    0.0831    0.0837    0.0843    0.0850
+    0.0900    0.0905    0.0910    0.0916    0.0921    0.0926    0.0931    0.0936    0.0942    0.0948
+    0.3200    0.3335    0.3450    0.3548    0.3632    0.3704    0.3768    0.3823    0.3872    0.3916
+
+  Columns 11 through 20
+
+    0.0747    0.0752    0.0758    0.0763    0.0768    0.0773    0.0778    0.0783    0.0788    0.0793
+    0.0856    0.0862    0.0868    0.0874    0.0880    0.0885    0.0891    0.0897    0.0903    0.0908
+    0.0953    0.0959    0.0965    0.0971    0.0977    0.0983    0.0989    0.0995    0.1001    0.1007
+    0.3955    0.3991    0.4023    0.4053    0.4080    0.4106    0.4130    0.4152    0.4173    0.4194
+
+  Columns 21 through 30
+
+    0.0798    0.0803    0.0807    0.0812    0.0817    0.0821    0.0826    0.0830    0.0835    0.0839
+    0.0914    0.0919    0.0924    0.0930    0.0935    0.0940    0.0945    0.0950    0.0955    0.0960
+    0.1013    0.1019    0.1025    0.1030    0.1036    0.1042    0.1048    0.1054    0.1059    0.1065
+    0.4213    0.4231    0.4249    0.4266    0.4282    0.4298    0.4314    0.4329    0.4344    0.4358
+
+  Columns 31 through 40
+
+    0.0843    0.0847    0.0851    0.0855    0.0860    0.0863    0.0867    0.0871    0.0875    0.0879
+    0.0965    0.0970    0.0975    0.0979    0.0984    0.0988    0.0993    0.0997    0.1002    0.1006
+    0.1070    0.1076    0.1081    0.1087    0.1092    0.1097    0.1102    0.1107    0.1112    0.1117
+    0.4372    0.4385    0.4399    0.4412    0.4424    0.4437    0.4449    0.4461    0.4473    0.4484
+
+  Columns 41 through 50
+
+    0.0883    0.0886    0.0890    0.0893    0.0897    0.0900    0.0904    0.0907    0.0910    0.0914
+    0.1010    0.1014    0.1018    0.1022    0.1026    0.1030    0.1034    0.1038    0.1042    0.1045
+    0.1122    0.1127    0.1132    0.1137    0.1141    0.1146    0.1150    0.1155    0.1159    0.1163
+    0.4496    0.4507    0.4517    0.4528    0.4539    0.4549    0.4559    0.4569    0.4578    0.4588
+
+  Columns 51 through 60
+
+    0.0917    0.0920    0.0923    0.0926    0.0929    0.0932    0.0935    0.0938    0.0941    0.0943
+    0.1049    0.1053    0.1056    0.1060    0.1063    0.1066    0.1070    0.1073    0.1076    0.1079
+    0.1168    0.1172    0.1176    0.1180    0.1184    0.1188    0.1192    0.1196    0.1199    0.1203
+    0.4597    0.4606    0.4615    0.4624    0.4633    0.4641    0.4650    0.4658    0.4666    0.4674
+
+  Columns 61 through 70
+
+    0.0946    0.0949    0.0951    0.0954    0.0957    0.0959    0.0962    0.0964    0.0966    0.0969
+    0.1082    0.1085    0.1088    0.1091    0.1094    0.1097    0.1100    0.1103    0.1105    0.1108
+    0.1207    0.1210    0.1214    0.1217    0.1221    0.1224    0.1227    0.1231    0.1234    0.1237
+    0.4681    0.4689    0.4696    0.4703    0.4711    0.4718    0.4724    0.4731    0.4738    0.4744
+
+  Columns 71 through 80
+
+    0.0971    0.0973    0.0976    0.0978    0.0980    0.0982    0.0984    0.0986    0.0988    0.0990
+    0.1111    0.1113    0.1116    0.1118    0.1121    0.1123    0.1125    0.1128    0.1130    0.1132
+    0.1240    0.1243    0.1246    0.1249    0.1252    0.1255    0.1257    0.1260    0.1263    0.1265
+    0.4750    0.4757    0.4763    0.4769    0.4775    0.4780    0.4786    0.4791    0.4797    0.4802
+
+  Columns 81 through 90
+
+    0.0992    0.0994    0.0996    0.0998    0.0999    0.1001    0.1003    0.1005    0.1006    0.1008
+    0.1134    0.1137    0.1139    0.1141    0.1143    0.1145    0.1147    0.1149    0.1151    0.1152
+    0.1268    0.1270    0.1273    0.1275    0.1278    0.1280    0.1282    0.1285    0.1287    0.1289
+    0.4807    0.4812    0.4817    0.4822    0.4827    0.4832    0.4836    0.4841    0.4845    0.4850
+
+  Columns 91 through 100
+
+    0.1010    0.1011    0.1013    0.1014    0.1016    0.1017    0.1019    0.1020    0.1021    0.1023
+    0.1154    0.1156    0.1158    0.1160    0.1161    0.1163    0.1164    0.1166    0.1168    0.1169
+    0.1291    0.1293    0.1295    0.1298    0.1300    0.1301    0.1303    0.1305    0.1307    0.1309
+    0.4854    0.4858    0.4862    0.4866    0.4870    0.4874    0.4878    0.4881    0.4885    0.4889
+
+  Columns 101 through 110
+
+    0.1024    0.1025    0.1027    0.1028    0.1029    0.1030    0.1032    0.1033    0.1034    0.1035
+    0.1171    0.1172    0.1174    0.1175    0.1176    0.1178    0.1179    0.1181    0.1182    0.1183
+    0.1311    0.1312    0.1314    0.1316    0.1318    0.1319    0.1321    0.1322    0.1324    0.1325
+    0.4892    0.4895    0.4899    0.4902    0.4905    0.4908    0.4911    0.4914    0.4917    0.4920
+
+  Columns 111 through 120
+
+    0.1036    0.1037    0.1038    0.1039    0.1040    0.1041    0.1042    0.1043    0.1044    0.1045
+    0.1184    0.1186    0.1187    0.1188    0.1189    0.1190    0.1191    0.1192    0.1193    0.1195
+    0.1327    0.1328    0.1330    0.1331    0.1332    0.1334    0.1335    0.1336    0.1338    0.1339
+    0.4923    0.4926    0.4929    0.4931    0.4934    0.4936    0.4939    0.4941    0.4944    0.4946
+
+  Columns 121 through 130
+
+    0.1046    0.1047    0.1048    0.1049    0.1050    0.1050    0.1051    0.1052    0.1053    0.1054
+    0.1196    0.1197    0.1198    0.1199    0.1199    0.1200    0.1201    0.1202    0.1203    0.1204
+    0.1340    0.1341    0.1342    0.1344    0.1345    0.1346    0.1347    0.1348    0.1349    0.1350
+    0.4948    0.4951    0.4953    0.4955    0.4957    0.4959    0.4961    0.4963    0.4965    0.4967
+
+  Columns 131 through 140
+
+    0.1054    0.1055    0.1056    0.1056    0.1057    0.1058    0.1058    0.1059    0.1060    0.1060
+    0.1205    0.1206    0.1206    0.1207    0.1208    0.1209    0.1209    0.1210    0.1211    0.1212
+    0.1351    0.1352    0.1353    0.1354    0.1355    0.1356    0.1356    0.1357    0.1358    0.1359
+    0.4969    0.4971    0.4972    0.4974    0.4976    0.4978    0.4979    0.4981    0.4982    0.4984
+
+  Columns 141 through 150
+
+    0.1061    0.1062    0.1062    0.1063    0.1063    0.1064    0.1064    0.1065    0.1065    0.1066
+    0.1212    0.1213    0.1214    0.1214    0.1215    0.1216    0.1216    0.1217    0.1217    0.1218
+    0.1360    0.1361    0.1361    0.1362    0.1363    0.1364    0.1364    0.1365    0.1366    0.1366
+    0.4986    0.4987    0.4988    0.4990    0.4991    0.4993    0.4994    0.4995    0.4997    0.4998
+
+  Columns 151 through 160
+
+    0.1066    0.1067    0.1067    0.1068    0.1068    0.1069    0.1069    0.1070    0.1070    0.1070
+    0.1218    0.1219    0.1219    0.1220    0.1221    0.1221    0.1222    0.1222    0.1222    0.1223
+    0.1367    0.1368    0.1368    0.1369    0.1370    0.1370    0.1371    0.1371    0.1372    0.1372
+    0.4999    0.5000    0.5001    0.5003    0.5004    0.5005    0.5006    0.5007    0.5008    0.5009
+
+  Columns 161 through 170
+
+    0.1071    0.1071    0.1072    0.1072    0.1072    0.1073    0.1073    0.1073    0.1074    0.1074
+    0.1223    0.1224    0.1224    0.1225    0.1225    0.1226    0.1226    0.1226    0.1227    0.1227
+    0.1373    0.1373    0.1374    0.1374    0.1375    0.1375    0.1376    0.1376    0.1377    0.1377
+    0.5010    0.5011    0.5012    0.5013    0.5014    0.5015    0.5016    0.5016    0.5017    0.5018
+
+  Columns 171 through 180
+
+    0.1074    0.1075    0.1075    0.1075    0.1076    0.1076    0.1076    0.1076    0.1077    0.1077
+    0.1227    0.1228    0.1228    0.1229    0.1229    0.1229    0.1230    0.1230    0.1230    0.1230
+    0.1378    0.1378    0.1379    0.1379    0.1379    0.1380    0.1380    0.1381    0.1381    0.1381
+    0.5019    0.5020    0.5020    0.5021    0.5022    0.5023    0.5023    0.5024    0.5025    0.5025
+
+  Columns 181 through 190
+
+    0.1077    0.1078    0.1078    0.1078    0.1078    0.1079    0.1079    0.1079    0.1079    0.1079
+    0.1231    0.1231    0.1231    0.1232    0.1232    0.1232    0.1232    0.1233    0.1233    0.1233
+    0.1382    0.1382    0.1382    0.1383    0.1383    0.1383    0.1384    0.1384    0.1384    0.1385
+    0.5026    0.5027    0.5027    0.5028    0.5029    0.5029    0.5030    0.5030    0.5031    0.5031
+
+  Columns 191 through 200
+
+    0.1080    0.1080    0.1080    0.1080    0.1080    0.1081    0.1081    0.1081    0.1081    0.1081
+    0.1233    0.1234    0.1234    0.1234    0.1234    0.1235    0.1235    0.1235    0.1235    0.1235
+    0.1385    0.1385    0.1385    0.1386    0.1386    0.1386    0.1386    0.1387    0.1387    0.1387
+    0.5032    0.5032    0.5033    0.5033    0.5034    0.5034    0.5035    0.5035    0.5036    0.5036
+
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma/steps)
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+betam =
+
+   -0.0058
+
+
+betab =
+
+   -0.0012
+
+
+betaf =
+
+   -0.0117
+
+
+betas =
+
+   -0.0558
+
+[betam,betab,betaf,betas]=optimsmallsti(equilib,c1,c2,gamma)
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+betam =
+
+   -0.0697
+
+
+betab =
+
+   -0.0147
+
+
+betaf =
+
+   -0.1412
+
+
+betas =
+
+   -0.6847
+
+for t=2:200,pop(:,t)=smalltsti(pop(:,t-1),betam,betab,betaf,betas,c1,c2,gamma,0);end
+pop
+
+pop =
+
+  Columns 1 through 10
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 11 through 20
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 21 through 30
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 31 through 40
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 41 through 50
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 51 through 60
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 61 through 70
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 71 through 80
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 81 through 90
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 91 through 100
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 101 through 110
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 111 through 120
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 121 through 130
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 131 through 140
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 141 through 150
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 151 through 160
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 161 through 170
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 171 through 180
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 181 through 190
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+  Columns 191 through 200
+
+    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700    0.0700
+    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800    0.0800
+    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900    0.0900
+    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200    0.3200
+
+main(scenarios('u','zeta'))
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+Optimization stopped because the objective function cannot be decreased in the 
+current <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'search_direction','CSHelpWindow');">search direction</a>. Either the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'pred_change','CSHelpWindow');">predicted change in the objective function</a>,
+or the <a href = "matlab: helpview([docroot '/toolbox/optim/msg_csh/optim_msg_csh.map'],'line_search_interval','CSHelpWindow');">line search interval</a> is less than eps.
+
+ans =
+
+    0.5767    0.3635    0.6553    0.8221
+    0.7583    0.6173    0.8064    0.9032
+    0.6374    0.4225    0.7094    0.8543
+
+main(scenarios('u','zeta'))
+
+ans =
+
+    0.5767    0.3635    0.6553    0.8221
+    0.7583    0.6173    0.8064    0.9032
+    0.6374    0.4225    0.7094    0.8543
+
+main(scenarios('u','zeta'))
+
+ans =
+
+    0.5767    0.3635    0.6553    0.8221
+    0.7583    0.6173    0.8064    0.9032
+    0.6374    0.4225    0.7094    0.8543
+
+edit small2HIV
+error('Bad practice. \n %f\n%f\n%f\n%f',[1:4])
+{Bad practice.
+ 1.000000
+2.000000
+3.000000
+4.000000
+} 
+e.w=4
+
+e = 
+
+    w: 4
+
+e.('w')(1)
+
+ans =
+
+     4
+
+r2='C:/Users/Crock/Documents/r2/'
+
+r2 =
+
+C:/Users/Crock/Documents/r2/
+
+p
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'    'theta'    'sexratio'    'probs' 
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [  1]    [    3]    [  0.5000]    [0.0100]
+
+  Column 17
+
+    'probb' 
+    [0.0400]
+
+p=scenarios('list')
+
+p = 
+
+  Columns 1 through 8
+
+    'desc'       'gamma'     'c1'        'c2'        'w'         'x'         'y'         'z'     
+    'default'    [1.2000]    [0.9200]    [0.9600]    [0.0700]    [0.0800]    [0.0900]    [0.3200]
+    'urban'      [1.2000]    [0.9200]    [0.9600]    [0.0500]    [0.0600]    [0.0700]    [0.3000]
+
+  Columns 9 through 16
+
+    'zeta'      'eff'       'res'       'att'       'per'    'theta'    'sexratio'    'probs' 
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [  1]    [    3]    [  0.5000]    [0.0100]
+    [0.5000]    [0.9500]    [0.0300]    [0.9000]    [  1]    [    3]    [  0.5000]    [0.0100]
+
+  Column 17
+
+    'probb' 
+    [0.0400]
+    [0.0400]
+
+small2HIV(p,r2)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('small2HIV', 'T:\Crock\SmallModel\small2HIV.m', 12)" style="font-weight:bold">small2HIV</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',12,0)">line 12</a>)
+Not enough input arguments.
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',12,1)">12  </a>    for output=1:numel(runs1)
+small2HIV(p,r2)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+Unable to read file 'C:/Users/Crock/Documents/r2/interventions/1/input/BioYearInt'. No such file or
+directory.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('small2HIV', 'T:\Crock\SmallModel\small2HIV.m', 13)" style="font-weight:bold">small2HIV</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',13,0)">line 13</a>)
+        load(sprintf(fileby,output),'PNGintBioVals','biointyrs')
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',13,1)">13  </a>        load(sprintf(fileby,output),'PNGintBioVals','biointyrs')
+small2HIV(p,r2)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('load')" style="font-weight:bold">load</a>
+Unable to read file 'C:/Users/Crock/Documents/r2/interventions/1/input/BioYearInt'. No such file or
+directory.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('small2HIV', 'T:\Crock\SmallModel\small2HIV.m', 13)" style="font-weight:bold">small2HIV</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',13,0)">line 13</a>)
+        load(sprintf(fileby,output),'PNGintBioVals','biointyrs')
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',13,1)">13  </a>        load(sprintf(fileby,output),'PNGintBioVals','biointyrs')
+r2='C:/Users/Crock/Documents/r2/lowfs'
+
+r2 =
+
+C:/Users/Crock/Documents/r2/lowfs
+
+if system_dependent('IsDebugMode')==1, dbquit; end
+r2='C:/Users/Crock/Documents/r2/lowfs'
+
+r2 =
+
+C:/Users/Crock/Documents/r2/lowfs
+
+small2HIV(p,r2)
+{Undefined variable PNGintBioYear.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('small2HIV', 'T:\Crock\SmallModel\small2HIV.m', 17)" style="font-weight:bold">small2HIV</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',17,0)">line 17</a>)
+            if all((PNGintBioYear.(['sti_' pops{jj} '1'])-pop(jj,end))^2<0.0001)
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',17,1)">17  </a>            if all((PNGintBioYear.(['sti_' pops{jj} '1'])-pop(jj,end))^2<0.0001)
+small2HIV(p,r2)
+{Error using <a href="matlab:matlab.internal.language.introspective.errorDocCallback('mpower')" style="font-weight:bold"> ^ </a>
+Inputs must be a scalar and a square matrix.
+To compute elementwise POWER, use POWER (.^) instead.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('small2HIV', 'T:\Crock\SmallModel\small2HIV.m', 17)" style="font-weight:bold">small2HIV</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',17,0)">line 17</a>)
+            if all((PNGintBioVals.(['sti_' pops{jj} '1'])-pop(jj,end))^2<0.0001)
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',17,1)">17  </a>            if all((PNGintBioVals.(['sti_' pops{jj} '1'])-pop(jj,end))^2<0.0001)
+small2HIV(p,r2)
+{Attempt to reference field of non-structure array.
+
+Error in <a href="matlab:matlab.internal.language.introspective.errorDocCallback('small2HIV', 'T:\Crock\SmallModel\small2HIV.m', 21)" style="font-weight:bold">small2HIV</a> (<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',21,0)">line 21</a>)
+                PNGintBioVals.(['sti_' pops{jj} '2'])=yearly(popint(jj,:),rates.steps);
+} 
+<a href="matlab: opentoline('T:\Crock\SmallModel\small2HIV.m',21,1)">21  </a>                PNGintBioVals.(['sti_' pops{jj} '2'])=yearly(popint(jj,:),rates.steps);
+small2HIV(p,r2)
+small2HIV(p,r2)
+load([r2 '/interventions/1/input/BioYearInt'])
+PNGintBioVals.sti_m2
+
+ans =
+
+  Columns 1 through 10
+
+    0.0700    0.0673    0.0637    0.0611    0.0589    0.0571    0.0557    0.0545    0.0536    0.0528
+
+  Columns 11 through 13
+
+    0.0522    0.0528    0.0543
+
+[r2 '/interventions/1/input/BioYearInt']
+
+ans =
+
+C:/Users/Crock/Documents/r2/lowfs/interventions/1/input/BioYearInt
+

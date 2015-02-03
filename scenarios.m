@@ -20,6 +20,8 @@ pin=[...
     {'psi';sensit;{0.67,.67*1.1,.67*.9}} ...
     {'eff';sensit;{0.95;1-.05*1.1;1-.05*.9}} ...
     {'res';sensit;{0.01;0.01*1.1;0.01*.9}} ... % Resistance per year
+    {'probbmod';sensit;{1;1.1;0.9}} ...
+    {'probsmod';sensit;{1;1.1;0.9}} ...
     {'region';regional;{2;1}} ...
     {'w';regional;{0.07;0.05}} ...
     {'x';regional;{0.08;0.06}} ...
@@ -27,7 +29,8 @@ pin=[...
     {'z';regional;{0.32;0.30}} ...
     {'probs';regional;{0.01;0.05}} ...
     {'probb';regional;{0.04;0.06}} ...
-    {'alphalr';al;{0;0.5;1}} ...
+    {'alpham';al;{0;0.5;1}} ...
+    {'alphaf';al;{0;0.5;1}} ...
     {'alphab';al;{0;0.5;1}} ...
     {'alphas';al;{1}} ...
     {'chiu';ch;{1;0;0.5}} ...
@@ -41,7 +44,9 @@ blocks=cell2mat(pin(2,:));
 npin=find(blocks==sensit);
 ipin=find(blocks==al|blocks==ch|blocks==cv);
 upin=[npin ipin];
-
+%% Complaints
+for ii={
+        },disp(ii);end
 %% Group scenarios
     tablein={
         'as',['Consequences of applying intervention to ' 10 ...
@@ -53,6 +58,9 @@ upin=[npin ipin];
         'gmph','s',{'gamma';'phi';}
         'durr','s',{'eff';'res';'theta';}
         'ulev','s',{'exception';'phipsi2';'highsti'}
+        'pbmd','s',{'probbmod';'probsmod'}
+        'alph','i',{'giveb';'addb';'givef';'addf';'givem';'addm'}
+        'ashr','i',{'propb'}
         }';
     tables=gettables(tablein);
     
@@ -71,26 +79,97 @@ upin=[npin ipin];
     for t = type
         switch t{:}
             case {'list' 'l'}
-                L={
-                    'swapal' al {'default','alphalr',1,'alphas',0} {} ...
-                    ['Provide PPT to general males ' 10 ...
-                     'and females, and not to FSW']
-                    'flatlr2' al {'default','alphalr',0.5,'alphab',0.5} ...
-                    {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)./ ...
-                    (0.5+0.5*rates.probs*(1-rates.sexratio))} ''
-                    'flatlr3' al {'default','alphalr',1,'alphab',1} ...
-                    {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)} ''
-                    'flatb2' al {'default','alphab',0.5} ...
-                    {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)/...
-                    (rates.probs*(1-rates.sexratio)+0.5*rates.probb*rates.sexratio)} ''
-                    'flatb3' al {'default','alphab',1} ...
-                    {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)/...
-                    (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)} ''
-                    'phipsi2' sensit {'default','phi',0.67,'psi',0.83} {} 'High phi and psi'
-                    'highsti' sensit {'default'} {'w',@(rates)rates.w*2; ...
-                    'x',@(rates)rates.x*2;'y',@(rates)rates.y*2; ...
-                    'z',@(rates)rates.z*2} 'High starting sti'
+                for dummy=1
+                    L={
+                        'swapal' al {'default','alphalr',1,'alphas',0} {} ...
+                        ['Provide PPT to general males ' 10 ...
+                        'and females, and not to FSW']
+                        'flatlr2' al {'default','alphalr',0.5,'alphab',0.5} ...
+                        {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)./ ...
+                        (0.5+0.5*rates.probs*(1-rates.sexratio))} ''
+                        'flatlr3' al {'default','alphalr',1,'alphab',1} ...
+                        {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)} ''
+                        'flatb2' al {'default','alphab',0.5} ...
+                        {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)/...
+                        (rates.probs*(1-rates.sexratio)+0.5*rates.probb*rates.sexratio)} ''
+                        'flatb3' al {'default','alphab',1} ...
+                        {'zeta',@(rates) rates.zeta*rates.probs*(1-rates.sexratio)/...
+                        (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)} ''
+                        'phipsi2' sensit {'default','phi',0.67,'psi',0.83} {} 'High phi and psi'
+                        'highsti' sensit {'default'} {'w',@(rates)rates.w*2; ...
+                        'x',@(rates)rates.x*2;'y',@(rates)rates.y*2; ...
+                        'z',@(rates)rates.z*2} 'High starting sti'
+                        }';
+                end
+                %end
+                if any(strcmp(varargin,'n'))
+                    fg=0.9;
+                    fa=0.2;
+                    L={
+                        'propb' al {'default','alphab',1} ...
+                        {'zeta',@(rates)rates.zeta*rates.probs*(1-rates.sexratio)/...
+                        (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)} ...
+                        'Move PPT among MSMW and FSW'
+                        'giveb' al {'default','alphas',1-fg} ...
+                        {'alphab',@(rates)fg*rates.probs/(rates.probb)} ... % NEED SEXRATIO=1
+                        [num2str(fg*100) '% of PPT moved to MSMW']
+                        'addb' al {'default'} {'alphab',@(rates)0.2*rates.probs/rates.probb} ...
+                        'Provide 20% PPT to MSMW and FSW'
+%                         'propf' al {'default','alphaf',1} ...
+%                         {'zeta',@(rates) rates.zeta*rates.probs} ...
+%                         'Move PPT among general females and FSW'
+                        'givef' al {'default','alphas',1-fg} ...
+                        {'alphaf',@(rates)fg*rates.probs/(1-rates.probs)} ...
+                        [num2str(fg*100) '% of PPT coverage moved to general females']
+                        'addf' al {'default'} {'alphaf',@(rates)0.2*rates.probs/(1-rates.probs)} ...
+                        'Provide 20% PPT to general females and FSW'
+                        'givem' al {'default','alphas',1-fg} ...
+                        {'alpham',@(rates)fg*rates.probs/(1-rates.probs)} ...
+                        [num2str(fg*100) '% of PPT coverage moved to general males']
+                        'addm' al {'default'} {'alpham',@(rates)0.2*rates.probs/(1-rates.probs)} ...
+                        'Provide 20% PPT to general males and FSW'
                     }';
+                elseif any(strcmp(varargin,'b'))
+                    if ~strcmp(varargin(end),'b')&isnumeric(varargin{[false strcmp(varargin(1:end-1),'b')]})
+                        fg=varargin{[false strcmp(varargin(1:end-1),'b')]};
+                    else
+                        fg=[0.1 0.3 0.5 0.6 0.9 1];
+                    end
+                    L=cell(length(fg),5);
+                    for ii=1:length(fg)
+                        L(ii,:)={['giveb' num2str(round(fg(ii)*10,0))] al {'default','alphas',1-fg(ii)} ...
+                        {'alphab',@(rates)fg(ii)*rates.probs/(rates.probb)} ... % NEED SEXRATIO=1
+                        [num2str(fg(ii)*100) '% of PPT moved to MSMW']};
+                    end
+                    L=L';
+                elseif any(strcmp(varargin,'f'))
+                    fg=[0.1 0.3 0.5 0.7 0.9 1];
+                    L=cell(length(fg),5);
+                    for ii=1:length(fg)
+                        L(ii,:)={['givef' num2str(round(fg(ii)*10,0))] al {'default','alphas',1-fg(ii)} ...
+                            {'alphaf',@(rates)fg(ii)*rates.probs/(1-rates.probs)} ... % NEED SEXRATIO=1
+                            [num2str(fg(ii)*100) '% of PPT moved to general females']};
+                    end
+                    L=L';
+                elseif any(strcmp(varargin,'m'))
+                    fg=[0.1 0.3 0.5 0.7 0.9 1];
+                    L=cell(length(fg),5);
+                    for ii=1:length(fg)
+                        L(ii,:)={['giveb' num2str(round(fg(ii)*10,0))] al {'default','alphas',1-fg(ii)} ...
+                            {'alphab',@(rates)fg(ii)*rates.probs/(1-rates.probb)} ... % NEED SEXRATIO=1
+                            [num2str(fg(ii)*100) '% of PPT moved to general males']};
+                    end
+                    L=L';
+                elseif any(strcmp(varargin,'o'))
+                    L={'zeros' al {'default','zeta',1,'eff',0.8,'res',Inf,'tau',12} {} 'Zero I_S'
+                        'zerob' al {'default','alphas',0,'alphab',.83,'zeta',1,'eff',0.8,'res',Inf,'tau',12} ...
+                        {'eff',@(rates)rates.eff*rates.probs/rates.probb} 'Zero I_B'
+                        }';
+                end
+                for ii=1:size(tables,2)
+                    tables{2,ii}=tables{2,ii}(ismember(tables{2,ii},[{'default'} L(1,:)]));
+                end
+                tables=tables(:,cellfun(@length,tables(2,:))>1);
                 for ii=1:size(L,2)
                     scen.(L{1,ii})=L{3,ii};
                     if ~isempty(L{4,ii})
@@ -198,41 +277,49 @@ end
 function tables=gettables(tablein)
     tables=cell(size(tablein)-[1 0]);
     for ii=1:size(tables,2)
-        namein=tablein{3,ii};
-        if ~strcmp(namein{1},'exception')
-            if isequal(tablein{2,ii},'s')
-                titlestr='Sensitivity to ';
-                cjn=' and ';
-            elseif isequal(tablein{2,ii},'i')
-                titlestr='Consequences of varying ';
-                cjn=' or ';
-            end
-            if length(namein)==2
-                tables{1,ii}=[titlestr namein{1} cjn namein{2}];
-                tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']};
-                if strcmp(namein{1},'alphab')
-                    tables{1,ii}='Consequences of extending PPT to MSMW';
-                elseif strcmp(namein{1},'alphalr')
-                    tables{1,ii}='Consequences of extending PPT to all populations';
-                end
-            elseif length(namein)==1
-                tables{1,ii}=[titlestr namein{1}];
-                tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3']};
-            elseif length(namein)==7
-            elseif length(namein)==4
-                tables{1,ii}=[titlestr namein{1} cjn namein{2}];
-                tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']; ...
-                    [namein{3} '2'];[namein{3} '3'];[namein{4} '2'];[namein{4} '3']};                
-            elseif length(namein)==3
-                tables{1,ii}=[titlestr namein{1} cjn namein{2}];
-                tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']; ...
-                    [namein{3} '2'];[namein{3} '3'];};
-            end
+        if strcmp(tablein{1,ii},'alph')
+            tables{1,ii}='Effect of providing PPT to other populations';
+            tables{2,ii}=[{};'default';tablein{3,ii}];
+        elseif strcmp(tablein{1,ii},'ashr')
+            tables{1,ii}='Effect of providing PPT equally to FSW and MSMW';
+            tables{2,ii}=[{};'default';tablein{3,ii}];
         else
-            if 0
+            namein=tablein{3,ii};
+            if ~strcmp(namein{1},'exception')
+                if isequal(tablein{2,ii},'s')
+                    titlestr='Sensitivity to ';
+                    cjn=' and ';
+                elseif isequal(tablein{2,ii},'i')
+                    titlestr='Consequences of varying ';
+                    cjn=' or ';
+                end
+                if length(namein)==2
+                    tables{1,ii}=[titlestr namein{1} cjn namein{2}];
+                    tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']};
+                    if strcmp(namein{1},'alphab')
+                        tables{1,ii}='Consequences of extending PPT to MSMW';
+                    elseif strcmp(namein{1},'alphalr')
+                        tables{1,ii}='Consequences of extending PPT to all populations';
+                    end
+                elseif length(namein)==1
+                    tables{1,ii}=[titlestr namein{1}];
+                    tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3']};
+                elseif length(namein)==7
+                elseif length(namein)==4
+                    tables{1,ii}=[titlestr namein{1} cjn namein{2}];
+                    tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']; ...
+                        [namein{3} '2'];[namein{3} '3'];[namein{4} '2'];[namein{4} '3']};
+                elseif length(namein)==3
+                    tables{1,ii}=[titlestr namein{1} cjn namein{2}];
+                    tables{2,ii}={'default';[namein{1} '2'];[namein{1} '3'];[namein{2} '2'];[namein{2} '3']; ...
+                        [namein{3} '2'];[namein{3} '3'];};
+                end
             else
-                tables{1,ii}=tablein{2,ii};
-                tables{2,ii}=['default';namein(2:end)];
+                if 0
+                else
+                    tables{1,ii}=tablein{2,ii};
+                    tables{2,ii}=['default';namein(2:end)];
+                end
             end
         end
     end
