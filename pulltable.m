@@ -8,6 +8,8 @@ function data=pulltable(intdir,timesteps,steps_year,labels)
     end
     load([intdir 'Results/PngHIVIntervene1'],'HIVIntResults1')
     results=getPNGresults(HIVIntResults1,timesteps,steps_year,labels);
-    data=results.incall(end);
+    dataa=results.incall(end);
+    datas=results.incs1(end)+results.incs2(end);
+    data=[datas dataa];
 end
 

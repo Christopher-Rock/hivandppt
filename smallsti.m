@@ -1,6 +1,7 @@
 function [ratios,popwith,rates,prpl,popint,popintout,oldproportional]=smallsti(rates,varargin)
 % SMALLSTI  Run simulation using structure imput
 % First five arguments are used - DO NOT EDIT
+% Outputs are USTI levels after combining UBSTIs and UVSTIs
 
 %% Load input parameters
 gamma=rates.gamma;
@@ -56,7 +57,7 @@ if any(strcmp(varargin,'quick'))
 else
     quick=0;
 end
-%% Set time parameters
+%% Set time step parameters
     % Populations m, f, s
     % At each time step,
     yintstart=2;
@@ -67,7 +68,7 @@ end
     intlength=yintlength*steps;
     obslength=yobslength*steps;
     tmax=intstart+intlength+obslength;
-    for ii={ 'steps'
+    for ii={ 
             },if(mod(now*24*60,1)*60<0.5), disp(ii);end;end
 %% Adjust step-dependent parameters
     gamma=gamma/steps;
@@ -89,8 +90,8 @@ end
     popintout=zeros(4,intlength+obslength+1,3);
     popintout(:,1,1)=pop(1:4,intstart);
     popintout(:,1,2)=pop(1:4,intstart);
-    popintout(:,1,2)=pop(1:4,intstart).*(1-zetax./rates.zeta*eff);
-    'HO HO HO'
+%     popintout(:,1,2)=pop(1:4,intstart).*(1-zetax./rates.zeta*eff);
+%     'HO HO HO'
 %% Intervention loop
     for tint=2:intlength+1
         popintout(:,tint,:)=smalltsti(popintout(:,tint-1,:),betam,betab,betaf,betas, ...
@@ -126,6 +127,7 @@ end
     end
 %% Intervention output
 popint=bsxfun(@times,popintout(:,:,1),1-zetax)+bsxfun(@times,popintout(:,:,2),zetax);
+totint=sum(bsxfun(@times,popint,N),1);
 %% Model output
     popwith=bsxfun(@plus,popint,otherlevel)-bsxfun(@times,popint,otherlevel.*F);
     proportional=sum(bsxfun(@times,popwith,N./stilevel));
@@ -135,19 +137,22 @@ popint=bsxfun(@times,popintout(:,:,1),1-zetax)+bsxfun(@times,popintout(:,:,2),ze
     ratios(2)=1-proportional(10*steps);
     prpl=proportional*sum(N.*equilib);
     rates.steps=steps;
+    rates.intstart=intstart;
     rates.intlength=intlength;
 %% Model plot
 if(2)
     cc=parula(16);
     plot ((0:intstart+intlength)/steps,pop(:,1:intstart+intlength+1)')
     holdnow=ishold(gcf);  hold all;
+    set(gca,'ColorOrderIndex',1)
     plot((intstart:intstart+intlength)/steps,popint(:,1:intlength+1)')%,'color',cc((1:8)+(rates.region-1)*8,:))
+    plot((0:intstart+intlength)/steps,totint([ones(1,intstart) 1:end]),'k-')
 %     plot(yintstart+yintlength*[1;1],[0 1],'k-')
     if rates.region==1
         set(gca,'ColorOrderIndex',1)
     end
     if ~holdnow, hold off; end
-    ylim([0 0.2]);legend([get(legend(gca),'String') {'m','b','f','s','m_{int}','b_{int}','f_{int}','s_{int}'}])
+    ylim([0 0.2]);legend([get(legend(gca),'String') {'m','b','f','s','m_{int}','b_{int}','f_{int}','s_{int}','t'}])
     if isfield(rates,'desc')
         title(['Infection levels for trial: ' desc])
     else

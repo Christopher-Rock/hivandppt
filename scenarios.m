@@ -1,4 +1,8 @@
 function [p,tables,pin,scen,scenblocks,ps]=scenarios(type,varargin)
+% SCENARIOS Create cell containing parameter values.
+%           For each set of values, there are 10 scenarios to run.
+%
+%
 %% Define indices
 const=-2;
 regional=-1;
@@ -14,8 +18,8 @@ pin=[...
     {'rsm';const;{1}} ...
     {'cfm';const;{4}} ...
     {'rfm';const;{0.7}} ...
-    {'gamma';sensit;{1.20;1.2*1.1;1.2*.9}} ...
-    {'theta';sensit;{365.25/122;1;7;}} ...
+    {'gamma';sensit;{1;1*1.1;1*.9}} ...
+    {'theta';sensit;{7;3;14;}} ...
     {'phi';sensit;{0.50,0.5*1.1,0.5*.9}} ...
     {'psi';sensit;{0.67,.67*1.1,.67*.9}} ...
     {'eff';sensit;{0.95;1-.05*1.1;1-.05*.9}} ...
@@ -29,15 +33,15 @@ pin=[...
     {'z';regional;{0.32;0.30}} ...
     {'probs';regional;{0.01;0.05}} ...
     {'probb';regional;{0.04;0.06}} ...
-    {'alpham';al;{0;0.5;1}} ...
-    {'alphaf';al;{0;0.5;1}} ...
-    {'alphab';al;{0;0.5;1}} ...
+    {'alpham';al;{0;0.5;.2}} ...
+    {'alphaf';al;{0;0.5;.2}} ...
+    {'alphab';al;{0;0.5;.2}} ...
     {'alphas';al;{1}} ...
     {'chiu';ch;{1;0;0.5}} ...
     {'chir';ch;{1;0;0.5}} ...
-    {'zeta';cv;{0.75;0.5;0.9}} ...
-    {'tau';cv;{6;4;12}} ...
-    {'intnum';cv;{1;2;3;4;5}} ...
+    {'zeta';cv;{0.75;0.5}} ...
+    {'tau';cv;{6;12}} ...
+    {'intnum';cv;{3;1;2;4}} ...
     {'sexratio';const;{0.5}} ...
     {'longdesc';const;{'Default intervention'}} ];
 blocks=cell2mat(pin(2,:));
@@ -55,14 +59,17 @@ for ii={
         'ab','i',{'alphab';'flatb'}
         'ch','i',{'chir';'chiu'}
         'cv','i',{'zeta';'tau'}
-        'gmph','s',{'gamma';'phi';}
-        'durr','s',{'eff';'res';'theta';}
+        'gmph','s',{'gamma';'psi';}
+        'durr','s',{'phi';'eff';'res';'theta';}
         'ulev','s',{'exception';'phipsi2';'highsti'}
         'pbmd','s',{'probbmod';'probsmod'}
         'alph','i',{'giveb';'addb';'givef';'addf';'givem';'addm'}
         'ashr','i',{'propb'}
         }';
     tables=gettables(tablein);
+    if nargin==0
+        tables={'def';{'default'}};
+    end
     
 
 
@@ -103,15 +110,15 @@ for ii={
                 end
                 %end
                 if any(strcmp(varargin,'n'))
-                    fg=0.9;
+                    fg=1;
                     fa=0.2;
                     L={
-                        'propb' al {'default','alphab',1} ...
-                        {'zeta',@(rates)rates.zeta*rates.probs*(1-rates.sexratio)/...
-                        (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)} ...
-                        'Move PPT among MSMW and FSW'
+%                         'propb' al {'default','alphab',1} ...
+%                         {'zeta',@(rates)rates.zeta*rates.probs*(1-rates.sexratio)/...
+%                         (rates.probs*(1-rates.sexratio)+rates.probb*rates.sexratio)} ...
+%                         'Move PPT among MSMW and FSW'
                         'giveb' al {'default','alphas',1-fg} ...
-                        {'alphab',@(rates)fg*rates.probs/(rates.probb)} ... % NEED SEXRATIO=1
+                        {'alphab',@(rates)fg*rates.probs/(rates.probb)*2} ... % NEED SEXRATIO=1
                         [num2str(fg*100) '% of PPT moved to MSMW']
                         'addb' al {'default'} {'alphab',@(rates)0.2*rates.probs/rates.probb} ...
                         'Provide 20% PPT to MSMW and FSW'
@@ -119,12 +126,12 @@ for ii={
 %                         {'zeta',@(rates) rates.zeta*rates.probs} ...
 %                         'Move PPT among general females and FSW'
                         'givef' al {'default','alphas',1-fg} ...
-                        {'alphaf',@(rates)fg*rates.probs/(1-rates.probs)} ...
+                        {'alphaf',@(rates)fg*rates.probs/(1-rates.probs)*20} ...
                         [num2str(fg*100) '% of PPT coverage moved to general females']
                         'addf' al {'default'} {'alphaf',@(rates)0.2*rates.probs/(1-rates.probs)} ...
                         'Provide 20% PPT to general females and FSW'
                         'givem' al {'default','alphas',1-fg} ...
-                        {'alpham',@(rates)fg*rates.probs/(1-rates.probs)} ...
+                        {'alpham',@(rates)fg*rates.probs/(1-rates.probs)*20} ...
                         [num2str(fg*100) '% of PPT coverage moved to general males']
                         'addm' al {'default'} {'alpham',@(rates)0.2*rates.probs/(1-rates.probs)} ...
                         'Provide 20% PPT to general males and FSW'
@@ -165,6 +172,16 @@ for ii={
                         'zerob' al {'default','alphas',0,'alphab',.83,'zeta',1,'eff',0.8,'res',Inf,'tau',12} ...
                         {'eff',@(rates)rates.eff*rates.probs/rates.probb} 'Zero I_B'
                         }';
+                elseif any(strcmp(varargin,'c'))
+                    a1=.2; A1=sprintf('%d',a1*100);
+                    a2=.24; A2=sprintf('%d',a2*100);
+                    L={ ['m' A1] al {'default' 'alpham' a1 'alphab' a1 'alphas' 0} {} ['Treat males at ' A1 '%']
+                        ['m' A2] al {'default' 'alpham' a2 'alphab' a2 'alphas' 0} {} ['Treat males at ' A2 '%']
+                        ['f' A1] al {'default' 'alphaf' a1 'alphas' a1} {} ['Treat females at ' A1 '%']
+                        ['f' A2] al {'default' 'alphaf' a2 'alphas' a2} {} ['Treat females at ' A2 '%']
+                        ['mix' A1] al {'default' 'alpham' a1/2 'alphaf' a1/2 'alphab' a1/2 'alphas' a1/2} {} [A1 '% mix']
+                        ['mix' A2] al {'default' 'alpham' a2/2 'alphaf' a2/2 'alphab' a2/2 'alphas' a2/2} {} [A2 '% mix']
+                        }';
                 end
                 for ii=1:size(tables,2)
                     tables{2,ii}=tables{2,ii}(ismember(tables{2,ii},[{'default'} L(1,:)]));
@@ -185,6 +202,8 @@ for ii={
                     cmp=varargin{[false strcmp(varargin(1:end-1),'subset')]};
                     if iscell(cmp)
                         cmp=cmp(:);
+                    elseif strcmp(cmp,'s')
+                        cmp={'psi' 'phi' 'gamma' 'theta' 'eff' 'res' }';
                     end
                     for ii=1:size(tables,2)
                         tables{2,ii}=tables{2,ii}(ismember(tables{2,ii},[{'default'};cmp;strcat(cmp,'2');strcat(cmp,'3')]));
@@ -192,10 +211,15 @@ for ii={
                     tables=tables(:,cellfun(@length,tables(2,:))>1);
                 end
                 for ii=upin
+                    if any(strcmp(varargin,'nos'))
+                        extra={'alphas',0};
+                    else
+                        extra={};
+                    end
                     if ~any(strcmp(varargin,'subset'))|any(strcmp(pin{1,ii},cmp))
                         for jj=2:numel(pin{3,ii})
                             if ~isequal(pin{3,ii}{1},pin{3,ii}{jj})
-                                scen.(sprintf('%s%d',pin{1,ii},jj))={'default',pin{1,ii},pin{3,ii}{jj}};
+                                scen.(sprintf('%s%d',pin{1,ii},jj))=[{'default',pin{1,ii},pin{3,ii}{jj}} extra];
                                 longdesc.(sprintf('%s%d',pin{1,ii},jj))= ...
                                     getlongdesc(pin{1,ii},pin{3,ii}{jj}, ...
                                     pin{3,ii}{jj}<pin{3,ii}{1} );
@@ -218,6 +242,30 @@ for ii={
                         scenblocks=[scenblocks 4];
                     end
                 end
+            case 'e'
+                scen=struct();
+                tables={'title';{'default'}};
+            case 'f'
+                alphaset={
+                    @(zz){'alpham',zz,'alphab',zz,'alphas',0,'zeta',1}
+                    @(zz){'alphaf',zz,'alphas',zz,'zeta',1}
+                    @(zz){'alpham',zz/2,'alphab',zz/2,'alphaf',zz/2,'alphas',zz/2,'zeta',1}
+                    };
+                zetaset=[.2 .3];
+                nameset={'men','women','both'};
+                if nargin==2
+                    alphaset=alphaset(strcmp(nameset,varargin{1}));
+                    nameset=nameset(strcmp(nameset,varargin{1}));
+                end                    
+                temp={};
+                for ii=1:length(alphaset)
+                    for zz=zetaset
+                        scen.(sprintf('%s%d',nameset{ii},zz*10))=['default',alphaset{ii}(zz)];
+                        temp=[temp;sprintf('%s%d',nameset{ii},zz*10)];
+                    end
+                end
+                tables={'bypop';temp};
+                scenblocks=[scenblocks repmat(al,1,6)];
             otherwise
                 disp(type)
         end
@@ -235,12 +283,15 @@ for ii=find(blocks==regional)
     pbase{1,ii}=pin{1,ii};
     [pbase{2:3,ii}]=pin{3,ii}{:};
 end
-pnew=pbase([1  2 3  2 3  2 3  2 3  2 3],:);
-pnew=cellop(pnew,'set',3:4,'zeta',pin{3,strcmp('zeta',pin(1,:))}{2},'intnum',2);
-pnew=cellop(pnew,'set',5:6,'zeta',pin{3,strcmp('zeta',pin(1,:))}{3},'intnum',3);
+pnew=pbase([1  2 3  2 3  2 3  2 3 ],:);
+pnew=cellop(pnew,'set',1:2,'zeta',pin{3,strcmp('zeta',pin(1,:))}{2},'intnum',1);
+pnew=cellop(pnew,'set',3:4,'zeta',pin{3,strcmp('zeta',pin(1,:))}{2},'tau',pin{3,strcmp('tau' ,pin(1,:))}{2},'intnum',2);
 pnew=cellop(pnew,'set',7:8,'tau',pin{3,strcmp('tau',pin(1,:))}{2},'intnum',4);
-pnew=cellop(pnew,'set',9:10,'tau',pin{3,strcmp('tau',pin(1,:))}{3},'intnum',5);
 p=pnew;
+
+if any(strcmp(type,'f'))
+    p=pnew(1:5,:); %#ok<NASGU> % remember to adjust for the header row!
+end
     
 %% Append other cell-format scenarios
 blocksinuse=find(ismember(1:max(blocks),blocks));
@@ -270,6 +321,10 @@ for block=blocksinuse
         ps{block}=p;
         p=pbase;
     end
+end
+
+if any(strcmp(type,'f'))
+    p=p([1 6:end],:);
 end
 end
 

@@ -55,7 +55,8 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
     if ~userpsset
         psset=1:size(tables,2); end
     tabless=tables{:,psset};
-    scentodo=numel(cat(1,tables{2,psset}))*5;
+    numvers=sum(strcmp(p(:,1),p{2,1}));
+    scentodo=numel(cat(1,tables{2,psset}))*numvers/2;
     scensofar=0;
     fprintf('This is %s. Generating results for %d scenarios. \n', ...
         mfilename,scentodo)
@@ -79,10 +80,11 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
 end
 
 function pout=getrows(p,names)
-    pout=cell(10*length(names)+1,size(p,2));
+    numvers=sum(strcmp(p(:,1),p{2,1}));
+    pout=cell(numvers*length(names)+1,size(p,2));
     pout(1,:)=p(1,:);
     for ii=1:length(names)
-        pout(10*ii-8:10*ii+1,:)=p(strcmp(p(:,1),names{ii}),:);
+        pout(numvers*(ii-1)+2:numvers*ii+1,:)=p(strcmp(p(:,1),names{ii}),:);
     end
 end
     

@@ -44,6 +44,7 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
         for run=runset
             rates=ratesall(run);
             ratios(:,run==runset)=smallsti(rates);
+            set(gca,'ColorOrderIndex',1)
             fprintf('1')
         end
     else
@@ -60,6 +61,7 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
             rates=ratesall(run);
             [ratios(:,run==runset),~,~,prpls(run==runset,:),popint]=smallsti(rates);
             ppis(run==runset,:)=popint(4,:);
+            set(gca,'ColorOrderIndex',1)
             fprintf('1')
         end
     end
@@ -84,7 +86,8 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     end
     %% SPLOT
     if splot
-        plotcmp(ratios(2,:),5,popsplit);
+        numvers=sum(strcmp({ratesall.desc},'default'));
+        plotcmp(ratios(2,:),numvers/2,popsplit);
     end
 end
 

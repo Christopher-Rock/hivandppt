@@ -1,4 +1,4 @@
-function data=pulltables(intdir,timesteps,steps_year,labels)
+function [dataa,datas]=pulltables(intdir,timesteps,steps_year,labels)
     if intdir(end)~='/'&& intdir(end)~='\'
         intdir=[intdir '/'];
     end
@@ -8,6 +8,7 @@ function data=pulltables(intdir,timesteps,steps_year,labels)
     end
     load([intdir 'Results/PngHIVIntervene1'],'HIVIntResults1')
     results=getPNGresults(HIVIntResults1,timesteps,steps_year,labels);
-    data=results.incall;
+    dataa=results.incall';
+    datas=results.incs1'+results.incs2';
 end
 
