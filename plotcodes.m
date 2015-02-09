@@ -17,7 +17,7 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs, urban','Cov=75%, Freq=6/year'});
+    title({'Prevalence of STIs, urban','Cov=75%, Freq=6/year'});
     
     ylim([0 .18])
     
@@ -30,7 +30,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YTick',0:.02:.2)
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'urban UBSTI.png'])
+    saveas(gcf,[figdir 'urban STI.png'])
     
     %% Prevalence plot 2 (copy and paste)
     clf
@@ -42,7 +42,7 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs, rural','Cov=75%, Freq=6/year'});
+    title({'Prevalence of STIs, rural','Cov=75%, Freq=6/year'});
     
     ylim([0 .18])
     set(gca,'YTick',0:.02:.2)
@@ -56,7 +56,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'rural UBSTI.png'])
+    saveas(gcf,[figdir 'rural STI.png'])
     
     %% Prevalence plot combined
 
@@ -89,7 +89,7 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs, overall','Cov=75%, Freq=6/year'});
+    title({'Prevalence of STIs, overall','Cov=75%, Freq=6/year'});
     
     ylim([0 .18])
     set(gca,'YTick',0:.02:.2)
@@ -103,7 +103,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'Overall UBSTI.png'])
+    saveas(gcf,[figdir 'Overall STI.png'])
     
     %% Incidence plot (both regions)
     clf
@@ -140,9 +140,9 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs, urban','(various FSW treatment patterns)'});
+    title({'Prevalence of STIs, urban','(various FSW treatment patterns)'});
     
-    ylim([0,.041])
+    ylim([0,.0415])
     
     legend({...
         'Cov=50%, Freq=6/year',...
@@ -154,7 +154,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'urban UBSTI scen.png'])
+    saveas(gcf,[figdir 'urban STI scen.png'])
     
 
     %% Prevalence plot rural
@@ -179,9 +179,9 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs, rural','(various FSW treatment patterns)'});
+    title({'Prevalence of STIs, rural','(various FSW treatment patterns)'});
         
-    ylim([0,.041])
+    ylim([0,.0415])
     
     legend({...
         'Cov=50%, Freq=6/year',...
@@ -193,7 +193,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'rural UBSTI scen.png'])
+    saveas(gcf,[figdir 'rural STI scen.png'])
     
     
 
@@ -227,9 +227,9 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs, overall','(various FSW treatment patterns)'});    
+    title({'Prevalence of STIs, overall','(various FSW treatment patterns)'});    
     
-    ylim([0,.04])
+    ylim([0,.0415])
     
     legend({...
         'Cov=50%, Freq=6/year',...
@@ -241,7 +241,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'Overall UBSTI scen.png'])
+    saveas(gcf,[figdir 'Overall STI scen.png'])
 
     %% Incidence plot bypatt
     
@@ -293,9 +293,9 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs','Treating males and MSMW'});    
+    title({'Prevalence of STIs','Treating males and MSMW'});    
     
-    ylim([0,.04])
+    ylim([0,.0415])
     
     legend({...
         'Cov=20%, Freq=6/year',...
@@ -307,7 +307,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'UBSTI males.png'])
+    saveas(gcf,[figdir 'STI males.png'])
     
     
             %% Prevalence plot women
@@ -341,9 +341,9 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs','Treating females and FSW'});    
+    title({'Prevalence of STIs','Treating females and FSW'});    
     
-    ylim([0,.04])
+    ylim([0,.0415])
     
     legend({...
         'Cov=20%, Freq=6/year',...
@@ -355,7 +355,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'UBSTI females.png'])
+    saveas(gcf,[figdir 'STI females.png'])
     
     
                 %% Prevalence plot allpop
@@ -389,9 +389,9 @@ rows=@(A,rows)A(rows,:);
     xlabel('Years');
     
     % Create title
-    title({'Prevalence of UBSTIs','Treating all sub-populations'});    
+    title({'Prevalence of STIs','Treating all sub-populations'});    
     
-    ylim([0,.04])
+    ylim([0,.0415])
     
     legend({...
         'Cov=10%, Freq=6/year',...
@@ -403,7 +403,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     
     set(gcf,'PaperPosition',[0 0 13.5 9])
-    saveas(gcf,[figdir 'UBSTI allpop.png'])
+    saveas(gcf,[figdir 'STI allpop.png'])
     
         %% Incidence plot men
     
