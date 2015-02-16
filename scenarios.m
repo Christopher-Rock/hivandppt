@@ -84,8 +84,10 @@ for ii={
         type={type};
     end
     for t = type
+    %% Generate additional scenario descriptors
         switch t{:}
             case {'list' 'l'}
+                %% Cases considered in final output
                 for dummy=1
                     L={
                         'swapal' al {'default','alphalr',1,'alphas',0} {} ...
@@ -198,6 +200,7 @@ for ii={
                     scenblocks=[scenblocks L{2,ii}]; %#ok<*AGROW>
                 end
             case {'univariate' 'u'}
+                %% Standard sensitivity analysis by data in table
                 if any(strcmp(varargin,'subset'))
                     cmp=varargin{[false strcmp(varargin(1:end-1),'subset')]};
                     if iscell(cmp)
@@ -229,23 +232,25 @@ for ii={
                     end
                 end
             case 's'
+                %% Specify new scenarios from command line
                 if any(strncmp(type,'u',1))
                     error('Cannot mix ''u'' and ''s''') %#ok<ERTAG>
                 end
-                userscens=varargin(~strcmp(varargin,'blocks')&~strcmp(varargin,'subset'));
-                for ii=1:4:length(userscens)-1
+                userscens=varargin(~strcmp(varargin,'blocks')&~strcmp(varargin,'subset')&~strcmp(varargin,'nobase'));
+                for ii=1:2:length(userscens)-1
                     scen.(userscens{ii})=userscens{ii+1};
-                    try %#ok<TRYNC>
-                    longdesc.(userscens{ii})=userscens{ii+2};
-                    scenblocks=[scenblocks userscens{ii+3}];
-                    catch
-                        scenblocks=[scenblocks 4];
-                    end
+                    scenblocks=[scenblocks 4];
+                end
+                tables= [{'s'};{userscens(1:2:end)}];
+                if any(strcmp('nobase',varargin))
+                    tables{2,1}=[{'default'};tables{2,1}];
                 end
             case 'e'
+                %% Do nothing
                 scen=struct();
                 tables={'title';{'default'}};
             case 'f'
+                %% Treat other sub-pops
                 alphaset={
                     @(zz){'alpham',zz,'alphab',zz,'alphas',0,'zeta',1}
                     @(zz){'alphaf',zz,'alphas',zz,'zeta',1}
@@ -267,6 +272,7 @@ for ii={
                 tables={'bypop';temp};
                 scenblocks=[scenblocks repmat(al,1,6)];
             otherwise
+                %% Probable error
                 disp(type)
         end
     end
@@ -323,8 +329,12 @@ for block=blocksinuse
     end
 end
 
-if any(strcmp(type,'f'))
-    p=p([1 6:end],:);
+if any(strcmp(type,'f'))|any(strcmp(varargin,'nobase'))
+    if sum(strcmp(p(:,end),'Default intervention'))==8
+        p=p([1 10:end],:);
+    else
+        p=p([1 6:end],:);
+    end
 end
 end
 

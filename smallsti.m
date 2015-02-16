@@ -57,11 +57,19 @@ if any(strcmp(varargin,'quick'))
 else
     quick=0;
 end
+if any(strcmp(varargin,'il'))
+    useril=1;
+    yintlength=varargin{[false strcmp(varargin(1:end-1),'il')]};
+else
+    useril=0;
+end
 %% Set time step parameters
     % Populations m, f, s
     % At each time step,
     yintstart=2;
-    yintlength=10;
+    if ~useril
+        yintlength=10;
+    end
     yobslength=0;
     steps=round(365.25/theta); steps=12;
     intstart=yintstart*steps;
