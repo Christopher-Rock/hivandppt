@@ -246,7 +246,7 @@ rows=@(A,rows)A(rows,:);
     %% Incidence plot bypatt
     
     clf
-    incallunsc=dopulltables(scenarios,simdir);
+    [incallunsc,incfswunsc,incurbunsc,incfswurbunsc]=dopulltables(scenarios,simdir);
     incall=bsxfun(@rdivide,incallunsc,incallunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
     plot(1:12,1-incall([ones(1,2) 1:end],:))

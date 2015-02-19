@@ -1,4 +1,4 @@
-function [dataa,datas]=pulltables(intdir,timesteps,steps_year,labels)
+function [dataa,datas,dataa1,datas1]=pulltables(intdir,timesteps,steps_year,labels)
     if intdir(end)~='/'&& intdir(end)~='\'
         intdir=[intdir '/'];
     end
@@ -10,5 +10,7 @@ function [dataa,datas]=pulltables(intdir,timesteps,steps_year,labels)
     results=getPNGresults(HIVIntResults1,timesteps,steps_year,labels);
     dataa=results.incall';
     datas=results.incs1'+results.incs2';
+    dataa1=results.incs1'+results.incf1'+results.incm1'+results.incb1';
+    datas1=results.incs1;
 end
 
