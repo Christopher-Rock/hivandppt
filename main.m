@@ -2,7 +2,7 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     clf;
     hold on;
     addnames=0;
-    if nargin==1
+    if nargin==1|strcmp(runset,'a')
         if isstruct(inrates)
             runs=numel(inrates);
         else
@@ -27,6 +27,13 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     elseif nargin<4
         splot=0;
     end
+    quick=0;
+    if strcmp(nplot,'quick')
+        quick=1;
+        quickarg=popsplit;
+        nplot=0;
+        splot=0;
+    end
     %% Prepare for main loop
     disp([repmat(' ',1,numel(runset)-1),'|'])
     if ~isstruct(inrates)
@@ -34,7 +41,12 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     else
         ratesall=inrates;
     end
-    ratios=zeros(2,length(runset));
+    if ~quick
+        ratios=zeros(2,length(runset));
+    else
+        ratios1=smallsti(ratesall(runset(1)),'quick',quickarg);
+        ratios=repmat(ratios1,1,length(runset));
+    end
     try %#ok<TRYNC>
     oldfig=get(gcf,'Number');
     clf(oldfig-1+2*(oldfig<=1),'reset')
@@ -43,7 +55,11 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
         %% Main loop 1
         for run=runset
             rates=ratesall(run);
-            ratios(:,run==runset)=smallsti(rates);
+            if ~quick
+                ratios(:,run==runset)=smallsti(rates);
+            else
+                ratios(:,run==runset)=smallsti(rates,'quick',quickarg);
+            end
             set(gca,'ColorOrderIndex',1)
             fprintf('1')
         end
