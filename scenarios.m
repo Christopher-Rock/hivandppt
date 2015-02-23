@@ -245,7 +245,7 @@ for ii={
                 if any(strcmp('nobase',varargin))
                     tables{2,1}=[{'default'};tables{2,1}];
                 end
-            case 'e'
+            case {'e' 'tz'}
                 %% Do nothing
                 scen=struct();
                 tables={'title';{'default'}};
@@ -298,6 +298,18 @@ p=pnew;
 if any(strcmp(type,'f'))
     p=pnew(1:5,:); %#ok<NASGU> % remember to adjust for the header row!
 end
+
+%% Modify tau and zeta if desired
+if any(strcmp(type,'tz'))
+    zetas=varargin{1};
+    taus=varargin{2};
+    p=p([1 repmat(2:3,1,length(zetas)*length(taus))],:);
+    for ii=1:length(zetas)
+        p(1+(length(taus)*(2*ii-2)+1:length(taus)*2*ii),strcmp(p(1,:),'zeta'))={zetas(ii)};
+    end
+    p(2:end,strcmp(p(1,:),'tau'))=num2cell(reshape(repmat(taus(:),numel(zetas),2)',1,[]));
+end
+
     
 %% Append other cell-format scenarios
 blocksinuse=find(ismember(1:max(blocks),blocks));
@@ -329,6 +341,8 @@ for block=blocksinuse
     end
 end
 
+
+%% Remove unmodified scenarios if required
 if any(strcmp(type,'f'))|any(strcmp(varargin,'nobase'))
     if sum(strcmp(p(:,end),'Default intervention'))==8
         p=p([1 10:end],:);

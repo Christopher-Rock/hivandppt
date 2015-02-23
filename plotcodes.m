@@ -7,6 +7,7 @@ col=[
      0     0     0]/256*.9;
 Nr=[[.47 .03 .475 .025]' [.48 .02 .495 .005]'];
 rows=@(A,rows)A(rows,:);
+popsplit=.14;
     %% Prevalence plot 1
     clf
     smallsti(assct(scenarios,2));
@@ -61,17 +62,19 @@ rows=@(A,rows)A(rows,:);
     %% Prevalence plot combined
 
     % Calculate sum 
-    [temp1,~,rates]=smallsti(assct(scenarios,2),'quick','{pop,popint,totint}');
-    temp2=smallsti(assct(scenarios,1),'quick','{pop,popint,totint}');
+    [temp1,~,rates]=smallsti(assct(scenarios,2),'quick','{pop,popintout(:,:,1),totint}');
+    temp2=smallsti(assct(scenarios,1),'quick','{pop,popintout(:,:,1),totint}');
     steps=rates.steps;
     intstart=rates.intstart;
     intlength=rates.intlength;
     clf
-    popsplit=.14;
     for ii=1:3
         temp3{ii}=temp1{ii}*popsplit+temp2{ii}*(1-popsplit); 
     end
     [pop,popint,totint]=deal(temp3{:});
+    pop=pop./pop;
+    popint=bsxfun(@rdivide,popint,popint(:,1));
+    totint=bsxfun(@rdivide,totint,totint(1));
     
     % Plot
     plot ((0:intstart+intlength)/steps,pop(:,1:intstart+intlength+1)')
@@ -79,7 +82,7 @@ rows=@(A,rows)A(rows,:);
     set(gca,'ColorOrderIndex',1)
     plot((intstart:intstart+intlength)/steps,popint(:,1:intlength+1)')
     hold all
-    plot((0:intstart+intlength)/steps,totint([ones(1,intstart) 1:end]),'k-')
+%     plot((0:intstart+intlength)/steps,totint([ones(1,intstart) 1:end]),'k-')
     
     % Prettify
     % Create ylabel
@@ -94,11 +97,13 @@ rows=@(A,rows)A(rows,:);
     ylim([0 .18])
     set(gca,'YTick',0:.02:.2)
     
+    ylim([0 1])
+    set(gca,'YTick',0:.1:1)
     l=get(gca,'Children');
     for ii=2:5
         l(ii).Annotation.LegendInformation.IconDisplayStyle='off';
     end
-    legend('General males','MSMW','General females','FSW','Overall')
+    legend('General males','MSMW','General females','FSW','Overall','Location','SouthWest')
     
     set(gca,'YGrid','on')
     
@@ -263,6 +268,116 @@ rows=@(A,rows)A(rows,:);
     set(gca,'YGrid','on')
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV scen.png'])
+    
+    %% FSW all prev bypatt
+    whichset='a';
+    %% PPT FSW prev bypatt
+    for ii=1:4
+        totintr(ii,:)=smallsti(assct(scenarios,ii*2-1),'quick','popintout(4,:,2)'''); %#ok<*SAGROW>
+    end
+    totintr(5,:)=totintr(1,1);
+    if any(totintr(:,1)-totintr(1,1)),
+        error here %#ok<ERTAG>
+    end
+    for ii=1:4
+        totintu(ii,:)=smallsti(assct(scenarios,ii*2),'quick','popintout(4,:,2)'''); %#ok<*SAGROW>
+    end
+    totintu(5,:)=totintu(1,1);
+    if any(abs(totintu(:,1)-totintu(1,1))>1e-14),
+        error here %#ok<ERTAG>
+    end
+    totinto=totintu*popsplit+totintr*(1-popsplit);
+        % Plot
+    clf
+    set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
+    
+    disp(whichset);
+    switch whichset
+        case 'a'
+            plot((0:intstart+intlength)'/steps,totinto(:,[ones(1,intstart) 1:end])')
+            title({'Prevalence of STIs, all PPT FSW','(various FSW treatment patterns)'});
+        case 'r'
+            plot((0:intstart+intlength)'/steps,totintr(:,[ones(1,intstart) 1:end])')
+            title({'Prevalence of STIs, rural PPT FSW','(various FSW treatment patterns)'});
+        case 'u'
+            plot((0:intstart+intlength)'/steps,totintu(:,[ones(1,intstart) 1:end])')
+            title({'Prevalence of STIs, urban PPT FSW','(various FSW treatment patterns)'});
+    end
+    
+    % Prettify
+    % Create ylabel
+    ylabel('Prevalence');
+    
+    % Create xlabel
+    xlabel('Years');
+        
+    % Create title
+    
+    ylim([0,.16])
+    
+    legend({...
+        'Cov=50%, Freq=6/year',...
+        'Cov=50%, Freq=12/year',...
+        'Cov=75%, Freq=6/year',...
+        'Cov=75%, Freq=12/year',...
+        'Baseline scenario'},'Location','NorthEast')
+    
+    set(gca,'YGrid','on')
+    
+    set(gcf,'PaperPosition',[0 0 13.5 9])
+    saveas(gcf,[figdir 'PPT ' whichset ' FSW STI.png'])
+    
+    %% FSW whichset prev bypatt
+    for ii=1:4
+        totintr(ii,:)=smallsti(assct(scenarios,ii*2-1),'quick','popint(4,:)'''); %#ok<*SAGROW>
+    end
+    totintr(5,:)=totintr(1,1);
+    if any(totintr(:,1)-totintr(1,1)),
+        error here %#ok<ERTAG>
+    end
+    for ii=1:4
+        totintu(ii,:)=smallsti(assct(scenarios,ii*2),'quick','popint(4,:)'''); %#ok<*SAGROW>
+    end
+    totintu(5,:)=totintu(1,1);
+    if any(abs(totintu(:,1)-totintu(1,1))>1e-14),
+        error here %#ok<ERTAG>
+    end
+    totinto=totintu*popsplit+totintr*(1-popsplit);
+        % Plot
+    clf
+    set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
+    disp(whichset);
+    switch whichset
+        case 'a'
+            plot((0:intstart+intlength)'/steps,totinto(:,[ones(1,intstart) 1:end])')
+            title({'Prevalence of STIs, all FSW','(various FSW treatment patterns)'});
+        case 'r'
+            plot((0:intstart+intlength)'/steps,totintr(:,[ones(1,intstart) 1:end])')
+            title({'Prevalence of STIs, rural FSW','(various FSW treatment patterns)'});
+        case 'u'
+            plot((0:intstart+intlength)'/steps,totintu(:,[ones(1,intstart) 1:end])')
+            title({'Prevalence of STIs, urban FSW','(various FSW treatment patterns)'});
+    end
+    % Prettify
+    % Create ylabel
+    ylabel('Prevalence');
+    
+    % Create xlabel
+    xlabel('Years'); 
+    
+    ylim([0,.16])
+    
+    legend({...
+        'Cov=50%, Freq=6/year',...
+        'Cov=50%, Freq=12/year',...
+        'Cov=75%, Freq=6/year',...
+        'Cov=75%, Freq=12/year',...
+        'Baseline scenario'},'Location','NorthEast')
+    
+    set(gca,'YGrid','on')
+    
+    set(gcf,'PaperPosition',[0 0 13.5 9])
+    saveas(gcf,[figdir 'FSW ' whichset ' STI.png'])
     
         %% Prevalence plot men
     for ii=1:4
