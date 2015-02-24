@@ -1,4 +1,4 @@
-function [inc]=dopullpop(p,ii,simdir)
+function [inc]=dopullpop(p,ii,simdir,burnlen)
         id=[simdir '/interventions/'];
     load([id p{2,1} '_1' ...
         '/input/IndiParams'],'PNGparamsIndi')
@@ -19,7 +19,7 @@ function [inc]=dopullpop(p,ii,simdir)
     scaleb=bsxfun(@rdivide,datab,datab(1,:));
     plot((1:timesteps/steps_year)',scaleb)
     clf
-    plot(1:timesteps/steps_year,1-datan./datab);
+    plot([-burnlen:0 1:timesteps/steps_year],[zeros(burnlen+1,4);1-datan./datab]);
     
 end
     function data=pullpop(intdir,timesteps,steps_year,labels)
@@ -36,6 +36,7 @@ end
     dataf=results.incf1+results.incf2;
     datam=results.incm1+results.incm2;
     datab=results.incb1+results.incb2;
-    dataa=results.incall;
-    data=[datam' datab' dataf' datas' dataa'];
+    dataa=results.incall;         %#ok<NASGU>
+    data=[datam' datab' dataf' datas' ...dataa'
+        ];
 end
