@@ -28,5 +28,5 @@ end
     
     
 function annual=yearly(x,steps,intlength)
-    annual=x(1:steps:intlength)';
+    annual=x(round(steps/3):steps:intlength)';
 end

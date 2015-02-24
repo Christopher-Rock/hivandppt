@@ -153,8 +153,8 @@ if(2)
     plot ((0:intstart+intlength)/steps,pop(:,1:intstart+intlength+1)')
     holdnow=ishold(gcf);  hold all;
     set(gca,'ColorOrderIndex',1)
-    plot((intstart:intstart+intlength)/steps,popint(:,1:intlength+1)')%,'color',cc((1:8)+(rates.region-1)*8,:))
-    plot((0:intstart+intlength)/steps,totint([ones(1,intstart) 1:end]),'k-')
+    plot((intstart:intstart+intlength)/steps,[popintout(:,1:intlength+1,1)' popintout(4,1:intlength+1,2)'])%,'color',cc((1:8)+(rates.region-1)*8,:))
+%     plot((0:intstart+intlength)/steps,totint([ones(1,intstart) 1:end]),'k-')
 %     plot(yintstart+yintlength*[1;1],[0 1],'k-')
     if rates.region==1
         set(gca,'ColorOrderIndex',1)

@@ -1,22 +1,21 @@
 function [diff,fullpath]=difffold(newdir,olddir)
-    diff=struct();
     temp=dir(newdir);
     nd={temp.name};
     nd=nd(strncmp(fliplr('.mat'),cellfun(@fliplr,nd,'UniformOutput',0),4));
     temp=dir(olddir);
     od={temp.name};
-    od=od(strncmp('.mat',cellfun(@fliplr,od,'UniformOutput',0),4));
+    od=od(strncmp(fliplr('.mat'),cellfun(@fliplr,od,'UniformOutput',0),4));
     if ~all(ismember(od,nd))
         error('%s missing some files from %s',olddir,newdir) %#ok<ERTAG>
     end
-    for ii=nd
+    for ii=od
         str=ii{1};
         if strcmp(str(end-3:end),'.mat')
             nsct.(str(1:end-4))=load([ws(newdir) str]);
             osct.(str(1:end-4))=load([ws(olddir) str]);
         end
     end
-    [diff,fullpath]=structdiff(osct,nsct);
+    [fullpath,diff]=structdiff(osct,nsct);
 end
 
 function out=ws(in)
@@ -27,7 +26,6 @@ function out=ws(in)
     end
 end
 function [diff,fullpath]=structdiff(in1,in2)
-    ans=inputname(1);
     diff=struct();
     fullpath=struct();
     fnames=fieldnames(in1);
@@ -62,7 +60,6 @@ function [diff,fullpath]=structdiff(in1,in2)
                 if replace
                     diff.(str)=pad(in1.(str), in2.(str));
                     fullpath.(str)=pad(in1.(str), in2.(str));
-                else disp different_lengths
                 end
             end
             catch ME
@@ -74,8 +71,6 @@ function [diff,fullpath]=structdiff(in1,in2)
     end
     if any(cell2mat(strfind(fieldnames(fullpath),'__')))
         throw ME
-    else if ~isempty(fieldnames(fullpath)), 
-            disp(fieldnames(fullpath)),end
     end
     if length(dbstack())==2
         0;

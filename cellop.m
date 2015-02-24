@@ -4,6 +4,8 @@ function [cll,rownums]=cellop(cll,func,varargin)
             cll=rm(cll,varargin);
         case 'set'
             cll=set(cll,varargin);
+        case 'rset'
+            cll=rset(cll,varargin);
         case 'get'
             cll=get(cll,varargin);
         case 'rep'
@@ -27,6 +29,21 @@ function cll=set(cll,args)
     fnames=cll(1,:);
     for ii=2:2:numel(args)        
         cll(args{1}+1,strcmp(fnames,args{ii}))=num2cell(args{ii+1},2);
+    end
+end
+
+function cll=rset(cll,args)
+    fnames=cll(1,:);
+    for ii=1:2:numel(args)
+        valin=args{ii+1};
+        if isnumeric(valin)
+            newval=num2cell(valin);
+        elseif ischar(valin)
+            newval={valin};
+        else
+            newval=valin;
+        end
+        cll(2:end,strcmp(fnames,args{ii}))=newval;
     end
 end
 

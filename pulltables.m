@@ -1,4 +1,4 @@
-function [dataa,datas,dataa1,datas1]=pulltables(intdir,timesteps,steps_year,labels)
+function [dataa,datas,dataa1,datas1,dataa2,datas2]=pulltables(intdir,timesteps,steps_year,labels)
     if intdir(end)~='/'&& intdir(end)~='\'
         intdir=[intdir '/'];
     end
@@ -12,5 +12,7 @@ function [dataa,datas,dataa1,datas1]=pulltables(intdir,timesteps,steps_year,labe
     datas=results.incs1'+results.incs2';
     dataa1=results.incs1'+results.incf1'+results.incm1'+results.incb1';
     datas1=results.incs1;
+    dataa2=results.incs2'+results.incf2'+results.incm2'+results.incb2';
+    datas2=results.incs2;
 end
 

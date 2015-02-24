@@ -47,6 +47,11 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
                     [p,tables]=scenarios(varargin{ii+1}{:});
                     userscenarios=1;
                     ii=ii+2;
+                case 'c'
+                    p=varargin{ii+1};
+                    tables={'users2r';unique(p(2:end,1))};
+                    userscenarios=1;
+                    ii=ii+2;
             end
         end
     end

@@ -8,6 +8,11 @@ col=[
 Nr=[[.47 .03 .475 .025]' [.48 .02 .495 .005]'];
 rows=@(A,rows)A(rows,:);
 popsplit=.14;
+    %% rates
+    [~,~,rates]=smallsti(assct(scenarios,2));
+    steps=rates.steps;
+    intstart=rates.intstart;
+    intlength=rates.intlength;
     %% Prevalence plot 1
     clf
     smallsti(assct(scenarios,2));
@@ -15,7 +20,7 @@ popsplit=.14;
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs, urban','Cov=75%, Freq=6/year'});
@@ -40,7 +45,7 @@ popsplit=.14;
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs, rural','Cov=75%, Freq=6/year'});
@@ -62,11 +67,8 @@ popsplit=.14;
     %% Prevalence plot combined
 
     % Calculate sum 
-    [temp1,~,rates]=smallsti(assct(scenarios,2),'quick','{pop,popintout(:,:,1),totint}');
+    [temp1,~,~]=smallsti(assct(scenarios,2),'quick','{pop,popintout(:,:,1),totint}');
     temp2=smallsti(assct(scenarios,1),'quick','{pop,popintout(:,:,1),totint}');
-    steps=rates.steps;
-    intstart=rates.intstart;
-    intlength=rates.intlength;
     clf
     for ii=1:3
         temp3{ii}=temp1{ii}*popsplit+temp2{ii}*(1-popsplit); 
@@ -77,19 +79,19 @@ popsplit=.14;
     totint=bsxfun(@rdivide,totint,totint(1));
     
     % Plot
-    plot ((0:intstart+intlength)/steps,pop(:,1:intstart+intlength+1)')
+    plot ((0:intstart+intlength)/steps-2,pop(:,1:intstart+intlength+1)')
     holdnow=ishold(gcf);  hold all;
     set(gca,'ColorOrderIndex',1)
-    plot((intstart:intstart+intlength)/steps,popint(:,1:intlength+1)')
+    plot((intstart:intstart+intlength)/steps-2,popint(:,1:intlength+1)')
     hold all
-%     plot((0:intstart+intlength)/steps,totint([ones(1,intstart) 1:end]),'k-')
+%     plot((0:intstart+intlength)/steps-2,totint([ones(1,intstart) 1:end]),'k-')
     
     % Prettify
     % Create ylabel
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs, overall','Cov=75%, Freq=6/year'});
@@ -115,7 +117,7 @@ popsplit=.14;
     dopullpop(scenarios,1,simdir);
     legend('General males','MSMW','General females','FSW','Overall','Location','NorthWest')
     gca;ans.Children;ans(1).Color=[0 0 0]; %#ok<NOANS>
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     ylabel('Decrease in incidence compared to baseline')
     title({'Decrease in incidence of HIV', 'Cov=75%, Freq=6/year'})
     ylim([0 0.08])
@@ -135,14 +137,14 @@ popsplit=.14;
     clf
     shg
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot((0:intstart+intlength)'/steps,totintu(:,[ones(1,intstart) 1:end])')
+    plot((0:intstart+intlength)'/steps-2,totintu(:,[ones(1,intstart) 1:end])')
     
     % Prettify
     % Create ylabel
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs, urban','(various FSW treatment patterns)'});
@@ -174,14 +176,14 @@ popsplit=.14;
         % Plot
     clf
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot((0:intstart+intlength)'/steps,totintr(:,[ones(1,intstart) 1:end])')
+    plot((0:intstart+intlength)'/steps-2,totintr(:,[ones(1,intstart) 1:end])')
     
     % Prettify
     % Create ylabel
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs, rural','(various FSW treatment patterns)'});
@@ -222,14 +224,14 @@ popsplit=.14;
         % Plot
     clf
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot((0:intstart+intlength)'/steps,totinto(:,[ones(1,intstart) 1:end])')
+    plot((0:intstart+intlength)'/steps-2,totinto(:,[ones(1,intstart) 1:end])')
     
     % Prettify
     % Create ylabel
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs, overall','(various FSW treatment patterns)'});    
@@ -248,23 +250,64 @@ popsplit=.14;
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'Overall STI scen.png'])
 
-    %% Incidence plot bypatt
+    %% Incidence plot rur bypatt
     
     clf
-    [incallunsc,incfswunsc,incurbunsc,incfswurbunsc]=dopulltables(scenarios,simdir);
-    incall=bsxfun(@rdivide,incallunsc,incallunsc(:,end));
+    [~,~,~,~,incrurunsc,incfswrurunsc]=dopulltables(scenarios,simdir);
+    incall=bsxfun(@rdivide,incrurunsc,incrurunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot(1:12,1-incall([ones(1,2) 1:end],:))
+    plot(-1:10,[zeros(2,5);1-incall])
     legend({...
         'Cov=50%, Freq=6/year',...
         'Cov=50%, Freq=12/year',...
         'Cov=75%, Freq=6/year',...
         'Cov=75%, Freq=12/year',...
         'Baseline scenario'},'Location','NorthWest')
-    xlabel('Years');
+    xlabel('Years since start of intervention');
+    ylabel('Decrease in incidence compared to baseline')
+    title({'Decrease in incidence of HIV','Urban regions'})
+    ylim([0 0.1])
+    set(gca,'YGrid','on')
+    set(gcf,'PaperPosition',[0 0 13.5 9])
+    saveas(gcf,[figdir 'HIV scen urb.png'])
+    %% Incidence plot urb bypatt
+    
+    clf
+    [~,~,incurbunsc,incfswurbunsc]=dopulltables(scenarios,simdir);
+    incall=bsxfun(@rdivide,incurbunsc,incurbunsc(:,end));
+    set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
+    plot(-1:10,1-[ones(2,5);incall])
+    legend({...
+        'Cov=50%, Freq=6/year',...
+        'Cov=50%, Freq=12/year',...
+        'Cov=75%, Freq=6/year',...
+        'Cov=75%, Freq=12/year',...
+        'Baseline scenario'},'Location','NorthWest')
+    xlabel('Years since start of intervention');
+    ylabel('Decrease in incidence compared to baseline')
+    title({'Decrease in incidence of HIV','Urban regions'})
+    ylim([0 0.1])
+    set(gca,'YGrid','on')
+    set(gcf,'PaperPosition',[0 0 13.5 9])
+    saveas(gcf,[figdir 'HIV scen urb.png'])
+    
+    %% Incidence plot bypatt
+    
+    clf
+    [incallunsc,incfswunsc,incurbunsc,incfswurbunsc]=dopulltables(scenarios,simdir);
+    incall=bsxfun(@rdivide,incallunsc,incallunsc(:,end));
+    set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
+    plot(-1:10,1-incall([ones(1,2) 1:end],:))
+    legend({...
+        'Cov=50%, Freq=6/year',...
+        'Cov=50%, Freq=12/year',...
+        'Cov=75%, Freq=6/year',...
+        'Cov=75%, Freq=12/year',...
+        'Baseline scenario'},'Location','NorthWest')
+    xlabel('Years since start of intervention');
     ylabel('Decrease in incidence compared to baseline')
     title({'Decrease in incidence of HIV'})
-    ylim([0 0.08])
+    ylim([0 0.1])
     set(gca,'YGrid','on')
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV scen.png'])
@@ -294,13 +337,13 @@ popsplit=.14;
     disp(whichset);
     switch whichset
         case 'a'
-            plot((0:intstart+intlength)'/steps,totinto(:,[ones(1,intstart) 1:end])')
+            plot((0:intstart+intlength)'/steps-2,totinto(:,[ones(1,intstart) 1:end])')
             title({'Prevalence of STIs, all PPT FSW','(various FSW treatment patterns)'});
         case 'r'
-            plot((0:intstart+intlength)'/steps,totintr(:,[ones(1,intstart) 1:end])')
+            plot((0:intstart+intlength)'/steps-2,totintr(:,[ones(1,intstart) 1:end])')
             title({'Prevalence of STIs, rural PPT FSW','(various FSW treatment patterns)'});
         case 'u'
-            plot((0:intstart+intlength)'/steps,totintu(:,[ones(1,intstart) 1:end])')
+            plot((0:intstart+intlength)'/steps-2,totintu(:,[ones(1,intstart) 1:end])')
             title({'Prevalence of STIs, urban PPT FSW','(various FSW treatment patterns)'});
     end
     
@@ -309,7 +352,7 @@ popsplit=.14;
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
         
     % Create title
     
@@ -349,13 +392,13 @@ popsplit=.14;
     disp(whichset);
     switch whichset
         case 'a'
-            plot((0:intstart+intlength)'/steps,totinto(:,[ones(1,intstart) 1:end])')
+            plot((0:intstart+intlength)'/steps-2,totinto(:,[ones(1,intstart) 1:end])')
             title({'Prevalence of STIs, all FSW','(various FSW treatment patterns)'});
         case 'r'
-            plot((0:intstart+intlength)'/steps,totintr(:,[ones(1,intstart) 1:end])')
+            plot((0:intstart+intlength)'/steps-2,totintr(:,[ones(1,intstart) 1:end])')
             title({'Prevalence of STIs, rural FSW','(various FSW treatment patterns)'});
         case 'u'
-            plot((0:intstart+intlength)'/steps,totintu(:,[ones(1,intstart) 1:end])')
+            plot((0:intstart+intlength)'/steps-2,totintu(:,[ones(1,intstart) 1:end])')
             title({'Prevalence of STIs, urban FSW','(various FSW treatment patterns)'});
     end
     % Prettify
@@ -363,7 +406,7 @@ popsplit=.14;
     ylabel('Prevalence');
     
     % Create xlabel
-    xlabel('Years'); 
+    xlabel('Years since start of intervention'); 
     
     ylim([0,.16])
     
@@ -398,14 +441,14 @@ popsplit=.14;
         % Plot
     clf
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot((0:intstart+intlength)'/steps,mtotinto(:,[ones(1,intstart) 1:end])')
+    plot((0:intstart+intlength)'/steps-2,mtotinto(:,[ones(1,intstart) 1:end])')
     
     % Prettify
     % Create ylabel
     ylabel('Prevalence (all populations)');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs','Treating males and MSMW'});    
@@ -444,7 +487,7 @@ popsplit=.14;
         % Plot
     clf
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot((0:intstart+intlength)'/steps,ftotinto(:,[ones(1,intstart) 1:end])')
+    plot((0:intstart+intlength)'/steps-2,ftotinto(:,[ones(1,intstart) 1:end])')
     
 %     addend(12,mtotinto(1:4,end)',col)
     
@@ -453,7 +496,7 @@ popsplit=.14;
     ylabel('Prevalence (all populations)');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs','Treating females and FSW'});    
@@ -492,7 +535,7 @@ popsplit=.14;
         % Plot
     clf
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot((0:intstart+intlength)'/steps,mtotinto(:,[ones(1,intstart) 1:end])')
+    plot((0:intstart+intlength)'/steps-2,mtotinto(:,[ones(1,intstart) 1:end])')
     
 %     addend(12,mtotinto(1:4,end)',col)
     
@@ -501,7 +544,7 @@ popsplit=.14;
     ylabel('Prevalence (all populations)');
     
     % Create xlabel
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     
     % Create title
     title({'Prevalence of STIs','Treating all sub-populations'});    
@@ -526,14 +569,14 @@ popsplit=.14;
     mincallunsc=dopulltables(rows(scenarios('f'),1:9),simdir);
     mincall=bsxfun(@rdivide,mincallunsc,mincallunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot(1:12,1-mincall([ones(1,2) 1:end],:))
+    plot(-1:10,1-mincall([ones(1,2) 1:end],:))
     legend({...
         'Cov=20%, Freq=6/year',...
         'Cov=20%, Freq=12/year',...
         'Cov=30%, Freq=6/year',...
         'Cov=30%, Freq=12/year',...
         'Baseline scenario'},'Location','NorthWest')
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     ylabel('Decrease in incidence compared to baseline')
     title({'Decrease in incidence of HIV', 'Treating males and MSMW'})
     ylim([0 0.08])
@@ -549,14 +592,14 @@ popsplit=.14;
     mincallunsc=dopulltables(rows(scenarios('f'),[1 10:17]),simdir);
     mincall=bsxfun(@rdivide,mincallunsc,mincallunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot(1:12,1-mincall([ones(1,2) 1:end],:))
+    plot(-1:10,1-mincall([ones(1,2) 1:end],:))
     legend({...
         'Cov=20%, Freq=6/year',...
         'Cov=20%, Freq=12/year',...
         'Cov=30%, Freq=6/year',...
         'Cov=30%, Freq=12/year',...
         'Baseline scenario'},'Location','NorthWest')
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     ylabel('Decrease in incidence compared to baseline')
     title({'Decrease in incidence of HIV', 'Treating females and FSW'})
     ylim([0 0.08])
@@ -570,14 +613,14 @@ popsplit=.14;
     mincallunsc=dopulltables(rows(scenarios('f'),[1 18:25]),simdir);
     mincall=bsxfun(@rdivide,mincallunsc,mincallunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot(1:12,1-mincall([ones(1,2) 1:end],:))
+    plot(-1:10,1-mincall([ones(1,2) 1:end],:))
     legend({...
         'Cov=10%, Freq=6/year',...
         'Cov=10%, Freq=12/year',...
         'Cov=15%, Freq=6/year',...
         'Cov=15%, Freq=12/year',...
         'Baseline scenario'},'Location','NorthWest')
-    xlabel('Years');
+    xlabel('Years since start of intervention');
     ylabel('Decrease in incidence compared to baseline')
     title({'Decrease in incidence of HIV', 'Treating all populations'})
     ylim([0 0.08])
