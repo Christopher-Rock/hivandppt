@@ -21,11 +21,14 @@ pin=[...
     {'gamma';sensit;{1;1*1.1;1*.9}} ...
     {'theta';sensit;{7;3;14;}} ...
     {'phi';sensit;{0.50,0.5*1.1,0.5*.9}} ...
-    {'psi';sensit;{0.67,.67*1.1,.67*.9}} ...
+    {'oldphi';sensit;{0.5,0.5,0.5}} ...
     {'eff';sensit;{0.95;1-.05*1.1;1-.05*.9}} ...
     {'res';sensit;{0.01;0.01*1.1;0.01*.9}} ... % Resistance per year
     {'probbmod';sensit;{1;1.1;0.9}} ...
     {'probsmod';sensit;{1;1.1;0.9}} ...
+    {'c1frac';sensit;{1}}...
+    {'c2frac';sensit;{1}}...    
+    {'movedir';const;{0}} ...
     {'region';regional;{2;1}} ...
     {'w';regional;{0.07;0.05}} ...
     {'x';regional;{0.08;0.06}} ...
@@ -43,6 +46,7 @@ pin=[...
     {'tau';cv;{6;12}} ...
     {'intnum';cv;{3;1;2;4}} ...
     {'sexratio';const;{0.5}} ...
+    {'fs';const;{2.4}} ...
     {'longdesc';const;{'Default intervention'}} ];
 blocks=cell2mat(pin(2,:));
 npin=find(blocks==sensit);
@@ -83,6 +87,8 @@ for ii={
     if isa(type,'char')
         type={type};
     end
+    
+    userscens=varargin(~strcmp(varargin,'blocks')&~strcmp(varargin,'subset')&~strcmp(varargin,'nobase'));
     for t = type
     %% Generate additional scenario descriptors
         switch t{:}
@@ -199,6 +205,16 @@ for ii={
                     end
                     scenblocks=[scenblocks L{2,ii}]; %#ok<*AGROW>
                 end
+            case 'STI'
+                scen=struct();
+                tables={'sti';{'default';'sti2';'sti3'}};
+            case 'r'
+                scen=struct();
+                for ii=userscens(:)'
+                    scen.(ii{:})={'default','movedir',1};
+                end
+                tables={'varname';{'default';userscens(:)}};
+                scenblocks=[scenblocks ones(1,length(userscens)*sensit)];
             case {'univariate' 'u'}
                 %% Standard sensitivity analysis by data in table
                 if any(strcmp(varargin,'subset'))
@@ -236,13 +252,12 @@ for ii={
                 if any(strncmp(type,'u',1))
                     error('Cannot mix ''u'' and ''s''') %#ok<ERTAG>
                 end
-                userscens=varargin(~strcmp(varargin,'blocks')&~strcmp(varargin,'subset')&~strcmp(varargin,'nobase'));
                 for ii=1:2:length(userscens)-1
-                    scen.(userscens{ii})=userscens{ii+1};
+                    scen.(userscens{ii})=[{'default'} userscens{ii+1}];
                     scenblocks=[scenblocks 4];
                 end
-                tables= [{'s'};{userscens(1:2:end)}];
-                if any(strcmp('nobase',varargin))
+                tables= [{'s'};{userscens(1:2:end)'}];
+                if ~any(strcmp('nobase',varargin))
                     tables{2,1}=[{'default'};tables{2,1}];
                 end
             case {'e' 'tz'}
@@ -271,6 +286,16 @@ for ii={
                 end
                 tables={'bypop';temp};
                 scenblocks=[scenblocks repmat(al,1,6)];
+            case 'm'
+                %% Multiply list by factors
+                for ii=varargin{1}(:)'
+                    scen.([ii{:} '2'])={'default'};
+                    scenf.([ii{:} '2'])={ii{:},@(rates)rates.(ii{:})*varargin{2}(1)};
+                    scen.([ii{:} '3'])={'default'};
+                    scenf.([ii{:} '3'])={ii{:},@(rates)rates.(ii{:})*varargin{2}(2)};
+                    scenblocks=[scenblocks ones(1,length(varargin{1})*2)*sensit];
+                end
+                        
             otherwise
                 %% Probable error
                 disp(type)
@@ -341,15 +366,30 @@ for block=blocksinuse
     end
 end
 
-
-%% Remove unmodified scenarios if required
-if any(strcmp(type,'f'))|any(strcmp(varargin,'nobase'))
-    if sum(strcmp(p(:,end),'Default intervention'))==8
-        p=p([1 10:end],:);
-    else
-        p=p([1 6:end],:);
+%% Deal with specific cases
+if isa(type,'char')
+    type={type};
+end
+for t = type
+    switch t{:}
+        case 'STI'
+            sz=size(p,1)-1;
+            p=p([1:end 2:end 2:end],:);
+            p(sz+2:2*sz+1,1)={'sti2'};
+            p(2*sz+2:3*sz+1,1)={'sti3'};
+            p(rpinds(p,{'sti2','sti3'}),cpind(p,'movedir'))={1};
+            p(rpind(p,'sti2'),cpinds(p,{'w','x','y','z'}))=num2cell(cell2mat(...
+                p(rpind(p,'sti2'),cpinds(p,{'w','x','y','z'})))*varargin{1});
+            p(rpind(p,'sti3'),cpinds(p,{'w','x','y','z'}))=num2cell(cell2mat(...
+                p(rpind(p,'sti3'),cpinds(p,{'w','x','y','z'})))*varargin{2});
+            tables={'sti';{'default';'sti2';'sti3'}};
     end
 end
+%% Remove unmodified scenarios if required
+if any(strcmp(type,'f'))|any(strcmp(varargin,'nobase'))
+    p=p(~rpind(p,'default'),:);
+end
+
 end
 
 
@@ -436,6 +476,22 @@ function thislongdesc=getlongdesc(name,value,lessthan)
                     'reducing zeta accordingly.'];
     end
         
+end
+
+function ind=cpind(p,str)
+    ind=strcmp(p(1,:),str);
+end
+function ind=cpinds(p,strs)
+    ind=ismember(p(1,:),strs);
+end
+function ind=rpind(p,str)
+    ind=strcmp(p(:,1),str);
+end
+function ind=rpinds(p,strs)
+    ind=ismember(p(:,1),strs);
+end
+function val=cpval(p,str)
+    val=p(:,cpind(p,str));
 end
  % TODO: Find some values for gamma (dependence on duration of infection)
 

@@ -37,14 +37,14 @@ end
 %% Calculate intermediate variables
 zetax=chi*zeta*[alpham;alphab;alphaf;alphas];
 stilevel=[rates.w;rates.x;rates.y;rates.z];
-equilib=stilevel*rates.phi;
-otherlevel=stilevel*rates.psi;
-F=(rates.phi+rates.psi-1)/rates.phi/rates.psi./stilevel;
+[equilib,otherlevel]=splitsti(stilevel,[rates.phi,rates.oldphi]);
 N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
     [1-rates.probs rates.probs]]';
 c2=1-rates.probb;
 asm=rates.probs*(rates.ac*rates.csm+rates.ar*rates.rsm);
 c1=1-asm/(asm+(1-rates.probs)*(rates.ac*rates.cfm+rates.ar*rates.rfm));
+c1=1-(1-c1)*rates.c1frac;
+c2=1-(1-c2)*rates.c2frac;
 %% Load varargin parameters
 if any(strcmp(varargin,'pretty'))
     pretty=1;
@@ -137,12 +137,11 @@ end
 popint=bsxfun(@times,popintout(:,:,1),1-zetax)+bsxfun(@times,popintout(:,:,2),zetax);
 totint=sum(bsxfun(@times,popint,N),1);
 %% Model output
-    popwith=bsxfun(@plus,popint,otherlevel)-bsxfun(@times,popint,otherlevel.*F);
+    popwith=joinsti(popint,otherlevel);
     proportional=sum(bsxfun(@times,popwith,N./stilevel));
     oldproportional=sum(N.*stilevel);
     ratios=zeros(2,1);
-    ratios(1)=1-proportional(3*steps);
-    ratios(2)=1-proportional(10*steps);
+    ratios(2)=1-proportional(intlength);
     prpl=proportional*sum(N.*equilib);
     rates.steps=steps;
     rates.intstart=intstart;
@@ -170,7 +169,11 @@ if(2)
     set(gca,'YGrid','on')
     shg;
     oldfig=get(gcf,'Number');
-    figure(oldfig-1+2*(oldfig==1))
+    try
+        figure(oldfig-1+2*(oldfig==1))
+    catch
+        figure
+    end
     if ~fors
         set(gca,'LineStyleOrder','--')
         set(gca,'ColorOrderIndex',1)
@@ -188,7 +191,9 @@ if(2)
     end
     plot((intstart:intstart+intlength)/steps,thisprop)
     legend({'m','b','f','s','T'})
-    figure(oldfig);
+    try
+        figure(oldfig);
+    end
 end
 % %% Result modification
 %     ratios=pop(:,end);

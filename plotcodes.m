@@ -36,6 +36,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     set(gca,'YGrid','on')
     set(gca,'YTick',0:.02:.2)
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'urban STI.png'])
     
@@ -62,34 +63,28 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'rural STI.png'])
     
     %% Prevalence plot combined
-
+%     for offset=0:2:6;
+    offset=4;
     % Calculate sum 
-    [temp1,~,~]=smallsti(assct(scenarios,2),'quick','{pop,popintout(:,:,1),totint}');
-    temp2=smallsti(assct(scenarios,1),'quick','{pop,popintout(:,:,1),totint}');
+    temp1=smallsti(assct(scenarios,2+offset),'quick','[popintout(:,:,1);popintout(4,:,2)]');
+    temp2=smallsti(assct(scenarios,1+offset),'quick','[popintout(:,:,1);popintout(4,:,2)]');
     clf
-    for ii=1:3
-        temp3{ii}=temp1{ii}*popsplit+temp2{ii}*(1-popsplit); 
-    end
-    [pop,popint,totint]=deal(temp3{:});
-    pop=pop./pop;
-    popint=bsxfun(@rdivide,popint,popint(:,1));
-    totint=bsxfun(@rdivide,totint,totint(1));
-    
+    popintout=temp1*popsplit+temp2*(1-popsplit); 
+    popintoutp=1-bsxfun(@rdivide,popintout,popintout(:,1));
+    disp([offset; popintoutp(:,end)./popintoutp(end,end)])
     % Plot
-    plot ((0:intstart+intlength)/steps-2,pop(:,1:intstart+intlength+1)')
-    holdnow=ishold(gcf);  hold all;
     set(gca,'ColorOrderIndex',1)
-    plot((intstart:intstart+intlength)/steps-2,popint(:,1:intlength+1)')
+    plot((intstart:intstart+intlength)/steps-2,popintoutp(:,1:intlength+1)')
     hold all
 %     plot((0:intstart+intlength)/steps-2,totint([ones(1,intstart) 1:end]),'k-')
-    
     % Prettify
     % Create ylabel
-    ylabel('Prevalence');
+    ylabel('Proportional decrease in prevalence');
     
     % Create xlabel
     xlabel('Years since start of intervention');
@@ -97,19 +92,18 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     % Create title
     title({'Prevalence of STIs, overall','Cov=75%, Freq=6/year'});
     
+    xlim([-2 10])
+    plot(0,0,'k.','MarkerSize',18)
     ylim([0 .18])
     set(gca,'YTick',0:.02:.2)
     
     ylim([0 1])
     set(gca,'YTick',0:.1:1)
-    l=get(gca,'Children');
-    for ii=2:5
-        l(ii).Annotation.LegendInformation.IconDisplayStyle='off';
-    end
-    legend('General males','MSMW','General females','FSW','Overall','Location','SouthWest')
-    
+
+    legend('General males','MSMW','General females','FSW not receiving PPT','FSW receiving PPT','Start of intervention','Location','West')
+%     end
     set(gca,'YGrid','on')
-    
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'Overall STI.png'])
     
@@ -124,6 +118,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     title({'Decrease in incidence of HIV', 'Cov=75%, Freq=6/year'})
     ylim([0 0.08])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV.png'])
 
@@ -185,6 +180,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'STI scen' rch '.png'])
 
@@ -208,6 +204,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     plot(0,0,'k.','MarkerSize',18)
     ylim([0 0.1])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV scen rur.png'])
     %% Incidence plot urb bypatt
@@ -230,6 +227,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     plot(0,0,'k.','MarkerSize',18)
     ylim([0 0.1])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV scen urb.png'])
     
@@ -253,6 +251,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     plot(0,0,'k.','MarkerSize',18)
     ylim([0 0.1])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV scen.png'])
     
@@ -316,6 +315,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'PPT ' whichset ' FSW STI.png'])
     
@@ -375,8 +375,43 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'FSW ' whichset ' STI.png'])
+    
+    %% Sensitivity plots
+    doseparately={
+        'phi'
+        'fs'
+        };
+    dospecial={
+        'theta'
+        'chir'
+        };
+    domin={
+        'gamma'
+        %'c1'
+        %'c2'
+        'eff'
+        'res'
+        };
+    separatescenarios=scenarios('s','phid45',{'phi',.45},'phid55',{'phi',.55},...
+        'fs2',{'fs',2.4*.9},'fs3',{'fs',2.4*1.1},'nobase');
+    specialscenarios=scenarios('s','theta2',{'theta',3.5},'theta3',{'theta',14},...
+        'chir2',{'chir',0},'nobase');
+    minscenarios=scenarios('m',domin,[0.9 1.1]);
+    %% STI effect plot
+    exist('pchi','var');exist('stiout','var');exist('hivout','var');
+    exist('pall','var');exist('propminus','var');
+    sensitivities;
+    greater=any(abs(hivout)>0.03);
+    sennames=pall(10:8:end,1);
+    mybar(sennames(greater),stiout(:,greater))
+    mybar(sennames(~greater),stiout(:,~greater))
+    mybar(sennames(greater),hivout(:,greater))
+    mybar(sennames(~greater),hivout(:,~greater))
+    
+        
     
         %% Prevalence plot men
     for ii=1:4
@@ -420,6 +455,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'STI males.png'])
     
@@ -468,6 +504,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'STI females.png'])
     
@@ -516,6 +553,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     set(gca,'YGrid','on')
     
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'STI allpop.png'])
     
@@ -537,6 +575,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     title({'Decrease in incidence of HIV', 'Treating males and MSMW'})
     ylim([0 0.08])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV men.png'])
 
@@ -560,6 +599,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     title({'Decrease in incidence of HIV', 'Treating females and FSW'})
     ylim([0 0.08])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV women.png'])
 
@@ -581,6 +621,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     title({'Decrease in incidence of HIV', 'Treating all populations'})
     ylim([0 0.08])
     set(gca,'YGrid','on')
+    set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
     saveas(gcf,[figdir 'HIV allpop.png'])
     

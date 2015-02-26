@@ -19,6 +19,9 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
     cleanresults=0;
     userpsset=0;
     userscenarios=0;
+    simdirmove=0;
+    repname=0;
+    noplot=0;
     if nargin>2
         ii=1;
         while ii<=length(varargin)
@@ -52,6 +55,15 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
                     tables={'users2r';unique(p(2:end,1))};
                     userscenarios=1;
                     ii=ii+2;
+                case 'move'
+                    simdirmove=1;
+                    ii=ii+1;
+                case 'repname'
+                    repname=1;
+                    ii=ii+2;
+                case 'n'
+                    noplot=1;
+                    ii=ii+1;
             end
         end
     end
@@ -69,14 +81,16 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
         thisp=getrows(p,tables{2,ii});
         if ~cleanresults
             if ~clean
-                small2HIV(thisp,simdir);
+                small2HIV(thisp,simdir,simdirmove);
             end
-            results=smallresults(thisp,1,1);
+            results=smallresults(thisp,1,1,simdirmove);
         else
             results=resultss{ii};
         end
         names=cellop(p(1:2:end,:),'get',tables{2,ii},'longdesc');
-        smallbar(results,names(2:end),tables{1,ii},figuredir)
+        if ~noplot
+            smallbar(results,names(2:end),tables{1,ii},figuredir)
+        end
         resultss{psset==ii}=results;
         scensofar=scensofar+length(names)-1;
         fprintf('%s: We have completed %d of %d scenarios. \n', ...

@@ -1,4 +1,6 @@
 function [dataa,datas,dataa1,datas1,dataa2,datas2]=dopulltables(p,simdir)
+    runstopull=(size(p,1)-1)/2;
+    fprintf('Pulling %d tables.\n%s\n',runstopull,[repmat(' ',1,runstopull-1) '.'])
     id=[simdir '/interventions/'];
     load([id p{2,1} '_1' ...
         '/input/IndiParams'],'PNGparamsIndi')
@@ -17,6 +19,9 @@ function [dataa,datas,dataa1,datas1,dataa2,datas2]=dopulltables(p,simdir)
         [dataa(:,ii), datas(:,ii), dataa1(:,ii), datas1(:,ii), dataa2(:,ii), datas2(:,ii)]=...
         pulltables([id p{ii*2,1} sprintf('_%d',p{ii*2,strcmp(p(1,:),'intnum')})], ...
             timesteps,steps_year,labels);
+        fprintf('.')
     end
     [dataa(:,end),datas(:,end),dataa1(:,end),datas1(:,end),dataa2(:,end),datas2(:,end)]=...
         pulltables([id 'BaselineInt'],timesteps,steps_year,labels);
+    fprintf('\n')
+end
