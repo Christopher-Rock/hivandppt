@@ -1,4 +1,4 @@
-function data=pulltable(intdir,timesteps,steps_year,labels)
+function [data,results]=pulltable(intdir,timesteps,steps_year,labels)
     if intdir(end)~='/'&& intdir(end)~='\'
         intdir=[intdir '/'];
     end

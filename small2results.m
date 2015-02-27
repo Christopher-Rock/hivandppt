@@ -21,7 +21,7 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
     userscenarios=0;
     simdirmove=0;
     repname=0;
-    noplot=0;
+    noplot=nargout==0;
     if nargin>2
         ii=1;
         while ii<=length(varargin)
@@ -64,6 +64,9 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
                 case 'n'
                     noplot=1;
                     ii=ii+1;
+                case 'y'
+                    noplot=0;
+                    ii=ii+1;
             end
         end
     end
@@ -83,7 +86,9 @@ function [resultss,tabless]=small2results(simdir,figuredir,varargin)
             if ~clean
                 small2HIV(thisp,simdir,simdirmove);
             end
-            results=smallresults(thisp,1,1,simdirmove);
+            if ~nargout
+                results=smallresults(thisp,1,1,simdirmove);
+            end
         else
             results=resultss{ii};
         end

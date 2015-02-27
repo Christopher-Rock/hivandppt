@@ -1,45 +1,12 @@
-function [diff,fullpath,short]=difffold(newdir,olddir)
-    temp=dir(newdir);
-    nd={temp.name};
-    nd=nd(strncmp(fliplr('.mat'),cellfun(@fliplr,nd,'UniformOutput',0),4));
-    temp=dir(olddir);
-    od={temp.name};
-    od=od(strncmp(fliplr('.mat'),cellfun(@fliplr,od,'UniformOutput',0),4));
-    if ~all(ismember(od,nd))
-        error('%s missing some files from %s',olddir,newdir) %#ok<ERTAG>
-    end
-    for ii=od
-        str=ii{1};
-        if strcmp(str(end-3:end),'.mat')
-            nsct.(str(1:end-4))=load([ws(newdir) str]);
-            osct.(str(1:end-4))=load([ws(olddir) str]);
-        end
-    end
-    [fullpath,diff]=structdiff(osct,nsct);
-    short=diff;
-    for ii=fieldnames(short)'
-        x=short.(ii{:});
-        if all(x==x(1))
-            short.(ii{:})=x(1);
-        end
-    end
-end
 
-function out=ws(in)
-    if ~ismember(in(end),{'/','\'})
-        out=[in '/'];
-    else
-        out=in;
-    end
-end
-function [diff,fullpath]=structdiff(in1,in2)
+function [diff,fullpath]=temp(in1,in2)
     diff=struct();
     fullpath=struct();
     fnames=fieldnames(in1);
     for ii=fnames'
         str=ii{:};
         if isstruct(in1.(str))
-            [tempd,tempf]=structdiff(in1.(str),in2.(str));
+            [tempd,tempf]=temp(in1.(str),in2.(str));
             for jj=fieldnames(tempd)'
                 diff.([str '__' jj{:}])=tempd.(jj{:});
             end
@@ -71,7 +38,7 @@ function [diff,fullpath]=structdiff(in1,in2)
             end
             catch ME
                 if ~strcmp(ME.identifier,'MATLAB:nonExistentField')
-                    throw ME
+                    throw(ME)
                 end
             end
         end
@@ -83,6 +50,7 @@ function [diff,fullpath]=structdiff(in1,in2)
         0;
     end
 end
+
 function out=pad(v1,v2)
     if length(v1)<length(v2)
         out=nan(length(v2),2);

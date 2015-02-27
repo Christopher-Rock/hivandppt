@@ -9,7 +9,7 @@ Nr=[[.47 .03 .475 .025]' [.48 .02 .495 .005]'];
 rows=@(A,rows)A(rows,:);
 popsplit=.14;
 decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
-    %% rates
+
     [~,~,rates]=smallsti(assct(scenarios,2));
     steps=rates.steps;
     intstart=rates.intstart;
@@ -213,18 +213,18 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     [~,~,incurbunsc,incfswurbunsc]=dopulltables(scenarios,simdir);
     incall=bsxfun(@rdivide,incurbunsc,incurbunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot(-1:10,1-[ones(2,5);incall])
+    plot(-1:10,1-[ones(2,4);incall(:,1:4)])
+    hold on
+    plot(0,0,'k.','MarkerSize',18)
     legend({...
         'Cov=50%, Freq=6/year',...
         'Cov=50%, Freq=12/year',...
         'Cov=75%, Freq=6/year',...
         'Cov=75%, Freq=12/year',...
-        'Baseline scenario'},'Location','NorthWest')
+        'Start of intervention'},'Location','NorthWest')
     xlabel('Years since start of intervention');
     ylabel('Decrease in incidence compared to baseline')
     title({'Decrease in incidence of HIV','Urban areas'})
-    hold on
-    plot(0,0,'k.','MarkerSize',18)
     ylim([0 0.1])
     set(gca,'YGrid','on')
     set(gca,'FontSize',13)
@@ -237,19 +237,20 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     [incallunsc,incfswunsc,incurbunsc,incfswurbunsc]=dopulltables(scenarios,simdir);
     incall=bsxfun(@rdivide,incallunsc,incallunsc(:,end));
     set(gca,'ColorOrderIndex',1),set(gca,'ColorOrder',col),hold on
-    plot(-1:10,1-[ones(2,5);incall])
+    plot(-1:10,1-[ones(2,4);incall(:,1:4)])
+    hold on
+    plot(0,0,'k.','MarkerSize',18)
     legend({...
         'Cov=50%, Freq=6/year',...
         'Cov=50%, Freq=12/year',...
         'Cov=75%, Freq=6/year',...
         'Cov=75%, Freq=12/year',...
-        'Baseline scenario'},'Location','NorthWest')
+        'Start of intervention'},'Location','NorthWest')
     xlabel('Years since start of intervention');
-    ylabel('Decrease in incidence compared to baseline')
+    ylabel('Decrease in incidence compared to no PPT')
     title({'Decrease in incidence of HIV','All PNG'})
-    hold on
-    plot(0,0,'k.','MarkerSize',18)
     ylim([0 0.1])
+    set(gca,'OuterPosition',[0 0.05 1 0.9])
     set(gca,'YGrid','on')
     set(gca,'FontSize',13)
     set(gcf,'PaperPosition',[0 0 13.5 9])
@@ -311,7 +312,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
         'Cov=50%, Freq=12/year',...
         'Cov=75%, Freq=6/year',...
         'Cov=75%, Freq=12/year',...
-        'Start of intervention'},'Location','NorthEast')
+        'Start of intervention'},'Location','Best')
     
     set(gca,'YGrid','on')
     
@@ -371,7 +372,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
         'Cov=50%, Freq=12/year',...
         'Cov=75%, Freq=6/year',...
         'Cov=75%, Freq=12/year',...
-        'Start of intervention'},'Location','NorthEast')
+        'Start of intervention'},'Location','Best')
     
     set(gca,'YGrid','on')
     
@@ -381,7 +382,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     
     %% Sensitivity plots
     doseparately={
-        'phi'
+        'sti'
         'fs'
         };
     dospecial={
@@ -389,6 +390,7 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
         'chir'
         };
     domin={
+        'phi'
         'gamma'
         %'c1'
         %'c2'
@@ -400,16 +402,38 @@ decreaseby=@(x) 1-bsxfun(@rdivide,x,x(1,:));
     specialscenarios=scenarios('s','theta2',{'theta',3.5},'theta3',{'theta',14},...
         'chir2',{'chir',0},'nobase');
     minscenarios=scenarios('m',domin,[0.9 1.1]);
-    %% STI effect plot
-    exist('pchi','var');exist('stiout','var');exist('hivout','var');
+    %% Sensitivity plots
+    exist('stiout','var');exist('hivout','var');exist('chihivout','var');
     exist('pall','var');exist('propminus','var');
     sensitivities;
     greater=any(abs(hivout)>0.03);
     sennames=pall(10:8:end,1);
-    mybar(sennames(greater),stiout(:,greater))
-    mybar(sennames(~greater),stiout(:,~greater))
-    mybar(sennames(greater),hivout(:,greater))
-    mybar(sennames(~greater),hivout(:,~greater))
+    blacklist={'c1frac2','c1frac3','c2frac2','c2frac3'};
+    grs={'Increase duration by 10%'
+        'Decrease duration by 10%'
+        ['Increase proportion of' ...
+        ' curable STIs by 10%  ']
+        ['Decrease proportion of' ...
+        ' curable STIs by 10%  ']
+        'Decrease STI prevalences by 10%'
+        'Increase STI prevalences by 10%'
+        'Increase cofactor by 10%'
+        'Decrease cofactor by 10%'};
+    ngrs={'Decrease protection to 3.5 days'
+        'Increase protection to 14 days'
+        'Decrease effectiveness to 94.5%'
+        'Increase effectiveness to 95.5%'
+        'Decrease resistance to 0.9%/year'
+        'Increase resistance to 1.1%/year'};
+        
+    greaternc=greater&~ismember(sennames,blacklist)';
+    ngreaternc=~greater&~ismember(sennames,blacklist)';
+    mybar(grs,tgtout(:,greaternc),'targeted STI prevalences',col,[figdir 'stigr.png'],'SouthEast')
+    mybar(ngrs,tgtout(:,ngreaternc),'targeted STI prevalences',col,[figdir 'stingr.png'])
+    mybar(grs,hivout(:,greaternc),'HIV incidence',col,[figdir 'hivgr.png'],'SouthEast')
+    mybar(ngrs,hivout(:,ngreaternc),'HIV incidence',col,[figdir 'hivngr.png'],'SouthEast')
+    mybar({'Provide PPT only in urban areas'},chihivout,'HIV incidence in urban areas',col,[figdir 'hivchi.png'],'Best','lone')
+    
     
         
     

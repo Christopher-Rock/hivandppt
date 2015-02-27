@@ -2,14 +2,8 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     clf;
     hold on;
     addnames=0;
-    if nargin==1|strcmp(runset,'a')
-        if isstruct(inrates)
-            runs=numel(inrates);
-        else
-            runs=size(inrates,1)-1;
-        end
-        runset=1:runs;
-    elseif isequal(runset,0)|isempty(runset)
+    if nargin==1,runset=[]; end
+    if strcmp(runset,'a')|isequal(runset,0)|isempty(runset)
         if isequal(runset,0)
             addnames=1; end
         if isstruct(inrates)
@@ -35,6 +29,9 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
         splot=0;
     end
     %% Prepare for main loop
+    if length(runset)>20
+        disp(datestr(now))
+    end
     disp([repmat(' ',1,numel(runset)-1),'|'])
     if ~isstruct(inrates)
         ratesall=assct(inrates);
@@ -104,6 +101,10 @@ function ratios=main(inrates,runset,nplot,popsplit,splot)
     if splot
         numvers=sum(strcmp({ratesall.desc},'default'));
         plotcmp(ratios(2,:),numvers/2,popsplit);
+    end
+    %% Time message
+    if length(runset)>20
+        disp(datestr(now))
     end
 end
 

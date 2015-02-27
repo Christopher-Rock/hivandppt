@@ -36,8 +36,8 @@ else
 end
 %% Calculate intermediate variables
 zetax=chi*zeta*[alpham;alphab;alphaf;alphas];
-stilevel=[rates.w;rates.x;rates.y;rates.z];
-[equilib,otherlevel]=splitsti(stilevel,[rates.phi,rates.oldphi]);
+stilevelin=[rates.w;rates.x;rates.y;rates.z];
+[equilib,otherlevel,stilevel]=splitsti(stilevelin,[rates.phi,rates.oldphi,rates.psifrac]);
 N=[rates.sexratio*[1-rates.probb rates.probb] (1-rates.sexratio)*...
     [1-rates.probs rates.probs]]';
 c2=1-rates.probb;
@@ -71,7 +71,7 @@ end
         yintlength=10;
     end
     yobslength=0;
-    steps=round(365.25/theta); steps=12;
+    steps=round(365.25/theta); steps=120;
     intstart=yintstart*steps;
     intlength=yintlength*steps;
     obslength=yobslength*steps;
@@ -139,8 +139,10 @@ totint=sum(bsxfun(@times,popint,N),1);
 %% Model output
     popwith=joinsti(popint,otherlevel);
     proportional=sum(bsxfun(@times,popwith,N./stilevel));
+    proptargeted=sum(bsxfun(@times,popint,N./equilib));
     oldproportional=sum(N.*stilevel);
     ratios=zeros(2,1);
+    ratios(1)=1-proptargeted(intlength);
     ratios(2)=1-proportional(intlength);
     prpl=proportional*sum(N.*equilib);
     rates.steps=steps;

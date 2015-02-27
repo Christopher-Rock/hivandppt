@@ -1,4 +1,7 @@
 function [dataa,datas,dataa1,datas1,dataa2,datas2]=sdopulltables(p,simdir)
+    if size(p,1)>20
+        disp(datestr(now))
+    end
     runstopull=(size(p,1)-1)/2;
     fprintf('Pulling %d tables.\n%s\n',runstopull,[repmat(' ',1,runstopull-1) '.'])
     im=[simdir '/mess/'];
@@ -29,5 +32,9 @@ function [dataa,datas,dataa1,datas1,dataa2,datas2]=sdopulltables(p,simdir)
         pulltables([im p{d,1} '/interventions/BaselineInt'],timesteps,steps_year,labels);
     end
 fprintf('\n')    
+    %% Time message
+    if size(p,1)>20
+        disp(datestr(now))
+    end
 end
 
